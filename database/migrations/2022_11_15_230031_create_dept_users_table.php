@@ -15,13 +15,10 @@ return new class extends Migration
     {
         Schema::create('dept_users', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('dept_id')->references('id')->on('depts')->cascadeOnDelete();
-            $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete();
+            $table->unsignedInteger('dept_id')->nullable()->index();
+            $table->unsignedInteger('user_id')->nullable()->index();
             $table->timestamp('valid_from')->nullable();
             $table->timestamp('valid_to')->nullable();
-
-            // OTHER COLUMNS DEFINATION
-
             $table->integer('is_active')->default('1')->comment('1[Active] 2[Inactive] 3[Deleted]');
             $table->string('status')->nullable();
             $table->unsignedBigInteger('createdby_userid')->nullable();

@@ -15,11 +15,9 @@ return new class extends Migration
     {
         Schema::create('depts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('org_id')->references('id')->on('orgs')->cascadeOnDelete();
+            $table->unsignedInteger('org_id')->nullable()->index();
             $table->string('name')->nullable();
             $table->longText('description')->nullable();
-            // OTHER COLUMNS DEFINATION
-
             $table->integer('is_active')->default('1')->comment('1[Active] 2[Inactive] 3[Deleted]');
             $table->string('status')->nullable();
             $table->unsignedBigInteger('createdby_userid')->nullable();

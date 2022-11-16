@@ -20,8 +20,6 @@ return new class extends Migration
             $table->longText('address')->nullable();
             $table->string('image_url')->nullable();
             $table->integer('is_premium')->default(1)->comment('1[yes] 2[No]');
-            // OTHER COLUMNS DEFINATION
-
             $table->integer('is_active')->default('1')->comment('1[Active] 2[Inactive] 3[Deleted]');
             $table->string('status')->nullable();
             $table->unsignedBigInteger('createdby_userid')->nullable();
