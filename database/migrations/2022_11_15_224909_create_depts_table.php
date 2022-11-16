@@ -13,16 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('depts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('org_id')->references('id')->on('orgs')->cascadeOnDelete();
             $table->string('name')->nullable();
-            $table->string('username')->unique();
-            $table->string('email')->unique()->nullable();
-            $table->string('phone')->nullable();
-            $table->string('image_url')->nullable();
-            $table->integer('is_org_admin')->default(2)->comment('1[YES] 2[NO]');
-            $table->rememberToken();
+            $table->longText('description')->nullable();
+            // OTHER COLUMNS DEFINATION
+
+            $table->integer('is_active')->default('1')->comment('1[Active] 2[Inactive] 3[Deleted]');
+            $table->string('status')->nullable();
+            $table->unsignedBigInteger('createdby_userid')->nullable();
+            $table->unsignedBigInteger('updatedby_userid')->nullable();
             $table->timestamps();
         });
     }
@@ -34,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('depts');
     }
 };
