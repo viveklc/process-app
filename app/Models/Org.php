@@ -21,4 +21,14 @@ class Org extends Model
     {
         return LogOptions::defaults()->logAll()->useLogName('Org');
     }
+
+    public function departments()
+    {
+        return $this->hasMany(Dept::class,'org_id','id');
+    }
+
+    public function users()
+    {
+        return $this->hasMany(User::class,'org_id');
+    }
 }

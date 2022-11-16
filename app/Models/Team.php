@@ -21,4 +21,10 @@ class Team extends Model
     {
         return LogOptions::defaults()->logAll()->useLogName('Team');
     }
+
+    public function teamUser()
+    {
+        return $this->belongsToMany(User::class,'team_users','team_id','user_id')
+        ->withPivot('valid_from','valid_to');
+    }
 }

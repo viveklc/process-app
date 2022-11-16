@@ -30,34 +30,7 @@ class User extends Authenticatable implements HasMedia
      * @var array<int, string>
      */
     public $fillable  = [
-        'role_id',
-        'name',
-        'first_name',
-        'last_name',
-        'email',
-        'user_phone',
-        'user_type',
-        'user_name',
-        'email_verified_at',
-        'password',
-        'birthday',
-        'gender',
-        'invited_by_user_id',
-        'is_verified',
-        'verifiedby_userid',
-        'verified_on',
-        'about_the_user',
-        'intro',
-        'health_information_title',
-        'health_information_details',
-        'health_information_date',
-        'health_information_info_url',
-        'user_status',
-        'is_active',
-        'status',
-        'createdby_userid',
-        'updatedby_userid',
-        'remember_token',
+        'org_id','name','username','email','password','phone','image_url','is_org_admin'
     ];
 
     /**
@@ -205,5 +178,27 @@ class User extends Authenticatable implements HasMedia
     public function quizLeaderboards()
     {
         return $this->hasMany(QuizLeaderboard::class);
+    }
+
+    /**
+     * code for process applicaiton
+     */
+
+    public function org(){
+        return $this->belongsTo(Org::class);
+    }
+
+    public function userDeptRoles()
+    {
+        return $this->belongsToMany(Dept::class,'user_org_roles','user_id','dept_id')
+        ->withPivot('current_role','valid_from','valid_to');
+    }
+
+    public function collegues(){
+        return $this->hasMany(User::class,'is_colleague_of_user_id');
+    }
+
+    public function reportTo(){
+        return $this->hasMany(User::class,'reports_to_user_id');
     }
 }
