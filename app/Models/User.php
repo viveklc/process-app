@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Activity\UserInvite;
 use App\Traits\ModelScopes;
 use Spatie\Image\Manipulations;
 use App\Traits\CreatedUpdatedBy;
@@ -194,11 +195,17 @@ class User extends Authenticatable implements HasMedia
         ->withPivot('current_role','valid_from','valid_to');
     }
 
-    public function collegues(){
+    public function collegues()
+    {
         return $this->hasMany(User::class,'is_colleague_of_user_id');
     }
 
-    public function reportTo(){
+    public function reportTo()
+    {
         return $this->hasMany(User::class,'reports_to_user_id');
+    }
+
+    public function Invites(){
+        return $this->hasMany(UserInvite::class,'invited_by_user_id');
     }
 }

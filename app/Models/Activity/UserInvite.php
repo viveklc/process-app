@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Activity;
 
-use App\Models\Activity\UserInvite;
+use App\Models\Org;
+use App\Models\Team;
+use App\Models\User;
 use App\Traits\CreatedUpdatedBy;
 use App\Traits\ModelScopes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 
-class Team extends Model
+class UserInvite extends Model
 {
     use HasFactory, LogsActivity;
     use CreatedUpdatedBy, ModelScopes;
@@ -20,17 +22,20 @@ class Team extends Model
     /** Spatie Activity Log */
     public function getActivitylogOptions(): LogOptions // spatie model log options
     {
-        return LogOptions::defaults()->logAll()->useLogName('Team');
+        return LogOptions::defaults()->logAll()->useLogName('UserInvite');
     }
 
-    public function teamUser()
-    {
-        return $this->belongsToMany(User::class,'team_users','team_id','user_id')
-        ->withPivot('valid_from','valid_to');
+    public function users(){
+        return $this->belongsTo(User::class);
     }
 
-    public function hasInvites()
-    {
-        return $this->hasMany(UserInvite::class,'team_id');
+    public function team(){
+        return $this->belongsTo(Team::class);
     }
+
+    public function org(){
+        return $this->belongsTo(Org::class);
+    }
+
+
 }
