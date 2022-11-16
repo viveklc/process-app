@@ -21,7 +21,8 @@ use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\SchoolController;
-
+use App\Http\Controllers\OrgController;
+use App\Http\Controllers\DeptController;
 Route::get('/', function () {
     return view('welcome');
 });
