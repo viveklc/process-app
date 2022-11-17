@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-
 class StoreDeptRequest extends FormRequest
 {
     /**
@@ -24,7 +23,15 @@ class StoreDeptRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'org_id' => [
+                'nullable'
+            ],
+            'name' => [
+                'nullable'
+            ],
+            'description' => [
+                'nullable'
+            ]
         ];
     }
 }

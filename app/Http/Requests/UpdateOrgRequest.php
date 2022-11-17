@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-
 class UpdateOrgRequest extends FormRequest
 {
     /**
@@ -24,7 +23,23 @@ class UpdateOrgRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => [
+                'required',
+                'string',
+                'max:191'
+            ],
+            'plan_id' => [
+                'nullable'
+            ],
+            'address' => [
+                'nullable'
+            ],
+            // 'image_url' => [
+            //     'nullable'
+            // ],
+            'is_premium' => [
+                'nullable'
+            ]
         ];
     }
 }
