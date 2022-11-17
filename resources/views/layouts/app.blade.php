@@ -15,6 +15,10 @@
 
         <!-- Scripts -->
         <script src="{{ asset('js/app.js') }}" defer></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+        <!-- Include the plugin's CSS and JS: -->
+  <script src="{{ asset('js/bootstrap-multiselect.min.js') }}"></script>
+  <link rel="stylesheet" href="{{ asset('css/bootstrap-multiselect.min.css') }}" type="text/css"/>
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">

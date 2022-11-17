@@ -21,6 +21,7 @@ use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\SchoolController;
+use App\Http\Controllers\Team\TeamController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -90,6 +91,22 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function() {
 
     Route::delete('books/destroy', [BookController::class, 'massDestroy'])->name('books.massDestroy');
     Route::resource('books', BookController::class);
+
+    /**
+     * team related routes
+     */
+
+     Route::prefix('team')->group(function(){
+        Route::get('',[TeamController::class,'index'])->name('team.index');
+        Route::get('create',[TeamController::class,'create'])->name('teams.create');
+        Route::post('store',[TeamController::class,'store'])->name('team.store');
+        Route::put('update/{id}',[TeamController::class,'update'])->name('team.update');
+        Route::get('{id}/edit',[TeamController::class,'edit'])->name('team.edit');
+        Route::delete('delete/{id}',[TeamController::class,'destroy'])->name('team.destroy');
+        Route::prefix('user')->group(function(){
+            Route::get('',[TeamController::class,'TeamUsers'])->name('team.user.index');
+        });
+     });
 });
 
 require __DIR__.'/auth.php';
