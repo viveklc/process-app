@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Activity\ProcessInstance;
 use App\Models\Activity\UserInvite;
 use App\Traits\ModelScopes;
 use Spatie\Image\Manipulations;
@@ -31,7 +32,7 @@ class User extends Authenticatable implements HasMedia
      * @var array<int, string>
      */
     public $fillable  = [
-        'org_id','name','username','email','password','phone','image_url','is_org_admin'
+        'org_id', 'name', 'username', 'email', 'password', 'phone', 'image_url', 'is_org_admin'
     ];
 
     /**
@@ -104,7 +105,7 @@ class User extends Authenticatable implements HasMedia
         $medias = $this->getMedia('profile_photo');
 
         $returnMedias = [];
-        foreach($medias as $media ) {
+        foreach ($medias as $media) {
             $returnMedia = [
                 'id' => $media->id,
                 'original_url' => $media->original_url,
@@ -122,7 +123,7 @@ class User extends Authenticatable implements HasMedia
 
     public function fullName()
     {
-        return $this->first_name.' '.$this->last_name;
+        return $this->first_name . ' ' . $this->last_name;
     }
 
     /** Relationship */
@@ -185,27 +186,34 @@ class User extends Authenticatable implements HasMedia
      * code for process applicaiton
      */
 
-    public function org(){
+    public function org()
+    {
         return $this->belongsTo(Org::class);
     }
 
     public function userDeptRoles()
     {
-        return $this->belongsToMany(Dept::class,'user_org_roles','user_id','dept_id')
-        ->withPivot('current_role','valid_from','valid_to');
+        return $this->belongsToMany(Dept::class, 'user_org_roles', 'user_id', 'dept_id')
+            ->withPivot('current_role', 'valid_from', 'valid_to');
     }
 
     public function collegues()
     {
-        return $this->hasMany(User::class,'is_colleague_of_user_id');
+        return $this->hasMany(User::class, 'is_colleague_of_user_id');
     }
 
     public function reportTo()
     {
-        return $this->hasMany(User::class,'reports_to_user_id');
+        return $this->hasMany(User::class, 'reports_to_user_id');
     }
 
-    public function Invites(){
-        return $this->hasMany(UserInvite::class,'invited_by_user_id');
+    public function Invites()
+    {
+        return $this->hasMany(UserInvite::class, 'invited_by_user_id');
+    }
+
+    public function assignedProcessInstance()
+    {
+        return $this->hasMany(ProcessInstance::class, 'assigned_to_user_id', 'id');
     }
 }

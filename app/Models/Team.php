@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Activity\ProcessInstance;
 use App\Models\Activity\UserInvite;
 use App\Traits\CreatedUpdatedBy;
 use App\Traits\ModelScopes;
@@ -25,12 +26,17 @@ class Team extends Model
 
     public function teamUser()
     {
-        return $this->belongsToMany(User::class,'team_users','team_id','user_id')
-        ->withPivot('valid_from','valid_to');
+        return $this->belongsToMany(User::class, 'team_users', 'team_id', 'user_id')
+            ->withPivot('valid_from', 'valid_to');
     }
 
     public function hasInvites()
     {
-        return $this->hasMany(UserInvite::class,'team_id');
+        return $this->hasMany(UserInvite::class, 'team_id');
+    }
+
+    public function hasProcessInstance()
+    {
+        return $this->hasMany(ProcessInstance::class, 'team_id');
     }
 }

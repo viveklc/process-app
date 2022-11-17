@@ -47,7 +47,6 @@ return new class extends Migration
             $table->unsignedInteger('completed_by_user_id')->nullable()->index();
             $table->integer('status')->nullable()->comment('1 [scheduled] 2[in-progress] 3[complete]');
             $table->integer('is_active')->default('1')->comment('1[Active] 2[Inactive] 3[Deleted]');
-            $table->string('status')->nullable();
             $table->unsignedBigInteger('createdby_userid')->nullable();
             $table->unsignedBigInteger('updatedby_userid')->nullable();
             $table->timestamps();

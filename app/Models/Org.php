@@ -43,4 +43,6 @@ class Org extends Model
     {
         return $this->hasMany(UserInvite::class,'org_id');
     }
+
+
 }

@@ -21,4 +21,9 @@ class StepInstance extends Model
     {
         return LogOptions::defaults()->logAll()->useLogName('StepInstance');
     }
+
+    public function hasComments()
+    {
+        return $this->hasMany(Comment::class, 'step_instance_id');
+    }
 }

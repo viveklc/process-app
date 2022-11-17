@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Activity\ProcessInstance;
 use App\Traits\CreatedUpdatedBy;
 use App\Traits\ModelScopes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -32,6 +33,10 @@ class Dept extends Model
     {
         return $this->belongsToMany(User::class,'dept_users','dept_id','user_id')
         ->withPivot('valid_from','valid_to');
+    }
+
+    public function hasProcessInstance(){
+        return $this->hasMany(ProcessInstance::class,'dept_id','id');
     }
 
 

@@ -2,6 +2,10 @@
 
 namespace App\Models\Activity;
 
+use App\Models\Dept;
+use App\Models\Org;
+use App\Models\Team;
+use App\Models\User;
 use App\Traits\CreatedUpdatedBy;
 use App\Traits\ModelScopes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,5 +24,30 @@ class ProcessInstance extends Model
     public function getActivitylogOptions(): LogOptions // spatie model log options
     {
         return LogOptions::defaults()->logAll()->useLogName('ProcessInstance');
+    }
+
+    public function org()
+    {
+        return $this->belongsTo(Org::class);
+    }
+
+    public function depts()
+    {
+        return $this->belongsTo(Dept::class);
+    }
+
+    public function team()
+    {
+        return $this->belongsTo(Team::class);
+    }
+
+    public function assignedTo()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function hasComments()
+    {
+        return $this->hasMany(Comment::class, 'process_instances_id', 'id');
     }
 }

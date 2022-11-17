@@ -29,7 +29,6 @@ return new class extends Migration
             $table->timestamp('actual_enddate')->nullable();
             $table->integer('actual_duration')->nullable();
             $table->unsignedInteger('assigned_to_user_id')->nullable()->index();
-            $table->string('status')->nullable()->comment('[added] [rejected] [published]');
             $table->integer('is_active')->default('1')->comment('1[Active] 2[Inactive] 3[Deleted]');
             $table->integer('status')->nullable()->comment('1[added] 2[rejected] 3[published]');
             $table->unsignedBigInteger('createdby_userid')->nullable();
