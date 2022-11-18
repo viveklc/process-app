@@ -82,23 +82,27 @@
                                             <th>Name</th>
                                             <th>Email</th>
                                             <th>Phone</th>
-                                            <th>Role</th>
+                                            {{-- <th>Role</th> --}}
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @forelse ($users as $i=>$item)
                                         <tr>
-                                            <td>1</td>
-                                            <td>Nitish Jha</td>
-                                            <td>ernitish1993@gmail.com</td>
-                                            <td>+919082415301</td>
-                                            <td>Employee</td>
+                                            <td>{{ $i+1 }}</td>
+                                            <td>{{ $item->name }}</td>
+                                            <td>{{$item->email}}</td>
+                                            <td>{{ $item->phone }}</td>
+
                                             <td>
 
                                                 <a href="#" title="Remove User" class="btn-link"><i
                                                         class="fa fa-trash"></i></a>
                                             </td>
                                         </tr>
+                                        @empty
+                                            <tr align="center"><td>No User Found</td></tr>
+                                        @endforelse
 
                                     </tbody>
                                 </table>

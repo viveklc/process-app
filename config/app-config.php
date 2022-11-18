@@ -1,6 +1,7 @@
 <?php
 
     return [
+        'per_page' => env('PER_PAGE',10),
         /*
         | Application display date format
         */

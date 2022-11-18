@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Activity\ProcessInstance;
 use App\Models\Activity\UserInvite;
 use App\Traits\CreatedUpdatedBy;
+use App\Traits\ModelAccessor;
 use App\Traits\ModelScopes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +15,7 @@ use Spatie\Activitylog\LogOptions;
 class Team extends Model
 {
     use HasFactory, LogsActivity;
-    use CreatedUpdatedBy, ModelScopes;
+    use CreatedUpdatedBy, ModelScopes,ModelAccessor;
 
     protected $guarded = [];
 
@@ -38,5 +39,9 @@ class Team extends Model
     public function hasProcessInstance()
     {
         return $this->hasMany(ProcessInstance::class, 'team_id');
+    }
+
+    public function scopeWithFilter($query,$filter){
+
     }
 }

@@ -75,7 +75,7 @@
                         <div class="card-body pt-0">
                             <!--begin::Table-->
                             <div class="table-responsive">
-                                <table class="table table-bordered">
+                                <table class="table table-bordered datatable datatable-Cities">
                                     <thead>
                                         <tr>
                                             <th width="10">#</th>
@@ -87,16 +87,17 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @forelse ($teams as $i=>$item)
                                         <tr>
-                                            <td>1</td>
-                                            <td>My Team</td>
-                                            <td>Org name</td>
-                                            <td>17-11-2022</td>
-                                            <td>21-11-2022</td>
+                                            <td></td>
+                                            <td>{{$item->team_name}}</td>
+                                            <td>{{ $item->org_name }}</td>
+                                            <td>{{ $item->valid_from }}</td>
+                                            <td>{{ $item->valid_to }}</td>
                                             <td>
-                                                <a href="{{ route('admin.team.user.index') }}" title="Team Users" class="btn-link"><i
+                                                <a href="{{ route('admin.team.user.index',$item->id) }}" title="Team Users" class="btn-link"><i
                                                         class="fa fa-users"></i></a>&nbsp;&nbsp;
-                                                <a href="#" title="Edit Team" class="btn-link"><i
+                                                <a href="{{ route('admin.team.edit',$item->id) }}" title="Edit Team" class="btn-link"><i
                                                         class="fa fa-pencil"></i></a>&nbsp;&nbsp;
                                                 <a href="#" title="View Team" class="btn-link"><i
                                                         class="fa fa-eye"></i></a>&nbsp;&nbsp;
@@ -104,6 +105,11 @@
                                                         class="fa fa-trash"></i></a>
                                             </td>
                                         </tr>
+                                        @empty
+                                            <tr align="center">
+                                                <td>No Team Found</td>
+                                            </tr>
+                                        @endforelse
 
                                     </tbody>
                                 </table>
@@ -122,4 +128,118 @@
         <!--end::Content wrapper-->
     </div>
     <!--end:::Main-->
+@endsection
+@section('scripts')
+    @parent
+    <script>
+        var table;
+        $(function() {
+            let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
+
+            @can('delete-country')
+                let deleteButtonTrans = '{{ trans('global.delete') }}'
+                let deleteButton = {
+                    text: deleteButtonTrans,
+                    url: "{{ route('admin.subjects.massDestroy') }}",
+                    className: 'btn btn-sm btn-danger',
+                    action: function(e, dt, node, config) {
+                        var ids = $.map(dt.rows({
+                            selected: true
+                        }).nodes(), function(entry) {
+                            return $(entry).data('entry-id')
+                        });
+
+                        if (ids.length === 0) {
+                            Swal.fire(
+                                '{{ trans('global.message') }}!',
+                                '{{ trans('global.grid.no_item_selected') }}',
+                            )
+                            return
+                        }
+
+                        Swal.fire({
+                            title: '{{ trans('global.are_you_sure') }}',
+                            text: '{{ trans('global.are_you_sure_delete_msg') }}',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#d33',
+                            cancelButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $.ajax({
+                                        headers: {
+                                            'x-csrf-token': _token
+                                        },
+                                        method: 'POST',
+                                        url: config.url,
+                                        data: {
+                                            ids: ids,
+                                            _method: 'DELETE'
+                                        }
+                                    })
+                                    .done(function() {
+                                        Swal.fire(
+                                            '{{ trans('global.delete') }}!',
+                                            '{{ trans('global.success') }}'
+                                        );
+
+                                        location.reload()
+                                    })
+                            }
+                        })
+                    }
+                }
+                dtButtons.push(deleteButton)
+            @endcan
+
+            $.extend(true, $.fn.dataTable.defaults, {
+                orderCellsTop: true,
+                paging: false,
+                language: {
+                    infoEmpty: "{{ trans('global.grid_no_data') }}",
+                    @if ($teams->count())
+                        info: '{{ trans('global.grid_pagination_count_status', [
+                            'firstItem' => $teams->firstItem(),
+                            'lastItem' => $teams->lastItem(),
+                            'total' => $teams->total(),
+                        ]) }}',
+                    @endif
+                },
+            });
+
+            table = $('.datatable-Cities:not(.ajaxTable)').DataTable({
+                buttons: dtButtons
+            })
+            $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e) {
+                $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+            });
+
+            // datatable search functionality
+            $('#dtToggleActionBtns').tooltip({
+                'trigger': 'hover',
+                'title': '{{ trans('global.grid.toggle_action_buttons_tooltip') }}'
+            });
+            $('#dataTableSearch').tooltip({
+                'trigger': 'focus',
+                'title': '{{ trans('global.grid.search_tooltip') }}'
+            });
+
+            $('#dataTableSearch').on('keyup', function(e) {
+                if (e.which == 13) { // if user press enter in search text input
+                    let requestParameters = [];
+
+                    let searchText = $('#dataTableSearch').val();
+                    if ($.trim(searchText) != '') {
+                        requestParameters.push('s=' + $.trim(searchText));
+                    }
+
+                    window.location.href = '{{ route('admin.subjects.index') }}' + generateQueryString(
+                        requestParameters);
+                } else {
+                    table.search(this.value).draw();
+                }
+            });
+        })
+    </script>
 @endsection

@@ -104,7 +104,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function() {
         Route::get('{id}/edit',[TeamController::class,'edit'])->name('team.edit');
         Route::delete('delete/{id}',[TeamController::class,'destroy'])->name('team.destroy');
         Route::prefix('user')->group(function(){
-            Route::get('',[TeamController::class,'TeamUsers'])->name('team.user.index');
+            Route::get('{id}',[TeamController::class,'TeamUsers'])->name('team.user.index');
         });
      });
 });

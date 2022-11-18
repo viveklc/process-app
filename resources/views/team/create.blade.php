@@ -1,11 +1,17 @@
 @extends('layouts.admin')
 @section('content')
+
+    @if (Session::has('success'))
+        <div class="alert alert-success">{{Session::get('success')}}</div>
+    @endif
+
     <!--begin::Main-->
     <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
         <!--begin::Content wrapper-->
         <div class="d-flex flex-column flex-column-fluid">
             <!--begin::Toolbar-->
             <div id="kt_app_toolbar" class="app-toolbar py-3 py-lg-6">
+
                 <!--begin::Toolbar container-->
                 <div id="kt_app_toolbar_container" class="app-container container-xxl d-flex flex-stack">
                     <!--begin::Page title-->
@@ -45,29 +51,34 @@
                     <div class="card">
                         <!--begin::Card body-->
                         <div class="card-body pt-7">
-                            <form id="" class="form" method="POST" action="{{ route('admin.classes.store') }}"
+                            <form id="" class="form" method="POST" action="{{ route('admin.team.store') }}"
                                 enctype="multipart/form-data">
                                 @csrf
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label for="">Organisation</label>
                                         <select name="org_id" id="" class="form-control">
-                                            <option value="1">Org 1</option>
+                                            @forelse ($org as $item)
+                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                            @empty
+                                                <option value="">No Org</option>
+                                            @endforelse
                                         </select>
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label for="">Team Name</label>
-                                        <input type="text" name="team_name" class="form-control">
+                                        <input type="text" name="team_name" class="form-control"
+                                            value="{{ old('team_name', '') }}">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-md-6">
                                         <label for="">Description</label>
-                                        <textarea name="team_description" class="form-control"></textarea>
+                                        <textarea name="team_description" class="form-control">{{ old('team_description') }}</textarea>
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label for="">Remarks</label>
-                                        <textarea name="team_remarks" class="form-control"></textarea>
+                                        <textarea name="team_remarks" class="form-control">{{ old('team_remarks') }}</textarea>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -77,7 +88,7 @@
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label for="">Valid To</label>
-                                        <input type="date" name="valid_from" class="form-control">
+                                        <input type="date" name="valid_to" class="form-control">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -86,13 +97,12 @@
                                         {{-- <select name="user[]" id="users" class="form-control">
 
                                 </select> --}}
-                                        <select id="example-getting-started" class="form-control" multiple="multiple">
-                                            <option value="cheese">Cheese</option>
-                                            <option value="tomatoes">Tomatoes</option>
-                                            <option value="mozarella">Mozzarella</option>
-                                            <option value="mushrooms">Mushrooms</option>
-                                            <option value="pepperoni">Pepperoni</option>
-                                            <option value="onions">Onions</option>
+                                        <select id="example-getting-started" name="user_id[]" class="form-control"
+                                            multiple="multiple">
+                                            @forelse ($users as $item)
+                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                            @empty
+                                            @endforelse
                                         </select>
                                     </div>
                                 </div>

@@ -3,6 +3,12 @@
 namespace App\Http\Controllers\Team;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Team\TeamRequest;
+use App\Models\Org;
+use App\Models\Team;
+use App\Services\OrgService;
+use App\Services\TeamService;
+use Exception;
 use Illuminate\Http\Request;
 
 class TeamController extends Controller
@@ -12,9 +18,12 @@ class TeamController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('team.index');
+        $teams = TeamService::getTeamByOrgId($request,1);
+        // dd($teams);
+
+        return view('team.index',compact('teams'));
         // return "hI";
     }
 
@@ -23,9 +32,12 @@ class TeamController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('team.create');
+        $org= OrgService::getOrg($request,['id','name']);
+        $users = OrgService::getUser(1);
+        $users= $users->users;
+        return view('team.create',compact('org','users'));
     }
 
     /**
@@ -34,9 +46,15 @@ class TeamController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TeamRequest $request)
     {
-        //
+        // dd($request->all());
+        try{
+            TeamService::storeTeam($request);
+            return back()->with('success','Team created successfully');
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
     }
 
     /**
@@ -56,9 +74,19 @@ class TeamController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request,$id)
     {
-        //
+        $teamuserId = [];
+        $team = Team::findOrFail($id);
+        $org= OrgService::getOrg($request,['id','name']);
+        $users = OrgService::getUser(1);
+        $users= $users->users;
+        // dd($team->teamUser);
+        foreach($team->teamUser as $t){
+            array_push($teamuserId,$t->id);
+        }
+        // dd($teamuserId);
+        return view('team.edit',compact('team','org','users','teamuserId'));
     }
 
     /**
@@ -68,9 +96,14 @@ class TeamController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(TeamRequest $request, $id)
     {
-        //
+        try{
+            TeamService::updateTeam($request,$id);
+            return back()->with('success','Team Updated Successfully');
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
     }
 
     /**
@@ -88,7 +121,10 @@ class TeamController extends Controller
      * team users
      */
 
-     public function TeamUsers(){
-        return view('team.team-users.index');
+     public function TeamUsers($id){
+        $users = Team::find($id);
+        $users = $users->teamUser;
+        // dd($users);
+        return view('team.team-users.index',compact('users'));
      }
 }
