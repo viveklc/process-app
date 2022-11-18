@@ -71,7 +71,6 @@
                                         <!--end::Label-->
                                         <select class="form-select form-control form-select-solid select2 {{ $errors->has('plan_id') ? 'is-invalid' : '' }}"  style="width: 100%;" name="plan_id"  required >
                                             <option value="" >Please Select</option>
-                                            <option value="1" >Demo</option>
                                         </select>
                                     </div>
                                 <!--end::Input group-->

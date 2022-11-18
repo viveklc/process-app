@@ -34,9 +34,9 @@ class UpdateOrgRequest extends FormRequest
             'address' => [
                 'nullable'
             ],
-            // 'image_url' => [
-            //     'nullable'
-            // ],
+            'image_url' => [
+                'nullable'
+            ],
             'is_premium' => [
                 'nullable'
             ]

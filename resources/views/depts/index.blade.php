@@ -152,7 +152,9 @@
                                     </tbody>
                                    
                                 </table>
-                               
+                                @if ($depts->count())
+                                    {{ $depts->links() }}
+                                @endif
                             </div>
                             <!--end::Table-->
                         </div>
@@ -167,4 +169,118 @@
         <!--end::Content wrapper-->
     </div>
     <!--end:::Main-->
+@endsection
+@section('scripts')
+    @parent
+    <script>
+        var table;
+        $(function() {
+            let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
+
+            // can('delete-dept')
+                let deleteButtonTrans = '{{ trans('global.delete') }}'
+                let deleteButton = {
+                    text: deleteButtonTrans,
+                    url: "{{ route('admin.depts.massDestroy') }}",
+                    className: 'btn btn-sm btn-danger',
+                    action: function(e, dt, node, config) {
+                        var ids = $.map(dt.rows({
+                            selected: true
+                        }).nodes(), function(entry) {
+                            return $(entry).data('entry-id')
+                        });
+
+                        if (ids.length === 0) {
+                            Swal.fire(
+                                '{{ trans('global.message') }}!',
+                                '{{ trans('global.grid.no_item_selected') }}',
+                            )
+                            return
+                        }
+
+                        Swal.fire({
+                            title: '{{ trans('global.are_you_sure') }}',
+                            text: '{{ trans('global.are_you_sure_delete_msg') }}',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#d33',
+                            cancelButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $.ajax({
+                                        headers: {
+                                            'x-csrf-token': _token
+                                        },
+                                        method: 'POST',
+                                        url: config.url,
+                                        data: {
+                                            ids: ids,
+                                            _method: 'DELETE'
+                                        }
+                                    })
+                                    .done(function() {
+                                        Swal.fire(
+                                            '{{ trans('global.delete') }}!',
+                                            '{{ trans('global.success') }}'
+                                        );
+
+                                        location.reload()
+                                    })
+                            }
+                        })
+                    }
+                }
+                dtButtons.push(deleteButton)
+            // endcan
+
+            $.extend(true, $.fn.dataTable.defaults, {
+                orderCellsTop: true,
+                paging: false,
+                language: {
+                    infoEmpty: "{{ trans('global.grid_no_data') }}",
+                    @if ($depts->count())
+                        info: '{{ trans('global.grid_pagination_count_status', [
+                            'firstItem' => $depts->firstItem(),
+                            'lastItem' => $depts->lastItem(),
+                            'total' => $depts->total(),
+                        ]) }}',
+                    @endif
+                },
+            });
+
+            table = $('.datatable-Cities:not(.ajaxTable)').DataTable({
+                buttons: dtButtons
+            })
+            $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e) {
+                $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+            });
+
+            // datatable search functionality
+            $('#dtToggleActionBtns').tooltip({
+                'trigger': 'hover',
+                'title': '{{ trans('global.grid.toggle_action_buttons_tooltip') }}'
+            });
+            $('#dataTableSearch').tooltip({
+                'trigger': 'focus',
+                'title': '{{ trans('global.grid.search_tooltip') }}'
+            });
+
+            $('#dataTableSearch').on('keyup', function(e) {
+                if (e.which == 13) { // if user press enter in search text input
+                    let requestParameters = [];
+
+                    let searchText = $('#dataTableSearch').val();
+                    if ($.trim(searchText) != '') {
+                        requestParameters.push('s=' + $.trim(searchText));
+                    }
+
+                    window.location.href = '{{ route('admin.depts.index') }}' + generateQueryString(
+                        requestParameters);
+                } else {
+                    table.search(this.value).draw();
+                }
+            });
+        })
+    </script>
 @endsection

@@ -46,7 +46,7 @@
                         <!--begin::Card body-->
                         <div class="card-body pt-7">
                             <form id="kt_subscriptions_export_form" class="form" method="POST"
-                                action="{{ route('admin.depts.store') }}" enctype="multipart/form-data">
+                                action="{{ route('admin.depts.store') }}">
                                 @csrf
                                 <!--begin::Input group-->
                                 <div class="d-flex flex-column mb-8 fv-row">
@@ -86,7 +86,7 @@
                                     <span class="required">Description</span>
                                     </label>
                                     <!--end::Label-->
-                                    <textarea class="form-control form-control-solid  {{ $errors->has('description') ? 'is-invalid' : '' }}" placeholder="Long Description" name="description"  required cols="30" rows="5"></textarea>
+                                    <textarea class="form-control form-control-solid  {{ $errors->has('description') ? 'is-invalid' : '' }}" placeholder="Description" name="description"  required cols="30" rows="5"></textarea>
                                 </div>
                                 <!--end::Input group-->
 

@@ -1,11 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
+use Alert;
 use App\Models\Dept;
 use App\Models\Org;
 use App\Http\Requests\StoreDeptRequest;
 use App\Http\Requests\MassDestroyDeptRequest;
 use App\Http\Requests\UpdateDeptRequest;
+use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -18,7 +20,13 @@ class DeptController extends Controller
      */
     public function index(Request $request)
     {
-        $depts = Dept::with('media')
+        $inputSearchString = $request->input('s', '');
+
+        $depts = Dept::when($inputSearchString, function($query) use ($inputSearchString) {
+            $query->where(function($query) use ($inputSearchString) {
+                $query->orWhere('name', 'LIKE', '%'.$inputSearchString.'%');
+            });
+        })
             ->isActive()
             ->orderBy('name')
             ->paginate(config('app-config.datatable_default_row_count', 25))
@@ -113,7 +121,7 @@ class DeptController extends Controller
      */
     public function destroy(Dept $dept)
     {
-        // abort_if(!auth()->user()->can('delete-course'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        // abort_if(!auth()->user()->can('delete-dept'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $dept->update([
             'is_active' => 3
@@ -125,10 +133,10 @@ class DeptController extends Controller
     public function massDestroy(MassDestroyDeptRequest $request)
     {
         Dept::whereIn('id', request('ids'))
-        ->update([
-            'is_active' => 3,
-            'updatedby_userid' => auth()->id(),
-        ]);
+            ->update([
+                'is_active' => 3,
+                'updatedby_userid' => auth()->id(),
+            ]);
 
         return response(null, Response::HTTP_NO_CONTENT);
     }

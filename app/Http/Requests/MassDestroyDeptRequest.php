@@ -24,10 +24,8 @@ class MassDestroyDeptRequest extends FormRequest
     public function rules()
     {
         return [
-            return [
-                'ids'   => 'required|array',
-                'ids.*' => 'exists:depts,id',
-            ];
+            'ids'   => 'required|array',
+            'ids.*' => 'exists:depts,id',
         ];
     }
 }

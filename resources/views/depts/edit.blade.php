@@ -83,10 +83,10 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                    <span class="required">Long Description</span>
+                                    <span class="required">Description</span>
                                     </label>
                                     <!--end::Label-->
-                                    <textarea class="form-control form-control-solid  {{ $errors->has('description') ? 'is-invalid' : '' }}" placeholder="Long Description" name="description"  required cols="30" rows="5" >{{ old('description', $dept->description) }}</textarea>
+                                    <textarea class="form-control form-control-solid  {{ $errors->has('description') ? 'is-invalid' : '' }}" placeholder="Description" name="description"  required cols="30" rows="5" >{{ old('description', $dept->description) }}</textarea>
                                 </div>
                                 <!--end::Input group-->
 

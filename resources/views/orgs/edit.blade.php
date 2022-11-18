@@ -71,7 +71,6 @@
                                         <!--end::Label-->
                                         <select class="form-select form-control form-select-solid select2 {{ $errors->has('plan_id') ? 'is-invalid' : '' }}"  style="width: 100%;" name="plan_id"  required >
                                             <option value="" >Please Select</option>
-                                           
                                         </select>
                                     </div>
                                 <!--end::Input group-->
@@ -97,7 +96,7 @@
                                     <input type="file"
                                         class="form-control form-control-solid  {{ $errors->has('image_url') ? 'is-invalid' : '' }}"
                                         placeholder="Image" name="image_url"  />
-                                    <br />
+                                        <br />
                                     @if($org->getFirstMediaUrl('Org'))
                                         <a href="{{ $org->getFirstMediaUrl('Org') }}" target="_BLANK">
                                             <img src="{{ $org->getFirstMediaUrl('Org', 'thumb') }}" />

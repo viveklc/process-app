@@ -21,7 +21,16 @@ class OrgController extends Controller
     {
         // abort_if(!auth()->user()->can('read-Org'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         
-        $orgs = Org::with('media')
+        $inputSearchString = $request->input('s', '');
+
+        $orgs = collect([]);
+
+        $orgs = Org::with('media')->when($inputSearchString, function($query) use ($inputSearchString) {
+            $query->where(function($query) use ($inputSearchString) {
+                $query->orWhere('name', 'LIKE', '%'.$inputSearchString.'%');
+
+            });
+        })
             ->isActive()
             ->orderBy('name')
             ->paginate(config('app-config.datatable_default_row_count', 25))
@@ -93,12 +102,15 @@ class OrgController extends Controller
      */
     public function update(UpdateOrgRequest $request, Org $org)
     {
+       
         $org->update($request->safe()->only(['name','plan_id', 'address', 'is_premium']));
 
-        if($request->hasFile('image') && $request->file('image')->isValid()) {
-            $org->addMedia($request->file('image'))->toMediaCollection('Org');
+        
+        if($request->hasFile('image_url') && $request->file('image_url')->isValid()) {
+            $org->media()->delete();
+            $org->addMedia($request->file('image_url'))->toMediaCollection('Org');
         }
-
+       
         toast(__('global.crud_actions', ['module' => 'Org', 'action' => 'updated']), 'success');
         return redirect()->route('admin.orgs.index');
     }
@@ -111,7 +123,7 @@ class OrgController extends Controller
      */
     public function destroy(Org $org)
     {
-        // abort_if(!auth()->user()->can('delete-course'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        // abort_if(!auth()->user()->can('delete-org'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $org->update([
             'is_active' => 3
