@@ -78,7 +78,7 @@
                                 <table class="table table-bordered datatable datatable-Cities">
                                     <thead>
                                         <tr>
-                                            <th width="10">#</th>
+                                            <th width="10"></th>
                                             <th>Team Name</th>
                                             <th>Organisation</th>
                                             <th>Valid From</th>
@@ -88,7 +88,7 @@
                                     </thead>
                                     <tbody>
                                         @forelse ($teams as $i=>$item)
-                                        <tr>
+                                        <tr data-entry-id="{{ $item->id }}">
                                             <td></td>
                                             <td>{{$item->team_name}}</td>
                                             <td>{{ $item->org_name }}</td>
@@ -181,11 +181,11 @@
         $(function() {
             let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
 
-            @can('delete-country')
+            @can('delete-team')
                 let deleteButtonTrans = '{{ trans('global.delete') }}'
                 let deleteButton = {
                     text: deleteButtonTrans,
-                    url: "{{ route('admin.subjects.massDestroy') }}",
+                    url: "{{ route('admin.team.massdestroy') }}",
                     className: 'btn btn-sm btn-danger',
                     action: function(e, dt, node, config) {
                         var ids = $.map(dt.rows({

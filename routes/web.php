@@ -103,6 +103,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function() {
         Route::put('update/{id}',[TeamController::class,'update'])->name('team.update');
         Route::get('{id}/edit',[TeamController::class,'edit'])->name('team.edit');
         Route::delete('delete/{id}',[TeamController::class,'destroy'])->name('team.destroy');
+        Route::delete('massdestroy',[TeamController::class,'massDestroy'])->name('team.massdestroy');
         Route::prefix('user')->group(function(){
             Route::get('{id}',[TeamController::class,'TeamUsers'])->name('team.user.index');
             Route::post('add',[TeamController::class,'addUserToTeam'])->name('team.user.add');

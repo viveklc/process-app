@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Team;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\MassRemoveUserFromTeam;
 use App\Http\Requests\Team\AddUserToTeamRequest;
+use App\Http\Requests\Team\MassDestroyTeamRequest;
 use App\Http\Requests\Team\StoreTeamRequest;
 use App\Http\Requests\Team\UpdateTeamRequest;
 use App\Models\Org;
@@ -162,8 +164,16 @@ class TeamController extends Controller
             'is_active'=>3
         ]);
         return back()->with('success','Team deleted successfully');
+    }
 
-        //
+    public function massDestroy(MassDestroyTeamRequest $request){
+        Team::whereIn('id', $request->input('ids'))
+            ->update([
+                'is_active' => 3,
+                'updatedby_userid' => auth()->user()->id,
+            ]);
+
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 
     /**
@@ -192,9 +202,13 @@ class TeamController extends Controller
         return back()->with('success','User added to team');
     }
 
-    public function removeUserFromTeam($user_id)
+    public function removeUserFromTeam(MassRemoveUserFromTeam $request)
     {
         abort_if(!auth()->user()->can('delete-team-user'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $team =Team::find($request->input('team_id'));
+        $team->teamUser()->detach($request->input('ids'));
+
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 
     public function getIdFromUser($users){
@@ -202,6 +216,7 @@ class TeamController extends Controller
         foreach($users as $user){
             array_push($id,$user->id);
         }
+
         return $id;
     }
 }
