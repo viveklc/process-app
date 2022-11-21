@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Symfony\Component\HttpFoundation\Response;
 class StoreOrgRequest extends FormRequest
 {
     /**
@@ -12,7 +13,7 @@ class StoreOrgRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        abort_if(!auth()->user()->can('create-org'), Response::HTTP_FORBIDDEN, '403 Forbidden');
     }
 
     /**
@@ -29,16 +30,23 @@ class StoreOrgRequest extends FormRequest
                 'max:191'
             ],
             'plan_id' => [
-                'nullable'
+                'required',
+                'exists:plans,id'
             ],
             'address' => [
-                'nullable'
+                'required'
             ],
-            // 'image_url' => [
-            //     'nullable'
-            // ],
+            'image_url' => [
+                'required',
+                'image',
+                'mimes:jpeg, png, jpg',
+                'max:2048'
+            ],
             'is_premium' => [
-                'nullable'
+                'nullable',
+                'integer',
+                'max:191',
+                'in:1,2'
             ]
         ];
     }

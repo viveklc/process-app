@@ -1,11 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-use Alert;
 use App\Models\Org;
 use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreOrgRequest;
 use App\Http\Requests\MassDestroyOrgRequest;
@@ -19,18 +17,14 @@ class OrgController extends Controller
      */
     public function index(Request $request)
     {
-        // abort_if(!auth()->user()->can('read-Org'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(!auth()->user()->can('read-org'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         
         $inputSearchString = $request->input('s', '');
-
-        $orgs = collect([]);
-
         $orgs = Org::with('media')->when($inputSearchString, function($query) use ($inputSearchString) {
-            $query->where(function($query) use ($inputSearchString) {
-                $query->orWhere('name', 'LIKE', '%'.$inputSearchString.'%');
-
-            });
-        })
+                $query->where(function($query) use ($inputSearchString) {
+                    $query->orWhere('name', 'LIKE', '%'.$inputSearchString.'%');
+                });
+            })
             ->isActive()
             ->orderBy('name')
             ->paginate(config('app-config.datatable_default_row_count', 25))
@@ -48,7 +42,7 @@ class OrgController extends Controller
      */
     public function create()
     {
-        // abort_if(!auth()->user()->can('create-org'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(!auth()->user()->can('create-org'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return view('orgs.create');
     }
 
@@ -60,9 +54,7 @@ class OrgController extends Controller
      */
     public function store(StoreOrgRequest $request)
     {
-       
         $org = Org::create($request->safe()->only('name', 'plan_id', 'address', 'is_premium'));
-
         if($request->hasFile('image_url') && $request->file('image_url')->isValid()) {
             $org->addMedia($request->file('image_url'))->toMediaCollection('Org');
         }
@@ -78,7 +70,7 @@ class OrgController extends Controller
      */
     public function show(Org $org)
     {
-        // abort_if(!auth()->user()->can('show-org'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(!auth()->user()->can('show-org'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return view('orgs.show', compact('org'));
     }
 
@@ -102,10 +94,7 @@ class OrgController extends Controller
      */
     public function update(UpdateOrgRequest $request, Org $org)
     {
-       
         $org->update($request->safe()->only(['name','plan_id', 'address', 'is_premium']));
-
-        
         if($request->hasFile('image_url') && $request->file('image_url')->isValid()) {
             $org->media()->delete();
             $org->addMedia($request->file('image_url'))->toMediaCollection('Org');
@@ -123,12 +112,10 @@ class OrgController extends Controller
      */
     public function destroy(Org $org)
     {
-        // abort_if(!auth()->user()->can('delete-org'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
+        abort_if(!auth()->user()->can('delete-org'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $org->update([
             'is_active' => 3
         ]);
-
         toast(__('global.crud_actions', ['module' => 'Org', 'action' => 'deleted']), 'success');
         return back();
     }

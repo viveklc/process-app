@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-use Alert;
 use App\Models\Dept;
 use App\Models\Org;
 use App\Http\Requests\StoreDeptRequest;
@@ -10,7 +9,6 @@ use App\Http\Requests\UpdateDeptRequest;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
 class DeptController extends Controller
 {
     /**
@@ -20,13 +18,14 @@ class DeptController extends Controller
      */
     public function index(Request $request)
     {
+        abort_if(!auth()->user()->can('read-dept'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        
         $inputSearchString = $request->input('s', '');
-
         $depts = Dept::when($inputSearchString, function($query) use ($inputSearchString) {
-            $query->where(function($query) use ($inputSearchString) {
-                $query->orWhere('name', 'LIKE', '%'.$inputSearchString.'%');
-            });
-        })
+                $query->where(function($query) use ($inputSearchString) {
+                    $query->orWhere('name', 'LIKE', '%'.$inputSearchString.'%');
+                });
+            })          
             ->isActive()
             ->orderBy('name')
             ->paginate(config('app-config.datatable_default_row_count', 25))
@@ -44,13 +43,12 @@ class DeptController extends Controller
      */
     public function create()
     {
-        // abort_if(!auth()->user()->can('create-dept'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
+        abort_if(!auth()->user()->can('create-dept'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $orgs = Org::select('id', 'name')
-        ->isActive()
-        ->orderBy('name')
-        ->pluck('name', 'id')
-        ->prepend('Please select', '');
+            ->isActive()
+            ->orderBy('name')
+            ->pluck('name', 'id')
+            ->prepend('Please select', '');
 
         return view('depts.create',compact('orgs'));
     }
@@ -77,7 +75,7 @@ class DeptController extends Controller
      */
     public function show(Dept $dept)
     {
-         // abort_if(!auth()->user()->can('show-dept'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+         abort_if(!auth()->user()->can('show-dept'), Response::HTTP_FORBIDDEN, '403 Forbidden');
          return view ('depts.show', compact('dept'));
     }
 
@@ -90,10 +88,10 @@ class DeptController extends Controller
     public function edit(Dept $dept)
     {
         $orgs = Org::select('id', 'name')
-        ->isActive()
-        ->orderBy('name')
-        ->pluck('name', 'id')
-        ->prepend('Please select', '');
+            ->isActive()
+            ->orderBy('name')
+            ->pluck('name', 'id')
+            ->prepend('Please select', '');
 
         return view('depts.edit',compact('dept','orgs'));
     }
@@ -121,22 +119,20 @@ class DeptController extends Controller
      */
     public function destroy(Dept $dept)
     {
-        // abort_if(!auth()->user()->can('delete-dept'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
+        abort_if(!auth()->user()->can('delete-dept'), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $dept->update([
             'is_active' => 3
         ]);
-
         toast(__('global.crud_actions', ['module' => 'Dept', 'action' => 'deleted']), 'success');
         return back();
     }
     public function massDestroy(MassDestroyDeptRequest $request)
     {
         Dept::whereIn('id', request('ids'))
-            ->update([
-                'is_active' => 3,
-                'updatedby_userid' => auth()->id(),
-            ]);
+        ->update([
+            'is_active' => 3,
+            'updatedby_userid' => auth()->id(),
+        ]);
 
         return response(null, Response::HTTP_NO_CONTENT);
     }

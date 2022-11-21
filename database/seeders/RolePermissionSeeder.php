@@ -25,7 +25,7 @@ class RolePermissionSeeder extends Seeder
     {
         $rolePermissions = config('role-permission', []);
         foreach($rolePermissions as $roleName => $permissions) {
-            $role = Role::create([
+            $role = Role::updateOrCreate([
                 'name' => $roleName,
                 'guard_name' => 'web'
             ]);
@@ -33,7 +33,7 @@ class RolePermissionSeeder extends Seeder
             if(!strcasecmp($roleName, 'admin')) {
                 // create permissions from admin because admin can have all permissions
                 foreach($permissions as $permission) {
-                    Permission::create([
+                    Permission::updateOrCreate([
                         'name' => $permission,
                         'guard_name' => 'web'
                     ]);
