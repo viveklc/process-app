@@ -38,7 +38,8 @@ class UserSeeder extends Seeder
                 'image_url' => $this->fake->image(),
                 // 'email_verified_at' => \Carbon\Carbon::now(),
                 'password' => bcrypt('password'),
-                'is_org_admin' => 1
+                'is_org_admin' => 1,
+                'org_id' => 1,
             ]);
 
             $user->assignRole($role);

@@ -34,12 +34,12 @@ class Org extends Model
         return $this->hasMany(User::class,'org_id');
     }
 
-    public function HasProcessInstance()
+    public function processInstance()
     {
         return $this->hasMany(ProcessInstance::class,'org_id');
     }
 
-    public function Hasinvites()
+    public function invites()
     {
         return $this->hasMany(UserInvite::class,'org_id');
     }

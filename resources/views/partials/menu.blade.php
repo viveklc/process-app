@@ -57,6 +57,19 @@
             <!--begin:Menu item-->
             <div class="menu-item">
                 <!--begin:Menu link-->
+                <a class="menu-link  {{ request()->is("admin/team*") ? 'active' : '' }}" href="{{ route('admin.team.index') }}">
+                <span class="menu-bullet">
+                <span class="bullet bullet-dot"></span>
+                </span>
+                <span class="menu-title">Teams</span>
+                </a>
+                <!--end:Menu link-->
+             </div>
+            <!--end:Menu item-->
+
+            <!--begin:Menu item-->
+            <div class="menu-item">
+                <!--begin:Menu link-->
                 <a class="menu-link  {{ request()->is("admin/states*") ? 'active' : '' }}" href="{{ route('admin.states.index') }}">
                 <span class="menu-bullet">
                 <span class="bullet bullet-dot"></span>

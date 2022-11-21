@@ -5,7 +5,7 @@ namespace App\Http\Requests\Team;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class TeamRequest extends FormRequest
+class UpdateTeamRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,31 +24,19 @@ class TeamRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = [
-            'user_id' => ['required', 'array'],
+        return [
+            'user_id' => ['required', 'array','min:1'],
+            'user_id.*' => ['required','numeric','distinct','exists:users,id'],
             'org_id' => ['required', 'numeric', 'exists:orgs,id'],
-            'valid_from' => ['required'],
-            'valid_to' => ['required']
-        ];
-        if ($this->method() === "POST") {
-            $rules += ['team_name' => [
-                'required', 'string', 'max:100', 'min:3',
-                Rule::unique('teams', 'team_name')->where(function ($q) {
-                    return $q->where('org_id', 1);
-                })
-            ]];
-        }
-        if ($this->method() === "PUT") {
-            $rules += ['team_name' => [
+            'valid_from' => ['required','date_format:Y-m-d','date','after_or_equal:today'],
+            'valid_to' => ['required'],
+            'team_name' =>  [
                 'required', 'string', 'max:100', 'min:3',
                 Rule::unique('teams', 'team_name')->ignore($this->id)
                 ->where(function ($q) {
-                    return $q->where('org_id', 1);
+                    return $q->where('org_id', $this->request->get('org_id'));
                 })
-            ]];
-        }
-
-
-        return $rules;
+            ]
+        ];
     }
 }

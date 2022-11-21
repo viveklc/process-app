@@ -31,12 +31,12 @@ class Team extends Model
             ->withPivot('valid_from', 'valid_to');
     }
 
-    public function hasInvites()
+    public function invites()
     {
         return $this->hasMany(UserInvite::class, 'team_id');
     }
 
-    public function hasProcessInstance()
+    public function processInstance()
     {
         return $this->hasMany(ProcessInstance::class, 'team_id');
     }

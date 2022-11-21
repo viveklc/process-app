@@ -31,7 +31,7 @@ class ProcessInstance extends Model
         return $this->belongsTo(Org::class);
     }
 
-    public function depts()
+    public function dept()
     {
         return $this->belongsTo(Dept::class);
     }
@@ -41,12 +41,12 @@ class ProcessInstance extends Model
         return $this->belongsTo(Team::class);
     }
 
-    public function assignedTo()
+    public function assignedToUser()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function hasComments()
+    public function comments()
     {
         return $this->hasMany(Comment::class, 'process_instances_id', 'id');
     }

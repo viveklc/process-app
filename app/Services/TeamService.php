@@ -10,7 +10,7 @@ class TeamService
 {
 
     public static function getTeamByOrgId(Request $request,int $orgId,array $field=[]){
-        $select = count($field) >0 ? implode($field):"*";
+        $select = count($field) > 0 ? implode($field) : "*";
         return Team::WithFilter($request)
         ->where('org_id',$orgId)->orderBy('id','DESC')
         ->select($select,DB::raw("(select name from orgs where id=teams.org_id limit 1) as org_name"))
@@ -20,7 +20,7 @@ class TeamService
 
 
     public static function storeTeam(Request $request){
-        $team= Team::create([
+        $team = Team::create([
             'org_id' => $request->input('org_id'),
             'team_name' => $request->input('team_name'),
             'team_remarks' => $request->input('team_remarks'),
@@ -32,6 +32,7 @@ class TeamService
             'valid_from' => $request->input('valid_from'),
             'valid_to' => $request->input('valid_to'),
         ]);
+
         return $team;
     }
 
@@ -50,6 +51,7 @@ class TeamService
             'valid_from' => $request->input('valid_from'),
             'valid_to' => $request->input('valid_to'),
         ]);
+
         return $team;
     }
 

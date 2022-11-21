@@ -22,7 +22,7 @@ class Comment extends Model
         return LogOptions::defaults()->logAll()->useLogName('Comment');
     }
 
-    public function hasReply()
+    public function replies()
     {
         return $this->hasMany(Comment::class,'in_reply_to_comment_id');
     }

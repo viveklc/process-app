@@ -25,7 +25,7 @@ class UserInvite extends Model
         return LogOptions::defaults()->logAll()->useLogName('UserInvite');
     }
 
-    public function users(){
+    public function user(){
         return $this->belongsTo(User::class);
     }
 
