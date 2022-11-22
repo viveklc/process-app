@@ -236,6 +236,32 @@
              </div>
             <!--end:Menu item-->
 
+            <!--begin:Menu item-->
+            <div class="menu-item">
+                <!--begin:Menu link-->
+                <a class="menu-link  {{ request()->is("admin/orgs*") ? 'active' : '' }}" href="{{ route('admin.orgs.index') }}">
+                <span class="menu-bullet">
+                <span class="bullet bullet-dot"></span>
+                </span>
+                <span class="menu-title">Orgs</span>
+                </a>
+                <!--end:Menu link-->
+             </div>
+            <!--end:Menu item-->
+
+            <!--begin:Menu item-->
+             <div class="menu-item">
+                <!--begin:Menu link-->
+                <a class="menu-link  {{ request()->is("admin/depts*") ? 'active' : '' }}" href="{{ route('admin.depts.index') }}">
+                <span class="menu-bullet">
+                <span class="bullet bullet-dot"></span>
+                </span>
+                <span class="menu-title">Depts</span>
+                </a>
+                <!--end:Menu link-->
+             </div>
+            <!--end:Menu item-->
+
           </div>
           <!--end::Menu-->
        </div>

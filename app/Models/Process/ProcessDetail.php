@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Admin;
+namespace App\Models\Process;
 
 use App\Traits\CreatedUpdatedBy;
 use App\Traits\ModelScopes;
@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
-use App\Models\Admin\Process;
+use App\Models\Process\Process;
 
 class ProcessDetail extends Model
 {

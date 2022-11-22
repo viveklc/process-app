@@ -198,7 +198,17 @@
             'show-team',
             'read-team-users', // team users table
             'add-team-user',
-            'delete-team-user'
+            'delete-team-user',
+            'create-org', // table orgs
+            'read-org',
+            'update-org',
+            'delete-org',
+            'show-org',
+            'create-dept', // table depts
+            'read-dept',
+            'update-dept',
+            'delete-dept',
+            'show-dept',
         ],
         'author' => [
             'read-language',
