@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Activity\ProcessInstance;
+use App\Models\Activity\UserInvite;
 use App\Traits\CreatedUpdatedBy;
 use App\Traits\ModelScopes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -48,4 +50,16 @@ class Org extends Model implements HasMedia
     {
         return $this->hasMany(User::class,'org_id');
     }
+
+    public function HasProcessInstance()
+    {
+        return $this->hasMany(ProcessInstance::class,'org_id');
+    }
+
+    public function Hasinvites()
+    {
+        return $this->hasMany(UserInvite::class,'org_id');
+    }
+
+
 }

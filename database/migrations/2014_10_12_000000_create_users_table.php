@@ -21,7 +21,9 @@ return new class extends Migration
             $table->string('email')->unique()->nullable();
             $table->string('phone')->nullable();
             $table->string('image_url')->nullable();
+            $table->unsignedInteger('role_id')->nullable()->index();
             $table->integer('is_org_admin')->default(2)->comment('1[YES] 2[NO]');
+            $table->string('password')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

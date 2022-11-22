@@ -13,14 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('courses', function (Blueprint $table) {
+        Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
-            $table->text('short_description')->nullable();
-            $table->text('long_description')->nullable();
-            $table->string('tags')->nullable();
-            // OTHER COLUMNS DEFINATION
-
+            $table->unsignedInteger('user_id')->index();
+            $table->integer('is_original_poster')->nullable();
+            $table->string('comment_title')->nullable();
+            $table->longText('description')->nullable();
+            $table->unsignedInteger('process_instances_id')->nullable()->index();
+            $table->unsignedInteger('step_instance_id')->nullable()->index();
+            $table->unsignedInteger('in_reply_to_comment_id')->nullable()->index();
             $table->integer('is_active')->default('1')->comment('1[Active] 2[Inactive] 3[Deleted]');
             $table->string('status')->nullable();
             $table->unsignedBigInteger('createdby_userid')->nullable();
@@ -36,6 +37,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('courses');
+        Schema::dropIfExists('comments');
     }
 };
