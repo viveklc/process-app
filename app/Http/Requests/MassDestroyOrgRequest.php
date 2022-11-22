@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Symfony\Component\HttpFoundation\Response;
 class MassDestroyOrgRequest extends FormRequest
 {
     /**
@@ -12,8 +11,8 @@ class MassDestroyOrgRequest extends FormRequest
      * @return bool
      */
     public function authorize()
-    {
-        abort_if(!auth()->user()->can('delete-org'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+    {       
+        return auth()->user()->can('delete-org');
     }
 
     /**

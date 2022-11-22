@@ -18,7 +18,7 @@
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
-                                <a href="{{ route('admin.countries.index') }}">Org</a>
+                                <a href="{{ route('admin.orgs.index') }}">Org</a>
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->
@@ -57,7 +57,8 @@
                                     <!--end::Label-->
                                     <input type="text"
                                         class="form-control form-control-solid  {{ $errors->has('name') ? 'is-invalid' : '' }}"
-                                        placeholder="Name" name="name"
+                                        placeholder="Name" name="name" 
+                                        value="{{ old('name', '') }}"
                                         required />
                                 </div>
                                 <!--end::Input group-->
@@ -66,11 +67,11 @@
                                     <div class="d-flex flex-column mb-8 fv-row">
                                         <!--begin::Label-->
                                         <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="required">Plan Type</span>
+                                        <span class="">Plan Type</span>
                                         </label>
                                         <!--end::Label-->
-                                        <select class="form-select form-control form-select-solid select2 {{ $errors->has('plan_id') ? 'is-invalid' : '' }}"  style="width: 100%;" name="plan_id"  required >
-                                            <option value="" >Please Select</option>
+                                        <select class="form-select form-control form-select-solid select2 {{ $errors->has('plan_id') ? 'is-invalid' : '' }}"  style="width: 100%;" name="plan_id">
+                                            <option value="">Please Select</option>
                                         </select>
                                     </div>
                                 <!--end::Input group-->
@@ -79,10 +80,14 @@
                                     <div class="d-flex flex-column mb-8 fv-row">
                                         <!--begin::Label-->
                                         <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="required">Address</span>
+                                        <span class="">Address</span>
                                         </label>
                                         <!--end::Label-->
-                                        <textarea class="form-control form-control-solid  {{ $errors->has('address') ? 'is-invalid' : '' }}" placeholder="Address" name="address"  required cols="30" rows="5"></textarea>
+                                        <textarea class="form-control form-control-solid  {{ $errors->has('address') ? 'is-invalid' : '' }}" 
+                                            placeholder="Address" 
+                                            name="address" 
+                                            cols="30" 
+                                            rows="5">{{ old('address', '') }}</textarea>
                                     </div>
                                 <!--end::Input group-->
 
@@ -90,7 +95,7 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="required">Image</span>
+                                        <span class="">Image</span>
                                     </label>
                                     <!--end::Label-->
                                     <input type="file"
@@ -98,21 +103,21 @@
                                         placeholder="Image" name="image_url"  />
                                 </div>
                                 <!--end::Input group-->
-
-                                <!--begin::Input group-->
-                                 <div class="d-flex flex-column mb-8 fv-row">
-                                        <!--begin::Label-->
-                                        <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="required">Premium</span>
-                                        </label>
-                                        <!--end::Label-->
-                                        <select class="form-select form-control form-select-solid select2 {{ $errors->has('is_premium') ? 'is-invalid' : '' }}"  style="width: 100%;" name="is_premium"  required >
-                                            <option value="">Please Select</option>
-                                            <option value="1">Yes</option>
-                                            <option value="2">No</option>
-                                        </select>
-                                    </div>
-                                <!--end::Input group-->
+                               
+                                <!-- begin::Input group-->
+                                <div class="d-flex flex-column mb-8 fv-row">
+                                    <!--begin::Label-->
+                                    <label class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="">Is Premium</span>
+                                        &nbsp;
+                                        <input type="hidden" name="is_premium" value="2">
+                                        <input type="checkbox"
+                                            class=" form-control-solid {{ $errors->has('is_premium') ? 'is-invalid' : '' }}"
+                                            name="is_premium" value="1" {{ old('is_premium', 2) == 1 ? 'checked' : '' }} />
+                                    </label>
+                                    <!--end::Label-->
+                                </div>
+                                <!--end::Input group -->
 
                                 <div>
                                     <button type="submit" id="kt_modal_new_ticket_submit" class="btn btn-primary">

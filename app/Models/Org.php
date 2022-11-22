@@ -26,6 +26,19 @@ class Org extends Model implements HasMedia
         return LogOptions::defaults()->logAll()->useLogName('Org');
     }
 
+    /**
+     * for spatie media management
+     */
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('Org')
+            ->singleFile()
+            ->registerMediaConversions(function (Media $media) {
+                $this->addMediaConversion('preview')->fit(Manipulations::FIT_CROP, 300, 300)->nonQueued();
+                $this->addMediaConversion('thumb')->fit(Manipulations::FIT_CROP, 50, 50)->nonQueued();
+            });
+    }
+
     public function departments()
     {
         return $this->hasMany(Dept::class,'org_id','id');

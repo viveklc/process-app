@@ -19,7 +19,7 @@ class DeptController extends Controller
     public function index(Request $request)
     {
         abort_if(!auth()->user()->can('read-dept'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        
+
         $inputSearchString = $request->input('s', '');
         $depts = Dept::when($inputSearchString, function($query) use ($inputSearchString) {
                 $query->where(function($query) use ($inputSearchString) {
@@ -44,6 +44,7 @@ class DeptController extends Controller
     public function create()
     {
         abort_if(!auth()->user()->can('create-dept'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+       
         $orgs = Org::select('id', 'name')
             ->isActive()
             ->orderBy('name')
@@ -62,8 +63,8 @@ class DeptController extends Controller
     public function store(StoreDeptRequest $request)
     {
         $dept = Dept::create($request->safe()->only('org_id', 'name', 'description'));
-
         toast(__('global.crud_actions', ['module' => 'Dept', 'action' => 'created']), 'success');
+
         return redirect()->route('admin.depts.index');
     }
 
@@ -76,6 +77,7 @@ class DeptController extends Controller
     public function show(Dept $dept)
     {
          abort_if(!auth()->user()->can('show-dept'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
          return view ('depts.show', compact('dept'));
     }
 
@@ -93,7 +95,7 @@ class DeptController extends Controller
             ->pluck('name', 'id')
             ->prepend('Please select', '');
 
-        return view('depts.edit',compact('dept','orgs'));
+        return view('depts.edit', compact('dept', 'orgs'));
     }
 
     /**
@@ -106,8 +108,8 @@ class DeptController extends Controller
     public function update(UpdateDeptRequest $request, Dept $dept)
     {
         $dept->update($request->safe()->only(['org_id','name', 'description']));
-
         toast(__('global.crud_actions', ['module' => 'Dept', 'action' => 'updated']), 'success');
+
         return redirect()->route('admin.depts.index');
     }
 
@@ -120,10 +122,12 @@ class DeptController extends Controller
     public function destroy(Dept $dept)
     {
         abort_if(!auth()->user()->can('delete-dept'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         $dept->update([
             'is_active' => 3
         ]);
         toast(__('global.crud_actions', ['module' => 'Dept', 'action' => 'deleted']), 'success');
+
         return back();
     }
     public function massDestroy(MassDestroyDeptRequest $request)

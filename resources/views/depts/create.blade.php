@@ -74,7 +74,7 @@
                                     <!--end::Label-->
                                     <input type="text"
                                         class="form-control form-control-solid  {{ $errors->has('name') ? 'is-invalid' : '' }}"
-                                        placeholder="{{ trans('crud.countries.fields.country_name') }}" name="name"
+                                        placeholder="Name" name="name"
                                         value="{{ old('name', '') }}" required />
                                 </div>
                                 <!--end::Input group-->
@@ -86,7 +86,7 @@
                                     <span class="required">Description</span>
                                     </label>
                                     <!--end::Label-->
-                                    <textarea class="form-control form-control-solid  {{ $errors->has('description') ? 'is-invalid' : '' }}" placeholder="Description" name="description"  required cols="30" rows="5"></textarea>
+                                    <textarea class="form-control form-control-solid" placeholder="Description" name="description" cols="30" rows="5" >{{ old('description', '') }}</textarea>
                                 </div>
                                 <!--end::Input group-->
 

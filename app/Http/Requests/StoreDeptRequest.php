@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Symfony\Component\HttpFoundation\Response;
 class StoreDeptRequest extends FormRequest
 {
     /**
@@ -12,8 +11,8 @@ class StoreDeptRequest extends FormRequest
      * @return bool
      */
     public function authorize()
-    {
-        abort_if(!auth()->user()->can('create-dept'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+    {       
+        return auth()->user()->can('create-dept'); 
     }
 
     /**
@@ -34,8 +33,8 @@ class StoreDeptRequest extends FormRequest
                 'max:191'
             ],
             'description' => [
-                'required',
-                'longText'
+                'nullable',
+                'string'
             ]
         ];
     }

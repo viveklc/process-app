@@ -3,8 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Symfony\Component\HttpFoundation\Response;
-
 class MassDestroyDeptRequest extends FormRequest
 {
     /**
@@ -14,7 +12,7 @@ class MassDestroyDeptRequest extends FormRequest
      */
     public function authorize()
     {
-        abort_if(!auth()->user()->can('delete-dept'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        return auth()->user()->can('delete-dept');
     }
 
     /**

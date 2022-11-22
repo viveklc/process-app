@@ -43,6 +43,7 @@ class OrgController extends Controller
     public function create()
     {
         abort_if(!auth()->user()->can('create-org'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         return view('orgs.create');
     }
 
@@ -55,10 +56,12 @@ class OrgController extends Controller
     public function store(StoreOrgRequest $request)
     {
         $org = Org::create($request->safe()->only('name', 'plan_id', 'address', 'is_premium'));
+
         if($request->hasFile('image_url') && $request->file('image_url')->isValid()) {
             $org->addMedia($request->file('image_url'))->toMediaCollection('Org');
         }
         toast(__('global.crud_actions', ['module' => 'Org', 'action' => 'created']), 'success');
+
         return redirect()->route('admin.orgs.index');
     }
 
@@ -71,6 +74,7 @@ class OrgController extends Controller
     public function show(Org $org)
     {
         abort_if(!auth()->user()->can('show-org'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         return view('orgs.show', compact('org'));
     }
 
@@ -82,7 +86,7 @@ class OrgController extends Controller
      */
     public function edit(Org $org)
     {
-        return view('orgs.edit',compact('org'));
+        return view('orgs.edit', compact('org'));
     }
 
     /**
@@ -95,12 +99,12 @@ class OrgController extends Controller
     public function update(UpdateOrgRequest $request, Org $org)
     {
         $org->update($request->safe()->only(['name','plan_id', 'address', 'is_premium']));
-        if($request->hasFile('image_url') && $request->file('image_url')->isValid()) {
-            $org->media()->delete();
+
+        if($request->hasFile('image_url') && $request->file('image_url')->isValid()) {           
             $org->addMedia($request->file('image_url'))->toMediaCollection('Org');
         }
-       
         toast(__('global.crud_actions', ['module' => 'Org', 'action' => 'updated']), 'success');
+
         return redirect()->route('admin.orgs.index');
     }
 
@@ -113,10 +117,12 @@ class OrgController extends Controller
     public function destroy(Org $org)
     {
         abort_if(!auth()->user()->can('delete-org'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         $org->update([
             'is_active' => 3
         ]);
         toast(__('global.crud_actions', ['module' => 'Org', 'action' => 'deleted']), 'success');
+
         return back();
     }
     public function massDestroy(MassDestroyOrgRequest $request)

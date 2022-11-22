@@ -177,7 +177,7 @@
         $(function() {
             let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
 
-            // can('delete-dept')
+            @can('delete-dept')
                 let deleteButtonTrans = '{{ trans('global.delete') }}'
                 let deleteButton = {
                     text: deleteButtonTrans,
@@ -232,7 +232,7 @@
                     }
                 }
                 dtButtons.push(deleteButton)
-            // endcan
+            @endcan
 
             $.extend(true, $.fn.dataTable.defaults, {
                 orderCellsTop: true,

@@ -81,19 +81,19 @@
                                             <th width="10">
                                             </th>
                                             <th>
-                                                 Name
+                                                Name
                                             </th>
                                             <th>
-                                                 Plan Type
+                                                Plan Type
                                             </th>
                                             <th>
-                                                 Address
+                                                Address
                                             </th>
                                             <th>
-                                                 Image
+                                                Image
                                             </th>
                                             <th>
-                                                 Premium
+                                                Is Premium
                                             </th>
                                             <th class="notexport">
                                                 &nbsp;
@@ -191,7 +191,7 @@
         $(function() {
             let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons);
 
-            // can('delete-org')
+            @can('delete-org')
                 let deleteButtonTrans = '{{ trans('global.delete') }}'
                 let deleteButton = {
                     text: deleteButtonTrans,
@@ -246,7 +246,7 @@
                     }
                 }
                 dtButtons.push(deleteButton)
-            // endcan
+            @endcan
 
             $.extend(true, $.fn.dataTable.defaults, {
                 orderCellsTop: true,
