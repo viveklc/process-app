@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Admin;
+namespace App\Models\Process;
 
 use App\Traits\CreatedUpdatedBy;
 use App\Traits\ModelScopes;
@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
-use App\Models\Admin\ProcessDetail;
-use App\Models\Admin\ProcessRecurrence;
-use App\Models\Admin\ProcessTeam;
-use App\Models\Admin\Step;
+use App\Models\Process\ProcessDetail;
+use App\Models\Process\ProcessRecurrence;
+use App\Models\Process\ProcessTeam;
+use App\Models\Process\Step;
 
 class Process extends Model
 {
@@ -27,10 +27,10 @@ class Process extends Model
     }
 
     /** Relationship */
-    // public function org()
-    // {
-    //     return $this->belongsTo(Org::class);
-    // }
+    public function org()
+    {
+        return $this->belongsTo(Org::class);
+    }
 
     public function processDetails()
     {

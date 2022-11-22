@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Admin;
+namespace App\Models\Process;
 
 use App\Traits\CreatedUpdatedBy;
 use App\Traits\ModelScopes;
@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
-use App\Models\Admin\Process;
+use App\Models\Process\Process;
 
-class Step extends Model
+class ProcessTeam extends Model
 {
     use HasFactory, LogsActivity;
     use CreatedUpdatedBy, ModelScopes;
@@ -20,7 +20,7 @@ class Step extends Model
     /** Spatie Activity Log */
     public function getActivitylogOptions(): LogOptions // spatie model log options
     {
-        return LogOptions::defaults()->logAll()->useLogName('Step');
+        return LogOptions::defaults()->logAll()->useLogName('ProcessTeam');
     }
 
     /** Relationship */
@@ -28,5 +28,5 @@ class Step extends Model
     {
         return $this->belongsTo(Process::class);
     }
-    
+
 }
