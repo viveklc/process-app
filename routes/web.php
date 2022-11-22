@@ -21,7 +21,8 @@ use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\SchoolController;
-
+use App\Http\Controllers\OrgController;
+use App\Http\Controllers\DeptController;
 Route::get('/', function () {
     return view('welcome');
 });
@@ -90,6 +91,12 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function() {
 
     Route::delete('books/destroy', [BookController::class, 'massDestroy'])->name('books.massDestroy');
     Route::resource('books', BookController::class);
+
+    Route::delete('orgs/destroy', [OrgController::class, 'massDestroy'])->name('orgs.massDestroy');
+    Route::resource('orgs', OrgController::class);
+
+    Route::delete('depts/destroy', [DeptController::class, 'massDestroy'])->name('depts.massDestroy');
+    Route::resource('depts', DeptController::class);
 });
 
 require __DIR__.'/auth.php';

@@ -191,6 +191,16 @@
             'update-quiz-leaderboard',
             'delete-quiz-leaderboard',
             'show-quiz-leaderboard',
+            'create-org', // table orgs
+            'read-org',
+            'update-org',
+            'delete-org',
+            'show-org',
+            'create-dept', // table depts
+            'read-dept',
+            'update-dept',
+            'delete-dept',
+            'show-dept',
         ],
         'author' => [
             'read-language',
