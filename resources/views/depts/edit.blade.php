@@ -52,7 +52,7 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                    <span class="required">Org Name</span>
+                                        <span class="required">Org Name</span>
                                     </label>
                                     <!--end::Label-->
                                     <select class="form-select form-control form-select-solid select2 {{ $errors->has('org_id') ? 'is-invalid' : '' }}"  style="width: 100%;" name="org_id" id="org_id" required >
@@ -83,7 +83,7 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                    <span class="required">Description</span>
+                                        <span class="required">Description</span>
                                     </label>
                                     <!--end::Label-->
                                     <textarea class="form-control form-control-solid" placeholder="Description" name="description" cols="30" rows="5" >{{ old('description', $dept->description) }}</textarea>

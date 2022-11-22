@@ -67,7 +67,7 @@
                                     <div class="d-flex flex-column mb-8 fv-row">
                                         <!--begin::Label-->
                                         <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="">Plan Type</span>
+                                        <span>Plan Type</span>
                                         </label>
                                         <!--end::Label-->
                                         <select class="form-select form-control form-select-solid select2 {{ $errors->has('plan_id') ? 'is-invalid' : '' }}"  style="width: 100%;" name="plan_id">
@@ -80,7 +80,7 @@
                                     <div class="d-flex flex-column mb-8 fv-row">
                                         <!--begin::Label-->
                                         <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="">Address</span>
+                                        <span>Address</span>
                                         </label>
                                         <!--end::Label-->
                                         <textarea class="form-control form-control-solid  {{ $errors->has('address') ? 'is-invalid' : '' }}" 
@@ -95,7 +95,7 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="">Image</span>
+                                        <span>Image</span>
                                     </label>
                                     <!--end::Label-->
                                     <input type="file"
@@ -108,7 +108,7 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="">Is Premium</span>
+                                        <span>Is Premium</span>
                                         &nbsp;
                                         <input type="hidden" name="is_premium" value="2">
                                         <input type="checkbox"
