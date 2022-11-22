@@ -42,6 +42,12 @@ class Team extends Model
     }
 
     public function scopeWithFilter($query,$filter){
+        return $query->when(!empty($filter->input('s','')) , function($query) use ($filter){
+            $query->where('team_name',$filter->input('s',''));
+        });
+    }
 
+    public function org(){
+        return $this->hasOne(Org::class,'id','org_id');
     }
 }

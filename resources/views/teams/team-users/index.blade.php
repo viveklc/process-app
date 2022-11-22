@@ -38,7 +38,7 @@
                         <!--begin::Secondary button-->
                         <!--end::Secondary button-->
                         <!--begin::Primary button-->
-                        <a href="javascript:void(0)" id="add_user"
+                        <a href="{{ route('admin.team.user.create',$id) }}" id="add_user"
                             class="btn btn-sm fw-bold btn-primary">{{ trans('global.add') }}</a>
                         <!--end::Primary button-->
                     </div>
@@ -87,56 +87,57 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse ($users as $i=>$item)
-                                        <tr data-entry-id="{{ $item->id }}">
-                                            <td></td>
-                                            <td>{{ $item->name }}</td>
-                                            <td>{{$item->email}}</td>
-                                            <td>{{ $item->phone }}</td>
+                                        @forelse ($teamUsers as $i=>$item)
+                                            <tr data-entry-id="{{ $item->id }}">
+                                                <td></td>
+                                                <td>{{ $item->name }}</td>
+                                                <td>{{ $item->email }}</td>
+                                                <td>{{ $item->phone }}</td>
 
-                                           <!--begin::Action=-->
-                                           <td class="text-end">
-                                            <a href="#" class="btn btn-light btn-active-light-primary btn-sm"
-                                                data-kt-menu-trigger="click"
-                                                data-kt-menu-placement="bottom-end">Actions
-                                                <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
-                                                <span class="svg-icon svg-icon-5 m-0">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                        height="24" viewBox="0 0 24 24" fill="none">
-                                                        <path
-                                                            d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z"
-                                                            fill="black" />
-                                                    </svg>
-                                                </span>
-                                                <!--end::Svg Icon-->
-                                            </a>
-                                            <!--begin::Menu-->
-                                            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4"
-                                                data-kt-menu="true">
+                                                <!--begin::Action=-->
+                                                <td class="text-end">
+                                                    <a href="#" class="btn btn-light btn-active-light-primary btn-sm"
+                                                        data-kt-menu-trigger="click"
+                                                        data-kt-menu-placement="bottom-end">Actions
+                                                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
+                                                        <span class="svg-icon svg-icon-5 m-0">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                height="24" viewBox="0 0 24 24" fill="none">
+                                                                <path
+                                                                    d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z"
+                                                                    fill="black" />
+                                                            </svg>
+                                                        </span>
+                                                        <!--end::Svg Icon-->
+                                                    </a>
+                                                    <!--begin::Menu-->
+                                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4"
+                                                        data-kt-menu="true">
 
-                                                <!--begin::Menu item-->
-                                                <div class="menu-item px-3">
-                                                    <form
-                                                        action="{{ route('admin.team.user.remove', $item->id) }}"
-                                                        method="POST" id="frmDeleteschool-{{ $item->id }}"
-                                                        style="display: inline-block; width: 100%;">
-                                                        <input type="hidden" name="_method" value="DELETE">
-                                                        <input type="hidden" name="_token"
-                                                            value="{{ csrf_token() }}">
-                                                        <a href="#" class="menu-link px-3"
-                                                            onclick="deleteGridRecord('frmDeleteschool-{{ $item->id }}')">
-                                                            {{ trans('global.delete') }}
-                                                        </a>
-                                                    </form>
-                                                </div>
-                                                <!--end::Menu item-->
-                                            </div>
-                                            <!--end::Menu-->
-                                        </td>
-                                        <!--end::Action=-->
-                                        </tr>
+                                                        <!--begin::Menu item-->
+                                                        <div class="menu-item px-3">
+                                                            <form action="{{ route('admin.team.user.remove', ['team'=>$id,'user_id'=>$item->id]) }}"
+                                                                method="POST" id="frmDeleteschool-{{ $item->id }}"
+                                                                style="display: inline-block; width: 100%;">
+                                                                <input type="hidden" name="_method" value="DELETE">
+                                                                <input type="hidden" name="_token"
+                                                                    value="{{ csrf_token() }}">
+                                                                <a href="#" class="menu-link px-3"
+                                                                    onclick="deleteGridRecord('frmDeleteschool-{{ $item->id }}')">
+                                                                    {{ trans('global.delete') }}
+                                                                </a>
+                                                            </form>
+                                                        </div>
+                                                        <!--end::Menu item-->
+                                                    </div>
+                                                    <!--end::Menu-->
+                                                </td>
+                                                <!--end::Action=-->
+                                            </tr>
                                         @empty
-                                            <tr align="center"><td>No User Found</td></tr>
+                                            <tr align="center">
+                                                <td>No User Found</td>
+                                            </tr>
                                         @endforelse
 
                                     </tbody>
@@ -156,14 +157,12 @@
         <!--end::Content wrapper-->
     </div>
     <!--end:::Main-->
-    @include('teams.partials.add_user_to_team')
+
 @endsection
 @section('scripts')
     @parent
     <script>
-        $("#add_user").click(function(){
-            $("#add_user_modal").modal('show');
-        })
+
 
         var table;
         $(function() {
@@ -173,7 +172,7 @@
                 let deleteButtonTrans = '{{ trans('global.delete') }}'
                 let deleteButton = {
                     text: deleteButtonTrans,
-                    url: "{{ route('admin.team.user.remove') }}",
+                    url: "{{ route('admin.team.users.remove') }}",
                     className: 'btn btn-sm btn-danger',
                     action: function(e, dt, node, config) {
                         var ids = $.map(dt.rows({
@@ -208,7 +207,7 @@
                                         url: config.url,
                                         data: {
                                             ids: ids,
-                                            team_id : '{{ $id }}',
+                                            team_id: '{{ $id }}',
                                             _method: 'DELETE'
                                         }
                                     })
@@ -262,7 +261,7 @@
                         requestParameters.push('s=' + $.trim(searchText));
                     }
 
-                    window.location.href = '{{ route('admin.subjects.index') }}' + generateQueryString(
+                    window.location.href = '{{ route('admin.team.user.index',$id) }}' + generateQueryString(
                         requestParameters);
                 } else {
                     table.search(this.value).draw();

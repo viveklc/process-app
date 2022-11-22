@@ -51,71 +51,103 @@
                     <div class="card">
                         <!--begin::Card body-->
                         <div class="card-body pt-7">
-                            <form id="" class="form" method="POST" action="{{ route('admin.team.update',$team->id) }}"
-                                enctype="multipart/form-data">
+                            <form id="kt_subscriptions_export_form" class="form" method="POST"
+                                action="{{ route('admin.team.update',$team->id) }}" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
-                                <div class="row">
-                                    <div class="form-group col-md-6">
-                                        <label for="">Organisation</label>
-                                        <select name="org_id" id="" class="form-control">
-                                            @forelse ($org as $item)
-                                                <option value="{{ $item->id }}" {{ ($item->org_id == $team->org_id)?'selected':'' }}>{{ $item->name }}</option>
-                                            @empty
-                                                <option value="">No Org</option>
-                                            @endforelse
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="">Team Name</label>
-                                        <input type="text" name="team_name" class="form-control"
-                                            value="{{ $team->team_name }}">
-                                    </div>
+                                <div class="d-flex flex-column mb-8 fv-row">
+                                    <!--begin::Label-->
+                                    <label class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="">Organisation</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <select
+                                        class="form-control form-control-solid select2 {{ $errors->has('org_id') ? 'is-invalid' : '' }}"
+                                        style="width: 100%;" name="org_id" id="country-dropdown">
+                                        <option value="">Select Organisation</option>
+                                        @forelse ($org as $item)
+                                            <option value="{{ $item->id }}" {{ ($item->id == $team->org_id) ? 'selected':'' }} >{{ $item->name }}</option>
+                                        @empty
+                                        @endforelse
+                                    </select>
                                 </div>
-                                <div class="row">
-                                    <div class="form-group col-md-6">
-                                        <label for="">Description</label>
-                                        <textarea name="team_description" class="form-control">{{ $team->team_description }}</textarea>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="">Remarks</label>
-                                        <textarea name="team_remarks" class="form-control">{{ $team->team_remarks }}</textarea>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-md-6">
-                                        <label for="">Valid From</label>
-                                        <input type="date" name="valid_from" class="form-control" value="{{ $team->valid_from }}">
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="">Valid To</label>
-                                        <input type="date" name="valid_to" class="form-control" value="{{ $team->valid_to }}">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-md-12">
-                                        <label for="">Team User</label>
-                                        {{-- <select name="user[]" id="users" class="form-control">
-
-                                </select> --}}
-                                        <select id="example-getting-started" name="user_id[]" class="form-control"
-                                            multiple="multiple">
-                                            @forelse ($users as $item)
-                                                <option value="{{ $item->id }}" {{ in_array($item->id,$teamuserId)?'selected':'' }}>{{ $item->name }}</option>
-                                            @empty
-                                            @endforelse
-                                        </select>
-                                    </div>
+                                <div class="d-flex flex-column mb-8 fv-row">
+                                    <!--begin::Label-->
+                                    <label class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="">Team Name</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <input
+                                        class="form-control form-control-solid {{ $errors->has('team_name') ? 'is-invalid' : '' }}"
+                                        type="text" name="team_name" id="team_name" value="{{ old('team_name', $team->team_name) }}">
                                 </div>
 
+                                <div class="d-flex flex-column mb-8 fv-row">
+                                    <!--begin::Label-->
+                                    <label class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="">Valid From</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <input
+                                        class="form-control form-control-solid {{ $errors->has('valid_from') ? 'is-invalid' : '' }}"
+                                        type="date" name="valid_from" id="valid_from"
+                                        value="{{ old('valid_from', dbDateFormat($team->valid_from)) }}">
+                                </div>
 
-                                <div class="row">
-                                    <div class="form-group col-md-12 text-center">
-                                        <label for=""></label>
-                                        <button type="submit" id="kt_modal_new_ticket_submit" class="btn btn-primary">
-                                            <span class="indicator-label"> {{ trans('global.save') }}</span>
-                                        </button>
-                                    </div>
+                                <div class="d-flex flex-column mb-8 fv-row">
+                                    <!--begin::Label-->
+                                    <label class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="">Valid To</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <input
+                                        class="form-control form-control-solid {{ $errors->has('valid_to') ? 'is-invalid' : '' }}"
+                                        type="date" name="valid_to" id="valid_to" value="{{ old('valid_to', dbDateFormat($team->valid_to)) }}">
+                                </div>
+
+                                <div class="d-flex flex-column mb-8 fv-row">
+                                    <!--begin::Label-->
+                                    <label class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="">Team Users</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <select
+                                        class="form-control form-control-solid select2 {{ $errors->has('user_id') ? 'is-invalid' : '' }}"
+                                        style="width: 100%;" name="user_id[]" id="country-dropdown" multiple>
+                                        @forelse ($orgUsers->users as $item)
+                                            <option value="{{ $item->id }}" {{ in_array($item->id,$teamuserId) ? 'selected':'' }} >{{ $item->name }}</option>
+                                        @empty
+                                        @endforelse
+                                    </select>
+                                </div>
+
+                                <div class="d-flex flex-column mb-8 fv-row">
+                                    <!--begin::Label-->
+                                    <label class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="required">Description</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <textarea class="form-control form-control-solid {{ $errors->has('team_description') ? 'is-invalid' : '' }}"
+                                        name="team_description" id="team_description">{{ old('team_description', $team->team_description) }}</textarea>
+                                </div>
+                                <div class="d-flex flex-column mb-8 fv-row">
+                                    <!--begin::Label-->
+                                    <label class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="required">Remarks</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <textarea class="form-control form-control-solid {{ $errors->has('team_remarks') ? 'is-invalid' : '' }}"
+                                        name="team_remarks" id="team_remarks">{{ old('team_remarks', $team->team_remarks) }}</textarea>
+                                </div>
+
+
+
+
+
+                                <div>
+                                    <button type="submit" id="kt_modal_new_ticket_submit" class="btn btn-primary">
+                                        <span class="indicator-label"> {{ trans('global.save') }}</span>
+                                    </button>
                                 </div>
                             </form>
                         </div>

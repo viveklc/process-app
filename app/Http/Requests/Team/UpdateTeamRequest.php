@@ -30,9 +30,11 @@ class UpdateTeamRequest extends FormRequest
             'org_id' => ['required', 'numeric', 'exists:orgs,id'],
             'valid_from' => ['required','date_format:Y-m-d','date','after_or_equal:today'],
             'valid_to' => ['required'],
+            'team_description' => ['nullable'],
+            'team_remarks' => ['nullable'],
             'team_name' =>  [
                 'required', 'string', 'max:100', 'min:3',
-                Rule::unique('teams', 'team_name')->ignore($this->id)
+                Rule::unique('teams', 'team_name')->ignore($this->team->id)
                 ->where(function ($q) {
                     return $q->where('org_id', $this->request->get('org_id'));
                 })

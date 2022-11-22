@@ -27,7 +27,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function() {
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
@@ -95,21 +95,17 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function() {
     /**
      * team related routes
      */
+    Route::resource('team', TeamController::class);
+    Route::delete('massdestroy', [TeamController::class, 'massDestroy'])->name('team.massdestroy');
+    Route::prefix('team')->name('team.')->group(function () {
+        Route::get('{team}/users', [TeamController::class, 'TeamUsers'])->name('user.index');
+        Route::get('{team}/user/add',[TeamController::class,'addUser'])->name('user.create');
+        Route::post('add', [TeamController::class, 'addUserToTeam'])->name('user.add');
+        Route::delete('user/mass-remove', [TeamController::class, 'removeUsersFromTeam'])->name('users.remove');
+        Route::delete('{team}/remove/{user_id}', [TeamController::class, 'removeUserFromTeam'])->name('user.remove');
+    });
 
-     Route::prefix('team')->group(function(){
-        Route::get('',[TeamController::class,'index'])->name('team.index');
-        Route::get('create',[TeamController::class,'create'])->name('teams.create');
-        Route::post('store',[TeamController::class,'store'])->name('team.store');
-        Route::put('update/{id}',[TeamController::class,'update'])->name('team.update');
-        Route::get('{id}/edit',[TeamController::class,'edit'])->name('team.edit');
-        Route::delete('delete/{id}',[TeamController::class,'destroy'])->name('team.destroy');
-        Route::delete('massdestroy',[TeamController::class,'massDestroy'])->name('team.massdestroy');
-        Route::prefix('user')->group(function(){
-            Route::get('{id}',[TeamController::class,'TeamUsers'])->name('team.user.index');
-            Route::post('add',[TeamController::class,'addUserToTeam'])->name('team.user.add');
-            Route::delete('remove',[TeamController::class,'removeUserFromTeam'])->name('team.user.remove');
-        });
-     });
+
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

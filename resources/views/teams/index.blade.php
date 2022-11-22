@@ -38,7 +38,7 @@
                         <!--begin::Secondary button-->
                         <!--end::Secondary button-->
                         <!--begin::Primary button-->
-                        <a href="{{ route('admin.teams.create') }}"
+                        <a href="{{ route('admin.team.create') }}"
                             class="btn btn-sm fw-bold btn-primary">{{ trans('global.add') }}</a>
                         <!--end::Primary button-->
                     </div>
@@ -91,7 +91,7 @@
                                         <tr data-entry-id="{{ $item->id }}">
                                             <td></td>
                                             <td>{{$item->team_name}}</td>
-                                            <td>{{ $item->org_name }}</td>
+                                            <td>{{ $item->org->name }}</td>
                                             <td>{{ $item->valid_from }}</td>
                                             <td>{{ $item->valid_to }}</td>
                                             <!--begin::Action=-->
@@ -279,7 +279,7 @@
                         requestParameters.push('s=' + $.trim(searchText));
                     }
 
-                    window.location.href = '{{ route('admin.subjects.index') }}' + generateQueryString(
+                    window.location.href = '{{ route('admin.team.index') }}' + generateQueryString(
                         requestParameters);
                 } else {
                     table.search(this.value).draw();
