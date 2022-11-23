@@ -12,13 +12,13 @@
                     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                         <!--begin::Title-->
                         <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
-                            Permissions</h1>
+                            Roles</h1>
                         <!--end::Title-->
                         <!--begin::Breadcrumb-->
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
-                                <a href="{{ route('admin.permissions.index') }}">Permissions</a>
+                                <a href="{{ route('admin.roles.index') }}">Roles</a>
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->
@@ -38,7 +38,7 @@
                         <!--begin::Secondary button-->
                         <!--end::Secondary button-->
                         <!--begin::Primary button-->
-                        <a href="{{ route('admin.permissions.create') }}"
+                        <a href="{{ route('admin.roles.create') }}"
                             class="btn btn-sm fw-bold btn-primary">{{ trans('global.add') }}</a>
                         <!--end::Primary button-->
                     </div>
@@ -79,7 +79,7 @@
                                     <thead>
                                         <tr>
                                             <th width="10"></th>
-                                            <th>Permission name</th>
+                                            <th>Role name</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -87,7 +87,7 @@
                                         @forelse ($data as $i=>$item)
                                             <tr data-entry-id="{{ $item->id }}">
                                                 <td></td>
-                                                <td>{{ Str::headline($item->name) }}</td>
+                                                <td>{{ $item->name }}</td>
                                                 <!--begin::Action=-->
                                                 <td class="text-end">
                                                     <a href="#" class="btn btn-light btn-active-light-primary btn-sm"
@@ -110,14 +110,14 @@
 
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <a href="{{ route('admin.permissions.edit', $item->id) }}"
+                                                            <a href="{{ route('admin.roles.edit', $item->id) }}"
                                                                 class="menu-link px-3"> {{ trans('global.edit') }}
                                                             </a>
                                                         </div>
                                                         <!--end::Menu item-->
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <form action="{{ route('admin.permissions.destroy', $item->id) }}"
+                                                            <form action="{{ route('admin.roles.destroy', $item->id) }}"
                                                                 method="POST" id="frmDeleteschool-{{ $item->id }}"
                                                                 style="display: inline-block; width: 100%;">
                                                                 <input type="hidden" name="_method" value="DELETE">
@@ -170,7 +170,7 @@
                 let deleteButtonTrans = '{{ trans('global.delete') }}'
                 let deleteButton = {
                     text: deleteButtonTrans,
-                    url: "{{ route('admin.permissions.massDestroy') }}",
+                    url: "{{ route('admin.roles.massDestroy') }}",
                     className: 'btn btn-sm btn-danger',
                     action: function(e, dt, node, config) {
                         var ids = $.map(dt.rows({
@@ -264,7 +264,7 @@
                         requestParameters.push('s=' + $.trim(searchText));
                     }
 
-                    window.location.href = '{{ route('admin.team.index') }}' + generateQueryString(
+                    window.location.href = '{{ route('admin.roles.index') }}' + generateQueryString(
                         requestParameters);
                 } else {
                     table.search(this.value).draw();

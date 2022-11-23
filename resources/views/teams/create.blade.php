@@ -64,7 +64,9 @@
                                         style="width: 100%;" name="org_id" id="country-dropdown">
                                         <option value="">Select Organisation</option>
                                         @forelse ($org as $item)
-                                            <option value="{{ $item->id }}" {{ old('org_id') == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
+                                            <option value="{{ $item->id }}"
+                                                {{ old('org_id') == $item->id ? 'selected' : '' }}>{{ $item->name }}
+                                            </option>
                                         @empty
                                         @endforelse
                                     </select>
@@ -113,7 +115,9 @@
                                         class="form-control form-control-solid select2 {{ $errors->has('user_id[]') ? 'is-invalid' : '' }}"
                                         style="width: 100%;" name="user_id[]" id="country-dropdown" multiple>
                                         @forelse ($orgUsers->users as $item)
-                                            <option value="{{ $item->id }}" {{ collect(old('user_id'))->contains($item->id) ? 'selected' : '' }} >{{ $item->name }}</option>
+                                            <option value="{{ $item->id }}"
+                                                {{ collect(old('user_id'))->contains($item->id) ? 'selected' : '' }}>
+                                                {{ $item->name }}</option>
                                         @empty
                                         @endforelse
                                     </select>

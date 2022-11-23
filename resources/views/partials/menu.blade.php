@@ -41,6 +41,31 @@
             </div>
             <!--end:Menu item-->
 
+            <div class="menu-item">
+                <!--begin:Menu link-->
+                <a class="menu-link  {{ request()->is("admin/permissions*") ? 'active' : '' }}" href="{{ route('admin.permissions.index') }}">
+                <span class="menu-bullet">
+                <span class="bullet bullet-dot"></span>
+                </span>
+                <span class="menu-title">Permissions</span>
+                </a>
+                <!--end:Menu link-->
+            </div>
+            <!--end:Menu item-->
+
+            <div class="menu-item">
+                <!--begin:Menu link-->
+                <a class="menu-link  {{ request()->is("admin/roles*") ? 'active' : '' }}" href="{{ route('admin.roles.index') }}">
+                <span class="menu-bullet">
+                <span class="bullet bullet-dot"></span>
+                </span>
+                <span class="menu-title">Roles</span>
+                </a>
+                <!--end:Menu link-->
+            </div>
+            <!--end:Menu item-->
+
+
             <!--begin:Menu item-->
              <div class="menu-item">
                 <!--begin:Menu link-->
