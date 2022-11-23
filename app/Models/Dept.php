@@ -35,7 +35,7 @@ class Dept extends Model
         ->withPivot('valid_from','valid_to');
     }
 
-    public function hasProcessInstance(){
+    public function processInstances(){
         return $this->hasMany(ProcessInstance::class,'dept_id','id');
     }
 

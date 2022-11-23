@@ -26,6 +26,7 @@
         'masters' => 'Masters',
         'view' => 'View',
         'edit' => 'Edit',
+        'team_users' => 'Team Users',
         'please_select' => 'Please select :option',
         'please_select_all_required_field' => 'Please select all required fields',
         'all_rights_reserved' => 'All rights reserved.',

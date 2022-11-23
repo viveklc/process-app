@@ -202,12 +202,12 @@ class User extends Authenticatable implements HasMedia
         return $this->hasMany(User::class, 'is_colleague_of_user_id');
     }
 
-    public function reportTo()
+    public function reportToUsers()
     {
         return $this->hasMany(User::class, 'reports_to_user_id');
     }
 
-    public function Invites()
+    public function invites()
     {
         return $this->hasMany(UserInvite::class, 'invited_by_user_id');
     }

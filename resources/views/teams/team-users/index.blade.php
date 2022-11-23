@@ -12,13 +12,13 @@
                     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                         <!--begin::Title-->
                         <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
-                            Schools</h1>
+                            Team Users</h1>
                         <!--end::Title-->
                         <!--begin::Breadcrumb-->
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
-                                <a href="{{ route('admin.schools.index') }}">Schools</a>
+                                <a href="{{ route('admin.team.index') }}">Teams</a>
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->
@@ -38,7 +38,7 @@
                         <!--begin::Secondary button-->
                         <!--end::Secondary button-->
                         <!--begin::Primary button-->
-                        <a href="{{ route('admin.schools.create') }}"
+                        <a href="{{ route('admin.team.user.create',$id) }}" id="add_user"
                             class="btn btn-sm fw-bold btn-primary">{{ trans('global.add') }}</a>
                         <!--end::Primary button-->
                     </div>
@@ -56,9 +56,9 @@
                         <!--begin::Card header-->
                         <div class="card-header border-0 pt-6"
                             style="display: flex;
-                                flex-wrap: wrap;
-                                justify-content: end;
-                                margin: 0;">
+                flex-wrap: wrap;
+                justify-content: end;
+                margin: 0;">
                             <!--begin::Card title-->
                             <div class="">
                                 <input type="text" class="form-control form-control-sm"
@@ -75,57 +75,25 @@
                         <div class="card-body pt-0">
                             <!--begin::Table-->
                             <div class="table-responsive">
-                                <table class="table datatable datatable-Cities">
+                                <table class="table table-bordered datatable datatable-Cities">
                                     <thead>
                                         <tr>
-                                            <th width="10">
-                                            </th>
-                                            <th>
-                                                Name
-                                            </th>
-                                            <th>
-                                                Description
-                                            </th>
-                                            <th>
-                                                Country
-                                            </th>
-                                            <th>
-                                                State
-                                            </th>
-                                            <th>
-                                                City
-                                            </th>
-                                            <th>
-                                                &nbsp;
-                                            </th>
+                                            <th width="10">#</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            {{-- <th>Role</th> --}}
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($schools as $school)
-                                            <tr data-entry-id="{{ $school->id }}">
-                                                <td>
-                                                </td>
-                                                <td>
-                                                    {{ $school->name ?? '' }}
-                                                </td>
-                                                <td>
-                                                    {{ $school->description ?? '' }}
-                                                </td>
-                                                <td>
-                                                    @isset($school->country)
-                                                        {{ $school->country->name ?? '' }}
-                                                    @endisset
-                                                </td>
-                                                <td>
-                                                    @isset($school->state)
-                                                        {{ $school->state->name ?? '' }}
-                                                    @endisset
-                                                </td>
-                                                <td>
-                                                    @isset($school->city)
-                                                        {{ $school->city->name ?? '' }}
-                                                    @endisset
-                                                </td>
+                                        @forelse ($teamUsers as $i=>$item)
+                                            <tr data-entry-id="{{ $item->id }}">
+                                                <td></td>
+                                                <td>{{ $item->name }}</td>
+                                                <td>{{ $item->email }}</td>
+                                                <td>{{ $item->phone }}</td>
+
                                                 <!--begin::Action=-->
                                                 <td class="text-end">
                                                     <a href="#" class="btn btn-light btn-active-light-primary btn-sm"
@@ -145,30 +113,17 @@
                                                     <!--begin::Menu-->
                                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4"
                                                         data-kt-menu="true">
+
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <a href="{{ route('admin.schools.show', $school->id) }}"
-                                                                class="menu-link px-3"> {{ trans('global.view') }}</a>
-                                                        </div>
-                                                        <!--end::Menu item-->
-                                                        <!--begin::Menu item-->
-                                                        <div class="menu-item px-3">
-                                                            <a href="{{ route('admin.schools.edit', $school->id) }}"
-                                                                class="menu-link px-3"> {{ trans('global.edit') }}
-                                                            </a>
-                                                        </div>
-                                                        <!--end::Menu item-->
-                                                        <!--begin::Menu item-->
-                                                        <div class="menu-item px-3">
-                                                            <form
-                                                                action="{{ route('admin.schools.destroy', $school->id) }}"
-                                                                method="POST" id="frmDeleteschool-{{ $school->id }}"
+                                                            <form action="{{ route('admin.team.user.remove', ['team'=>$id,'user_id'=>$item->id]) }}"
+                                                                method="POST" id="frmDeleteschool-{{ $item->id }}"
                                                                 style="display: inline-block; width: 100%;">
                                                                 <input type="hidden" name="_method" value="DELETE">
                                                                 <input type="hidden" name="_token"
                                                                     value="{{ csrf_token() }}">
                                                                 <a href="#" class="menu-link px-3"
-                                                                    onclick="deleteGridRecord('frmDeleteschool-{{ $school->id }}')">
+                                                                    onclick="deleteGridRecord('frmDeleteschool-{{ $item->id }}')">
                                                                     {{ trans('global.delete') }}
                                                                 </a>
                                                             </form>
@@ -179,12 +134,15 @@
                                                 </td>
                                                 <!--end::Action=-->
                                             </tr>
-                                        @endforeach
+                                        @empty
+                                            <tr align="center">
+                                                <td>No User Found</td>
+                                            </tr>
+                                        @endforelse
+
                                     </tbody>
                                 </table>
-                                @if ($schools->count())
-                                    {{ $schools->links() }}
-                                @endif
+
                             </div>
                             <!--end::Table-->
                         </div>
@@ -199,19 +157,22 @@
         <!--end::Content wrapper-->
     </div>
     <!--end:::Main-->
+
 @endsection
 @section('scripts')
     @parent
     <script>
+
+
         var table;
         $(function() {
             let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
 
-            @can('delete-country')
+            @can('delete-team-user')
                 let deleteButtonTrans = '{{ trans('global.delete') }}'
                 let deleteButton = {
                     text: deleteButtonTrans,
-                    url: "{{ route('admin.schools.massDestroy') }}",
+                    url: "{{ route('admin.team.users.remove') }}",
                     className: 'btn btn-sm btn-danger',
                     action: function(e, dt, node, config) {
                         var ids = $.map(dt.rows({
@@ -246,6 +207,7 @@
                                         url: config.url,
                                         data: {
                                             ids: ids,
+                                            team_id: '{{ $id }}',
                                             _method: 'DELETE'
                                         }
                                     })
@@ -269,13 +231,7 @@
                 paging: false,
                 language: {
                     infoEmpty: "{{ trans('global.grid_no_data') }}",
-                    @if ($schools->count())
-                        info: '{{ trans('global.grid_pagination_count_status', [
-                            'firstItem' => $schools->firstItem(),
-                            'lastItem' => $schools->lastItem(),
-                            'total' => $schools->total(),
-                        ]) }}',
-                    @endif
+
                 },
             });
 
@@ -305,7 +261,7 @@
                         requestParameters.push('s=' + $.trim(searchText));
                     }
 
-                    window.location.href = '{{ route('admin.schools.index') }}' + generateQueryString(
+                    window.location.href = '{{ route('admin.team.user.index',$id) }}' + generateQueryString(
                         requestParameters);
                 } else {
                     table.search(this.value).draw();

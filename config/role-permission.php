@@ -191,6 +191,14 @@
             'update-quiz-leaderboard',
             'delete-quiz-leaderboard',
             'show-quiz-leaderboard',
+            'read-teams', // table teams
+            'create-team',
+            'update-team',
+            'delete-team',
+            'show-team',
+            'read-team-users', // team users table
+            'add-team-user',
+            'delete-team-user',
             'create-org', // table orgs
             'read-org',
             'update-org',

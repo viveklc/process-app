@@ -21,13 +21,16 @@ use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\SchoolController;
+use App\Http\Controllers\Team\TeamController;
+
 use App\Http\Controllers\OrgController;
 use App\Http\Controllers\DeptController;
+
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function() {
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
@@ -92,6 +95,20 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function() {
     Route::delete('books/destroy', [BookController::class, 'massDestroy'])->name('books.massDestroy');
     Route::resource('books', BookController::class);
 
+    /**
+     * team related routes
+     */
+    Route::resource('team', TeamController::class);
+    Route::delete('massdestroy', [TeamController::class, 'massDestroy'])->name('team.massdestroy');
+    Route::prefix('team')->name('team.')->group(function () {
+        Route::get('{team}/users', [TeamController::class, 'TeamUsers'])->name('user.index');
+        Route::get('{team}/user/add',[TeamController::class,'addUser'])->name('user.create');
+        Route::post('add', [TeamController::class, 'addUserToTeam'])->name('user.add');
+        Route::delete('user/mass-remove', [TeamController::class, 'removeUsersFromTeam'])->name('users.remove');
+        Route::delete('{team}/remove/{user_id}', [TeamController::class, 'removeUserFromTeam'])->name('user.remove');
+    });
+
+
     Route::delete('orgs/destroy', [OrgController::class, 'massDestroy'])->name('orgs.massDestroy');
     Route::resource('orgs', OrgController::class);
 
@@ -99,4 +116,4 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function() {
     Route::resource('depts', DeptController::class);
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
