@@ -38,7 +38,7 @@
                         <!--begin::Secondary button-->
                         <!--end::Secondary button-->
                         <!--begin::Primary button-->
-                        <a href="{{ route('admin.team.user.create',$id) }}" id="add_user"
+                        <a href="{{ route('admin.team.team-users.create',$id) }}" id="add_user"
                             class="btn btn-sm fw-bold btn-primary">{{ trans('global.add') }}</a>
                         <!--end::Primary button-->
                     </div>
@@ -116,7 +116,7 @@
 
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <form action="{{ route('admin.team.user.remove', ['team'=>$id,'user_id'=>$item->id]) }}"
+                                                            <form action="{{ route('admin.team.team-users.destroy', ['team'=>$id,'team_user'=>$item->id]) }}"
                                                                 method="POST" id="frmDeleteschool-{{ $item->id }}"
                                                                 style="display: inline-block; width: 100%;">
                                                                 <input type="hidden" name="_method" value="DELETE">
@@ -135,9 +135,7 @@
                                                 <!--end::Action=-->
                                             </tr>
                                         @empty
-                                            <tr align="center">
-                                                <td>No User Found</td>
-                                            </tr>
+
                                         @endforelse
 
                                     </tbody>
@@ -261,7 +259,7 @@
                         requestParameters.push('s=' + $.trim(searchText));
                     }
 
-                    window.location.href = '{{ route('admin.team.user.index',$id) }}' + generateQueryString(
+                    window.location.href = '{{ route('admin.team.team-users.index',$id) }}' + generateQueryString(
                         requestParameters);
                 } else {
                     table.search(this.value).draw();

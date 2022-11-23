@@ -56,7 +56,7 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="">Organisation</span>
+                                        <span class="required">Organisation</span>
                                     </label>
                                     <!--end::Label-->
                                     <select
@@ -64,7 +64,7 @@
                                         style="width: 100%;" name="org_id" id="country-dropdown">
                                         <option value="">Select Organisation</option>
                                         @forelse ($org as $item)
-                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                            <option value="{{ $item->id }}" {{ old('org_id') == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
                                         @empty
                                         @endforelse
                                     </select>
@@ -72,7 +72,7 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="">Team Name</span>
+                                        <span class="required">Team Name</span>
                                     </label>
                                     <!--end::Label-->
                                     <input
@@ -83,7 +83,7 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="">Valid From</span>
+                                        <span class="required">Valid From</span>
                                     </label>
                                     <!--end::Label-->
                                     <input
@@ -95,7 +95,7 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="">Valid To</span>
+                                        <span class="required">Valid To</span>
                                     </label>
                                     <!--end::Label-->
                                     <input
@@ -106,14 +106,14 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="">Team Users</span>
+                                        <span class="required">Team Users</span>
                                     </label>
                                     <!--end::Label-->
                                     <select
-                                        class="form-control form-control-solid select2 {{ $errors->has('user_id') ? 'is-invalid' : '' }}"
+                                        class="form-control form-control-solid select2 {{ $errors->has('user_id[]') ? 'is-invalid' : '' }}"
                                         style="width: 100%;" name="user_id[]" id="country-dropdown" multiple>
                                         @forelse ($orgUsers->users as $item)
-                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                            <option value="{{ $item->id }}" {{ collect(old('user_id'))->contains($item->id) ? 'selected' : '' }} >{{ $item->name }}</option>
                                         @empty
                                         @endforelse
                                     </select>
@@ -122,7 +122,7 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="required">Description</span>
+                                        <span class="">Description</span>
                                     </label>
                                     <!--end::Label-->
                                     <textarea class="form-control form-control-solid {{ $errors->has('team_description') ? 'is-invalid' : '' }}"
@@ -131,7 +131,7 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="required">Remarks</span>
+                                        <span class="">Remarks</span>
                                     </label>
                                     <!--end::Label-->
                                     <textarea class="form-control form-control-solid {{ $errors->has('team_remarks') ? 'is-invalid' : '' }}"

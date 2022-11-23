@@ -58,7 +58,7 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="">Organisation</span>
+                                        <span class="required">Organisation</span>
                                     </label>
                                     <!--end::Label-->
                                     <select
@@ -74,7 +74,7 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="">Team Name</span>
+                                        <span class="required">Team Name</span>
                                     </label>
                                     <!--end::Label-->
                                     <input
@@ -85,7 +85,7 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="">Valid From</span>
+                                        <span class="required">Valid From</span>
                                     </label>
                                     <!--end::Label-->
                                     <input
@@ -97,7 +97,7 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="">Valid To</span>
+                                        <span class="required">Valid To</span>
                                     </label>
                                     <!--end::Label-->
                                     <input
@@ -108,7 +108,7 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="">Team Users</span>
+                                        <span class="required">Team Users</span>
                                     </label>
                                     <!--end::Label-->
                                     <select
@@ -124,7 +124,7 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="required">Description</span>
+                                        <span class="">Description</span>
                                     </label>
                                     <!--end::Label-->
                                     <textarea class="form-control form-control-solid {{ $errors->has('team_description') ? 'is-invalid' : '' }}"
@@ -133,7 +133,7 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="required">Remarks</span>
+                                        <span class="">Remarks</span>
                                     </label>
                                     <!--end::Label-->
                                     <textarea class="form-control form-control-solid {{ $errors->has('team_remarks') ? 'is-invalid' : '' }}"

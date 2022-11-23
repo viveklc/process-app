@@ -3,14 +3,11 @@
 namespace App\Http\Controllers\Team;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Team\AddUserToTeamRequest;
 use App\Http\Requests\Team\MassDestroyTeamRequest;
-use App\Http\Requests\Team\MassRemoveUserFromTeamRequest;
 use App\Http\Requests\Team\StoreTeamRequest;
 use App\Http\Requests\Team\UpdateTeamRequest;
 use App\Models\Org;
 use App\Models\Team;
-use App\Models\User;
 use Exception;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -18,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TeamController extends Controller
 {
-     /**
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -30,7 +27,7 @@ class TeamController extends Controller
         $inputSearchString = $request->input('s', '');
 
         $teams = Team::with('org:id,name')
-            ->where('teams.org_id', 1)
+            ->where('teams.org_id', auth()->user()->org_id)
             ->when(!empty($inputSearchString), function ($query) use ($inputSearchString) {
                 $query->where(function ($query) use ($inputSearchString) {
                     $query->orWhere('team_name', 'LIKE', '%' . $inputSearchString . '%');
@@ -57,13 +54,14 @@ class TeamController extends Controller
     {
         abort_if(!auth()->user()->can('create-team'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $org = Org::orderBy('id', 'DESC')
-            ->where('is_active', 1)
+        $org = Org::query()
             ->select('name', 'id')
             ->isActive()
+            ->orderBy('id', 'DESC')
             ->get();
 
-        $orgUsers = Org::with('users:id,org_id,name')
+        $orgUsers = Org::query()
+            ->with('users:id,org_id,name')
             ->where('id', auth()->user()->org_id)
             ->isActive()
             ->first();
@@ -116,10 +114,10 @@ class TeamController extends Controller
         abort_if(!auth()->user()->can('update-team'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         try {
-            $org = Org::orderBy('id', 'DESC')
-                ->where('is_active', 1)
+            $org = Org::query()
                 ->select('name', 'id')
                 ->isActive()
+                ->orderBy('id', 'DESC')
                 ->get();
 
             $orgUsers = Org::with('users:id,org_id,name')
@@ -186,60 +184,4 @@ class TeamController extends Controller
         return response(null, Response::HTTP_NO_CONTENT);
     }
 
-    /**
-     * team user method
-     */
-
-
-    public function TeamUsers(Request $request, Team $team)
-    {
-        abort_if(!auth()->user()->can('read-team-users'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $id = $team->id;
-        $inputSearchString = $request->input('s', '');
-        $teamUsers = $team->teamUser;
-
-        return view('teams.team-users.index', compact('teamUsers', 'id'));
-    }
-
-    public function addUser(Team $team)
-    {
-        abort_if(!auth()->user()->can('add-team-user'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $addTouser = User::whereNotIn('id', collect($team->teamUser)->pluck('id')->toArray())
-            ->select('id', 'name')
-            ->get();
-
-        return view('teams.team-users.add', ['addTouser' => $addTouser, 'id' => $team->id]);
-    }
-
-    public function addUserToTeam(AddUserToTeamRequest $request)
-    {
-        abort_if(!auth()->user()->can('add-team-user'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $team = Team::find($request->team_id);
-        $team->teamUser()->attach($request->user_id);
-
-        return redirect()->route('admin.team.user.index', $team->id)->with('success', 'User added to team');
-    }
-
-    public function removeUserFromTeam(Team $team, $user_id)
-    {
-        // dd($user_id);
-        abort_if(!auth()->user()->can('delete-team-user'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $team->teamUser()->detach($user_id);
-
-        return response(null, Response::HTTP_NO_CONTENT);
-    }
-
-    public function removeUsersFromTeam(MassRemoveUserFromTeamRequest $request)
-    {
-        abort_if(!auth()->user()->can('delete-team-user'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $team = Team::find($request->team_id);
-        $team->teamUser()->detach($request->ids);
-
-        return response(null, Response::HTTP_NO_CONTENT);
-    }
 }
