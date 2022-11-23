@@ -23,7 +23,7 @@
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
-                                <a href="{{ route('admin.team.user.index',$id) }}">Team Users</a>
+                                <a href="{{ route('admin.team.team-users.index',$id) }}">Team Users</a>
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->
@@ -51,7 +51,7 @@
                         <!--begin::Card body-->
                         <div class="card-body pt-7">
                             <form id="kt_subscriptions_export_form" class="form" method="POST"
-                            action="{{ route('admin.team.user.add') }}" enctype="multipart/form-data">
+                            action="{{ route('admin.team.team-users.store',$id) }}" enctype="multipart/form-data">
                             @csrf
 
                             <input type="hidden" name="org_id" value="{{ auth()->user()->org_id }}">

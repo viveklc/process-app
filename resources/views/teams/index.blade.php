@@ -115,7 +115,7 @@
                                                     data-kt-menu="true">
                                                     <!--begin::Menu item-->
                                                     <div class="menu-item px-3">
-                                                        <a href="{{ route('admin.team.user.index',$item->id) }}"
+                                                        <a href="{{ route('admin.team.team-users.index',$item->id) }}"
                                                             class="menu-link px-3"> {{ trans('global.team_users') }}</a>
                                                     </div>
                                                     <!--end::Menu item-->
@@ -148,9 +148,7 @@
                                             <!--end::Action=-->
                                         </tr>
                                         @empty
-                                            <tr align="center">
-                                                <td align="center">No Team Found</td>
-                                            </tr>
+
                                         @endforelse
 
                                     </tbody>
@@ -185,7 +183,7 @@
                 let deleteButtonTrans = '{{ trans('global.delete') }}'
                 let deleteButton = {
                     text: deleteButtonTrans,
-                    url: "{{ route('admin.team.massdestroy') }}",
+                    url: "{{ route('admin.team.massDestroy') }}",
                     className: 'btn btn-sm btn-danger',
                     action: function(e, dt, node, config) {
                         var ids = $.map(dt.rows({

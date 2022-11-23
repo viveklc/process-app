@@ -25,6 +25,7 @@ use App\Http\Controllers\Team\TeamController;
 
 use App\Http\Controllers\OrgController;
 use App\Http\Controllers\DeptController;
+use App\Http\Controllers\Team\TeamUserController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -98,16 +99,11 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     /**
      * team related routes
      */
+    Route::delete('team/destroy', [TeamController::class, 'massDestroy'])->name('team.massDestroy');
     Route::resource('team', TeamController::class);
-    Route::delete('massdestroy', [TeamController::class, 'massDestroy'])->name('team.massdestroy');
-    Route::prefix('team')->name('team.')->group(function () {
-        Route::get('{team}/users', [TeamController::class, 'TeamUsers'])->name('user.index');
-        Route::get('{team}/user/add',[TeamController::class,'addUser'])->name('user.create');
-        Route::post('add', [TeamController::class, 'addUserToTeam'])->name('user.add');
-        Route::delete('user/mass-remove', [TeamController::class, 'removeUsersFromTeam'])->name('users.remove');
-        Route::delete('{team}/remove/{user_id}', [TeamController::class, 'removeUserFromTeam'])->name('user.remove');
-    });
 
+    Route::delete('team/user/mass-remove', [TeamUserController::class, 'removeUsersFromTeam'])->name('team.users.remove');
+    Route::resource('team.team-users',TeamUserController::class)->only(['index','store','create','destroy']);
 
     Route::delete('orgs/destroy', [OrgController::class, 'massDestroy'])->name('orgs.massDestroy');
     Route::resource('orgs', OrgController::class);
