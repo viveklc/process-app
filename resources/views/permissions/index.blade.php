@@ -112,8 +112,18 @@
                                                         </div>
                                                         <!--end::Menu item-->
 
+                                                        <!--begin::Menu item-->
+                                                        <div class="menu-item px-3">
+                                                            <a href="{{ route('admin.permissions.show', $item->id) }}"
+                                                                class="menu-link px-3"> {{ trans('global.view') }}
+                                                            </a>
+                                                        </div>
+                                                        <!--end::Menu item-->
+
                                                     </div>
                                                     <!--end::Menu-->
+
+
 
 
 

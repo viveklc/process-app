@@ -75,7 +75,7 @@
                                 <select
                                     class="form-control form-control-solid select2 {{ $errors->has('permission_name') ? 'is-invalid' : '' }}"
                                     style="width: 100%;" name="permission_name[]" id="country-dropdown" multiple required>
-                                    @forelse ($role->permissions as $item)
+                                    @forelse ($permissions as $item)
                                         <option value="{{ $item->name }}" {{ in_array($item->name,collect($role->permissions)->pluck('name')->toArray()) ? 'selected':'' }} >{{ Str::headline($item->name )}}</option>
                                     @empty
                                     @endforelse

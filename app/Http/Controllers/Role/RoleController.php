@@ -28,7 +28,7 @@ class RoleController extends Controller
             ->when($inputSearchString, function ($query) use ($inputSearchString) {
                 $query->where('name', 'LIKE', '%' . $inputSearchString . '%');
             })
-            ->orderBy('id', 'DESC')
+            ->orderBy('name')
             ->paginate(config('app-config.per_page'));
 
         return view('roles.index', compact('roles'));
@@ -73,9 +73,11 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Role $role)
     {
-        //
+        collect($role->load('permissions'))->sortBy('name');
+
+        return view('roles.show',compact('role'));
     }
 
     /**
@@ -86,9 +88,13 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
+        $permissions = Permission::query()
+        ->orderBy('name')
+        ->get();
+
         $role->load('permissions');
 
-        return view('roles.edit', compact('role'));
+        return view('roles.edit', compact('role','permissions'));
     }
 
     /**

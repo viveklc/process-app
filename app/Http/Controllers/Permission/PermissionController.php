@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Permission\MassDestroyPermissionRequest;
 use App\Http\Requests\Permission\StorePermissionRequest;
 use App\Http\Requests\Permission\UpdatePermissionRequest;
+use App\Models\Team;
 use Exception;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
@@ -18,10 +19,15 @@ class PermissionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $inputSearchString = $request->input('s', '');
+
         $permissions = Permission::query()
             ->select('id', 'name')
+            ->when($inputSearchString, function($query) use ($inputSearchString){
+                $query->where('name','LIKE','%'.$inputSearchString.'%');
+            })
             ->orderBy('name')
             ->paginate(config('app-config.per_page'));
 
@@ -53,6 +59,18 @@ class PermissionController extends Controller
         } catch (Exception $e) {
             return $e->getMessage();
         }
+    }
+
+     /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Permission $permission)
+    {
+        $permission->load('roles');
+        return view('permissions.show',compact('permission'));
     }
 
     /**
