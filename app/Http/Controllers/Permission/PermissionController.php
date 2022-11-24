@@ -20,13 +20,12 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        $data = Permission::query()
-            ->where('is_active', 1)
+        $permissions = Permission::query()
             ->select('id', 'name')
-            ->orderBy('id', 'DESC')
+            ->orderBy('name')
             ->paginate(config('app-config.per_page'));
 
-        return view('permissions.index', compact('data'));
+        return view('permissions.index', compact('permissions'));
     }
 
     /**
@@ -48,25 +47,12 @@ class PermissionController extends Controller
     public function store(StorePermissionRequest $request)
     {
         try {
-
             Permission::create($request->validated());
 
             return back()->with('success', 'Permission created successfully');
         } catch (Exception $e) {
-
             return $e->getMessage();
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
@@ -90,43 +76,12 @@ class PermissionController extends Controller
     public function update(UpdatePermissionRequest $request, Permission $permission)
     {
         try {
-
             $permission->update($request->validated());
 
             return back()->with('success', 'Permission updated successfully');
         } catch (Exception $e) {
-
             return $e->getMessage();
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Permission $permission)
-    {
-        try {
-
-            $permission->update([
-                'is_active' => 3
-            ]);
-
-            return back()->with('success', 'pemission deleted successfully');
-        } catch (Exception $e) {
-            return $e->getMessage();
-        }
-    }
-
-    public function massDestroy(MassDestroyPermissionRequest $request)
-    {
-        Permission::whereIn('id', $request->input('ids'))
-            ->update([
-                'is_active' => 3
-            ]);
-
-        return response(null, Response::HTTP_NO_CONTENT);
-    }
 }

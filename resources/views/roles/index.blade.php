@@ -84,7 +84,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse ($data as $i=>$item)
+                                        @forelse ($roles as $i=>$item)
                                             <tr data-entry-id="{{ $item->id }}">
                                                 <td></td>
                                                 <td>{{ $item->name }}</td>
@@ -115,21 +115,7 @@
                                                             </a>
                                                         </div>
                                                         <!--end::Menu item-->
-                                                        <!--begin::Menu item-->
-                                                        <div class="menu-item px-3">
-                                                            <form action="{{ route('admin.roles.destroy', $item->id) }}"
-                                                                method="POST" id="frmDeleteschool-{{ $item->id }}"
-                                                                style="display: inline-block; width: 100%;">
-                                                                <input type="hidden" name="_method" value="DELETE">
-                                                                <input type="hidden" name="_token"
-                                                                    value="{{ csrf_token() }}">
-                                                                <a href="#" class="menu-link px-3"
-                                                                    onclick="deleteGridRecord('frmDeleteschool-{{ $item->id }}')">
-                                                                    {{ trans('global.delete') }}
-                                                                </a>
-                                                            </form>
-                                                        </div>
-                                                        <!--end::Menu item-->
+
                                                     </div>
                                                     <!--end::Menu-->
                                                 </td>
@@ -140,8 +126,8 @@
 
                                     </tbody>
                                 </table>
-                                @if ($data->count())
-                                    {{ $data->links() }}
+                                @if ($roles->count())
+                                    {{ $roles->links() }}
                                 @endif
 
                             </div>
@@ -166,73 +152,17 @@
         $(function() {
             let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
 
-            @can('delete-team')
-                let deleteButtonTrans = '{{ trans('global.delete') }}'
-                let deleteButton = {
-                    text: deleteButtonTrans,
-                    url: "{{ route('admin.roles.massDestroy') }}",
-                    className: 'btn btn-sm btn-danger',
-                    action: function(e, dt, node, config) {
-                        var ids = $.map(dt.rows({
-                            selected: true
-                        }).nodes(), function(entry) {
-                            return $(entry).data('entry-id')
-                        });
-
-                        if (ids.length === 0) {
-                            Swal.fire(
-                                '{{ trans('global.message') }}!',
-                                '{{ trans('global.grid.no_item_selected') }}',
-                            )
-                            return
-                        }
-
-                        Swal.fire({
-                            title: '{{ trans('global.are_you_sure') }}',
-                            text: '{{ trans('global.are_you_sure_delete_msg') }}',
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#d33',
-                            cancelButtonColor: '#3085d6',
-                            confirmButtonText: 'Ok'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                $.ajax({
-                                        headers: {
-                                            'x-csrf-token': _token
-                                        },
-                                        method: 'POST',
-                                        url: config.url,
-                                        data: {
-                                            ids: ids,
-                                            _method: 'DELETE'
-                                        }
-                                    })
-                                    .done(function() {
-                                        Swal.fire(
-                                            '{{ trans('global.delete') }}!',
-                                            '{{ trans('global.success') }}'
-                                        );
-
-                                        location.reload()
-                                    })
-                            }
-                        })
-                    }
-                }
-                dtButtons.push(deleteButton)
-            @endcan
 
             $.extend(true, $.fn.dataTable.defaults, {
                 orderCellsTop: true,
                 paging: false,
                 language: {
                     infoEmpty: "{{ trans('global.grid_no_data') }}",
-                    @if ($data->count())
+                    @if ($roles->count())
                         info: '{{ trans('global.grid_pagination_count_status', [
-                            'firstItem' => $data->firstItem(),
-                            'lastItem' => $data->lastItem(),
-                            'total' => $data->total(),
+                            'firstItem' => $roles->firstItem(),
+                            'lastItem' => $roles->lastItem(),
+                            'total' => $roles->total(),
                         ]) }}',
                     @endif
                 },

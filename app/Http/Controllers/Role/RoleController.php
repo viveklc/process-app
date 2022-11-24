@@ -23,16 +23,15 @@ class RoleController extends Controller
     {
         $inputSearchString = $request->input('s', '');
 
-        $data = Role::query()
-            ->where('is_active', 1)
-            ->when(!empty($inputSearchString), function ($query) use ($inputSearchString) {
+        $roles = Role::query()
+            ->select('id', 'name')
+            ->when($inputSearchString, function ($query) use ($inputSearchString) {
                 $query->where('name', 'LIKE', '%' . $inputSearchString . '%');
             })
-            ->select('id', 'name')
             ->orderBy('id', 'DESC')
             ->paginate(config('app-config.per_page'));
 
-        return view('roles.index', compact('data'));
+        return view('roles.index', compact('roles'));
     }
 
     /**
@@ -44,7 +43,7 @@ class RoleController extends Controller
     {
         $permissions = Permission::query()
             ->select('id', 'name')
-            ->orderBy('id', 'DESC')
+            ->orderBy('name')
             ->get();
 
         return view('roles.create', compact('permissions'));
@@ -59,14 +58,11 @@ class RoleController extends Controller
     public function store(StoreRoleRequest $request)
     {
         try {
-
             $role = Role::create($request->safe()->except('permission_name'));
-
             $role->givePermissionTo($request->permission_name);
 
             return back()->with('success', 'Role created successfully');
         } catch (Exception $e) {
-
             return $e->getMessage();
         }
     }
@@ -90,6 +86,8 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
+        $role->load('permissions');
+
         return view('roles.edit', compact('role'));
     }
 
@@ -103,9 +101,7 @@ class RoleController extends Controller
     public function update(UpdateRoleRequest $request, Role $role)
     {
         try {
-
             $role->update($request->only('name'));
-
             $role->syncPermissions($request->permission_name);
 
             return back()->with('success', 'Role updated successfully');
@@ -115,39 +111,5 @@ class RoleController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Role $role)
-    {
-        try {
 
-            $role->update([
-                'is_active' => 3
-            ]);
-
-            $role->syncPermissions([]);
-
-            return back()->with('success', 'Role deleted successfully');
-        } catch (Exception $e) {
-
-            return $e->getMessage();
-        }
-    }
-
-    /**
-     * mass remove role
-     */
-
-     public function massDestroy(MassDestroyRoleRequest $request){
-        Role::whereIn('id', $request->input('ids'))
-            ->update([
-                'is_active' => 3
-            ]);
-
-        return response(null, Response::HTTP_NO_CONTENT);
-     }
 }
