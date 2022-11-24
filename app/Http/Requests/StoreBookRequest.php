@@ -32,6 +32,8 @@ class StoreBookRequest extends FormRequest
             ];
         }
 
+        // dd($additonalDetails);
+
         return [
             'subject_id' => [
                 'required',

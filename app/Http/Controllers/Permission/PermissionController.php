@@ -10,6 +10,7 @@ use App\Models\Team;
 use Exception;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Symfony\Component\HttpFoundation\Response;
 
 class PermissionController extends Controller
@@ -53,7 +54,9 @@ class PermissionController extends Controller
     public function store(StorePermissionRequest $request)
     {
         try {
-            Permission::create($request->validated());
+           $permission = Permission::create($request->validated());
+           $role = Role::where('name','admin')->first();
+           $permission->assignRole($role);
 
             return back()->with('success', 'Permission created successfully');
         } catch (Exception $e) {

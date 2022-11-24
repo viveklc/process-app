@@ -26,6 +26,7 @@ use App\Http\Controllers\Team\TeamController;
 use App\Http\Controllers\OrgController;
 use App\Http\Controllers\DeptController;
 use App\Http\Controllers\Permission\PermissionController;
+use App\Http\Controllers\Plan\PlanController;
 use App\Http\Controllers\Role\RoleController;
 use App\Http\Controllers\Team\TeamUserController;
 
@@ -115,6 +116,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     Route::resource('permissions',PermissionController::class)->except(['destroy']);
     Route::resource('roles',RoleController::class)->except(['destroy']);
+
+    Route::resource('plans',PlanController::class);
 
 });
 
