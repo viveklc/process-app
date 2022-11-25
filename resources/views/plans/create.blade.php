@@ -139,7 +139,6 @@
                                  dd(\App\Models\PaymentPlan::ADDITIONAL_DETAILS)
                              @endphp --}}
                              @forelse ( \App\Models\PaymentPlan::ADDITIONAL_DETAILS as $key => $value)
-                             {{  $key }}
                              <div class="d-flex flex-column mb-8 fv-row">
                                  <!--begin::Label-->
                                  <label class="d-flex align-items-center fs-6 fw-bold mb-2">

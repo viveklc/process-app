@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Plan;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Plan\MassDestroyPlanRequest;
 use App\Http\Requests\Plan\StorePlanRequest;
+use App\Http\Requests\Plan\UpdatePlanRequest;
 use App\Models\PaymentPlan;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -81,6 +82,10 @@ class PlanController extends Controller
     public function show(PaymentPlan $plan)
     {
         abort_if(!auth()->user()->can('show-plan'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $plan->load('planDetails');
+
+        return view('plans.show', compact('plan'));
     }
 
     /**
@@ -92,8 +97,10 @@ class PlanController extends Controller
     public function edit(PaymentPlan $plan)
     {
         abort_if(!auth()->user()->can('update-plan'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         $plan->load('planDetails');
-        dd($plan);
+
+        return view('plans.edit', compact('plan'));
     }
 
     /**
@@ -103,9 +110,20 @@ class PlanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdatePlanRequest $request, PaymentPlan $plan)
     {
         abort_if(!auth()->user()->can('update-plan'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $plan->update($request->safe()->only('plan_name', 'plan_description', 'plan_features', 'plan_price', 'valid_from', 'valid_to', 'status'));
+        $input = $request->validated();
+        $plan_details = [];
+        foreach (PaymentPlan::ADDITIONAL_DETAILS as $key => $value) {
+            array_push($plan_details, ['plan_key_name' => $key, 'plan_key_type' => $value['type'], 'plan_key_value' => $input[$key]]);
+        }
+        $plan->planDetails()->delete();
+        $plan->planDetails()->createMany($plan_details);
+
+        return back()->with('success', 'Plan updated successfully');
     }
 
     /**

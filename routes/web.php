@@ -117,6 +117,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('permissions',PermissionController::class)->except(['destroy']);
     Route::resource('roles',RoleController::class)->except(['destroy']);
 
+    Route::delete('plans/destroy', [PlanController::class, 'massDestroy'])->name('plans.massDestroy');
     Route::resource('plans',PlanController::class);
 
 });

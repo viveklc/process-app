@@ -25,7 +25,7 @@ class UpdatePlanRequest extends FormRequest
      */
     public function rules()
     {
-        [$keys, $values] = Arr::divide(\App\Models\Content\Book::ADDITIONAL_DETAILS);
+        [$keys, $values] = Arr::divide(\App\Models\PaymentPlan::ADDITIONAL_DETAILS);
         $additonalDetails =[];
         foreach($keys as $key) {
             $additonalDetails[$key] = [

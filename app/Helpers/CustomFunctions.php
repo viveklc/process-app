@@ -25,7 +25,7 @@ if (!function_exists('appDateFormat')) {
         if(filled($dateFormat)) {
             $returnDateFormat = Carbon::parse($inputDate)->format($dateFormat);
         } else {
-            $returnDateFormat = Carbon::parse($inputDate)->format(config('app-config.date_format.date', 'd/M/Y')." ".config('app-config.date_format.time', 'H:i A'));
+            $returnDateFormat = Carbon::parse($inputDate)->format(config('app-config.date_format.date', 'd/m/Y'));
         }
         return $returnDateFormat;
     }

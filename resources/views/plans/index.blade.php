@@ -93,9 +93,11 @@
                                                 <td></td>
                                                 <td>{{ $item->plan_name }}</td>
                                                 <td>{{ $item->plan_price }}</td>
-                                                <td>{{ $item->valid_from }}</td>
-                                                <td>{{ $item->valid_to }}</td>
-                                                <td>{{ $item->status }}</td>
+                                                <td>{{ appDateFormat($item->valid_from) }}</td>
+                                                <td>{{ appDateFormat($item->valid_to) }}</td>
+                                                <td>{!! $item->status == 'active'
+                                                    ? '<span class="badge badge-success">Active</span>'
+                                                    : '<span class="badge badge-danger">In-active</span>' !!}</td>
                                                 <!--begin::Action=-->
                                                 <td class="text-end">
                                                     <a href="#" class="btn btn-light btn-active-light-primary btn-sm"
@@ -129,6 +131,21 @@
                                                             <a href="{{ route('admin.plans.show', $item->id) }}"
                                                                 class="menu-link px-3"> {{ trans('global.view') }}
                                                             </a>
+                                                        </div>
+                                                        <!--end::Menu item-->
+                                                        <!--begin::Menu item-->
+                                                        <div class="menu-item px-3">
+                                                            <form action="{{ route('admin.plans.destroy', $item->id) }}"
+                                                                method="POST" id="frmDeleteschool-{{ $item->id }}"
+                                                                style="display: inline-block; width: 100%;">
+                                                                <input type="hidden" name="_method" value="DELETE">
+                                                                <input type="hidden" name="_token"
+                                                                    value="{{ csrf_token() }}">
+                                                                <a href="#" class="menu-link px-3"
+                                                                    onclick="deleteGridRecord('frmDeleteschool-{{ $item->id }}')">
+                                                                    {{ trans('global.delete') }}
+                                                                </a>
+                                                            </form>
                                                         </div>
                                                         <!--end::Menu item-->
 
@@ -171,7 +188,7 @@
                 let deleteButtonTrans = '{{ trans('global.delete') }}'
                 let deleteButton = {
                     text: deleteButtonTrans,
-                    url: "{{ route('admin.team.massDestroy') }}",
+                    url: "{{ route('admin.plans.massDestroy') }}",
                     className: 'btn btn-sm btn-danger',
                     action: function(e, dt, node, config) {
                         var ids = $.map(dt.rows({
