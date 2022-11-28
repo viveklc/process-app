@@ -209,6 +209,11 @@
             'update-dept',
             'delete-dept',
             'show-dept',
+            'read-plans',
+            'create-plan',
+            'show-plan',
+            'update-plan',
+            'delete-plan',
         ],
         'author' => [
             'read-language',
