@@ -31,7 +31,7 @@ class TeamProcessController extends Controller
                     $query->orWhere('process_name', 'LIKE', '%' . $inputSearchString . '%');
                 });
             })
-            ->paginate(10);
+            ->paginate(config('app-config.per_page'));
 
 
         return view('teams.team-process.index', compact('teamProcess', 'id'));

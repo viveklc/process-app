@@ -2,6 +2,7 @@
 
 namespace App\Models\Admin;
 
+use App\Models\Org;
 use App\Traits\CreatedUpdatedBy;
 use App\Traits\ModelScopes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -42,6 +43,6 @@ class Department extends Model
 
     public function organization()
     {
-        return $this->belongsTo(Organization::class);
+        return $this->belongsTo(Org::class);
     }
 }

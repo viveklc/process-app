@@ -12,13 +12,13 @@
                     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                         <!--begin::Title-->
                         <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
-                            Depts</h1>
+                            Department Users</h1>
                         <!--end::Title-->
                         <!--begin::Breadcrumb-->
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
-                                <a href="{{ route('admin.depts.index') }}">Dept</a>
+                                <a href="{{ route('admin.depts.index') }}">Departments</a>
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->
@@ -38,7 +38,7 @@
                         <!--begin::Secondary button-->
                         <!--end::Secondary button-->
                         <!--begin::Primary button-->
-                        <a href="{{ route('admin.depts.create') }}"
+                        <a href="{{ route('admin.depts.dept-users.create',$id) }}" id="add_user"
                             class="btn btn-sm fw-bold btn-primary">{{ trans('global.add') }}</a>
                         <!--end::Primary button-->
                     </div>
@@ -56,9 +56,9 @@
                         <!--begin::Card header-->
                         <div class="card-header border-0 pt-6"
                             style="display: flex;
-                                flex-wrap: wrap;
-                                justify-content: end;
-                                margin: 0;">
+                flex-wrap: wrap;
+                justify-content: end;
+                margin: 0;">
                             <!--begin::Card title-->
                             <div class="">
                                 <input type="text" class="form-control form-control-sm"
@@ -75,39 +75,24 @@
                         <div class="card-body pt-0">
                             <!--begin::Table-->
                             <div class="table-responsive">
-                                <table class="table datatable datatable-Cities">
+                                <table class="table table-bordered datatable datatable-Cities">
                                     <thead>
                                         <tr>
-                                            <th width="10">
-                                            </th>
-                                            <th>
-                                                Org Name
-                                            </th>
-                                            <th>
-                                                Name
-                                            </th>
-                                            <th>
-                                                Description
-                                            </th>
-                                            <th class="notexport">
-                                                &nbsp;
-                                            </th>
+                                            <th width="10">#</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            {{-- <th>Role</th> --}}
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($depts as $dept)
-                                            <tr data-entry-id="{{ $dept->id }}">
-                                                <td>
-                                                </td>
-                                                <td>
-                                                    {{ $dept->org->name ?? '' }}
-                                                </td>
-                                                <td>
-                                                    {{ $dept->name ?? '' }}
-                                                </td>
-                                                <td>
-                                                    {{ $dept->description ?? '' }}
-                                                </td>
+                                        @forelse ($deptUsers as $i=>$item)
+                                            <tr data-entry-id="{{ $item->id }}">
+                                                <td></td>
+                                                <td>{{ $item->name }}</td>
+                                                <td>{{ $item->email }}</td>
+                                                <td>{{ $item->phone }}</td>
 
                                                 <!--begin::Action=-->
                                                 <td class="text-end">
@@ -128,35 +113,17 @@
                                                     <!--begin::Menu-->
                                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4"
                                                         data-kt-menu="true">
+
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <a href="{{ route('admin.depts.dept-users.index', $dept->id) }}"
-                                                                class="menu-link px-3"> {{ trans('global.dept_users') }}</a>
-                                                        </div>
-                                                        <!--end::Menu item-->
-                                                        <!--begin::Menu item-->
-                                                        <div class="menu-item px-3">
-                                                            <a href="{{ route('admin.depts.show', $dept->id) }}"
-                                                                class="menu-link px-3"> {{ trans('global.view') }}</a>
-                                                        </div>
-                                                        <!--end::Menu item-->
-                                                        <!--begin::Menu item-->
-                                                        <div class="menu-item px-3">
-                                                            <a href="{{ route('admin.depts.edit', $dept->id) }}"
-                                                                class="menu-link px-3"> {{ trans('global.edit') }}
-                                                            </a>
-                                                        </div>
-                                                        <!--end::Menu item-->
-                                                        <!--begin::Menu item-->
-                                                        <div class="menu-item px-3">
-                                                            <form action="{{ route('admin.depts.destroy', $dept->id) }}"
-                                                                method="POST" id="frmDeleteCountry-{{ $dept->id }}"
+                                                            <form action="{{ route('admin.depts.dept-users.destroy', ['dept'=>$id,'dept_user'=>$item->id]) }}"
+                                                                method="POST" id="frmDeleteschool-{{ $item->id }}"
                                                                 style="display: inline-block; width: 100%;">
                                                                 <input type="hidden" name="_method" value="DELETE">
                                                                 <input type="hidden" name="_token"
                                                                     value="{{ csrf_token() }}">
                                                                 <a href="#" class="menu-link px-3"
-                                                                    onclick="deleteGridRecord('frmDeleteCountry-{{ $dept->id }}')">
+                                                                    onclick="deleteGridRecord('frmDeleteschool-{{ $item->id }}')">
                                                                     {{ trans('global.delete') }}
                                                                 </a>
                                                             </form>
@@ -167,13 +134,13 @@
                                                 </td>
                                                 <!--end::Action=-->
                                             </tr>
-                                        @endforeach
-                                    </tbody>
+                                        @empty
 
+                                        @endforelse
+
+                                    </tbody>
                                 </table>
-                                @if ($depts->count())
-                                    {{ $depts->links() }}
-                                @endif
+
                             </div>
                             <!--end::Table-->
                         </div>
@@ -188,19 +155,22 @@
         <!--end::Content wrapper-->
     </div>
     <!--end:::Main-->
+
 @endsection
 @section('scripts')
     @parent
     <script>
+
+
         var table;
         $(function() {
             let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
 
-            @can('delete-dept')
+            @can('delete-team-user')
                 let deleteButtonTrans = '{{ trans('global.delete') }}'
                 let deleteButton = {
                     text: deleteButtonTrans,
-                    url: "{{ route('admin.depts.massDestroy') }}",
+                    url: "{{ route('admin.dept.users.remove') }}",
                     className: 'btn btn-sm btn-danger',
                     action: function(e, dt, node, config) {
                         var ids = $.map(dt.rows({
@@ -235,6 +205,7 @@
                                         url: config.url,
                                         data: {
                                             ids: ids,
+                                            dept_id: '{{ $id }}',
                                             _method: 'DELETE'
                                         }
                                     })
@@ -258,13 +229,7 @@
                 paging: false,
                 language: {
                     infoEmpty: "{{ trans('global.grid_no_data') }}",
-                    @if ($depts->count())
-                        info: '{{ trans('global.grid_pagination_count_status', [
-                            'firstItem' => $depts->firstItem(),
-                            'lastItem' => $depts->lastItem(),
-                            'total' => $depts->total(),
-                        ]) }}',
-                    @endif
+
                 },
             });
 
@@ -294,7 +259,7 @@
                         requestParameters.push('s=' + $.trim(searchText));
                     }
 
-                    window.location.href = '{{ route('admin.depts.index') }}' + generateQueryString(
+                    window.location.href = '{{ route('admin.depts.dept-users.index',$id) }}' + generateQueryString(
                         requestParameters);
                 } else {
                     table.search(this.value).draw();

@@ -18,7 +18,7 @@ class OrgController extends Controller
     public function index(Request $request)
     {
         abort_if(!auth()->user()->can('read-org'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        
+
         $inputSearchString = $request->input('s', '');
         $orgs = Org::with('media')->when($inputSearchString, function($query) use ($inputSearchString) {
                 $query->where(function($query) use ($inputSearchString) {
@@ -100,7 +100,7 @@ class OrgController extends Controller
     {
         $org->update($request->safe()->only(['name','plan_id', 'address', 'is_premium']));
 
-        if($request->hasFile('image_url') && $request->file('image_url')->isValid()) {           
+        if($request->hasFile('image_url') && $request->file('image_url')->isValid()) {
             $org->addMedia($request->file('image_url'))->toMediaCollection('Org');
         }
         toast(__('global.crud_actions', ['module' => 'Org', 'action' => 'updated']), 'success');

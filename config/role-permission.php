@@ -223,7 +223,10 @@
             'create-process',
             'delete-process',
             'update-process',
-            'show-process'
+            'show-process',
+            'read-department-users',
+            'create-department-users',
+            'delete-department-users'
         ],
         'author' => [
             'read-language',

@@ -32,7 +32,8 @@ class Dept extends Model
     public function deptUsers()
     {
         return $this->belongsToMany(User::class,'dept_users','dept_id','user_id')
-        ->withPivot('valid_from','valid_to');
+        ->withPivot('valid_from','valid_to')
+        ->withTimestamps();
     }
 
     public function processInstances(){

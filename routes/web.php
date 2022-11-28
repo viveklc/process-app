@@ -25,6 +25,7 @@ use App\Http\Controllers\Team\TeamController;
 
 use App\Http\Controllers\OrgController;
 use App\Http\Controllers\DeptController;
+use App\Http\Controllers\DeptUserController;
 use App\Http\Controllers\Permission\PermissionController;
 use App\Http\Controllers\Plan\PlanController;
 use App\Http\Controllers\Process\ProcessController;
@@ -127,6 +128,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     Route::delete('process/destroy', [ProcessController::class, 'massDestroy'])->name('processes.massDestroy');
     Route::resource('processes',ProcessController::class);
+
+    Route::delete('dept/user/mass-remove', [DeptUserController::class, 'massDestroy'])->name('dept.users.remove');
+    Route::resource('depts.dept-users',DeptUserController::class)->except('edit','show');
 
 });
 
