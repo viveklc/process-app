@@ -28,5 +28,5 @@ class Step extends Model
     {
         return $this->belongsTo(Process::class);
     }
-    
+
 }

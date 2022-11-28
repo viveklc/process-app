@@ -27,7 +27,9 @@ use App\Http\Controllers\OrgController;
 use App\Http\Controllers\DeptController;
 use App\Http\Controllers\Permission\PermissionController;
 use App\Http\Controllers\Plan\PlanController;
+use App\Http\Controllers\Process\ProcessController;
 use App\Http\Controllers\Role\RoleController;
+use App\Http\Controllers\Team\TeamProcessController;
 use App\Http\Controllers\Team\TeamUserController;
 
 Route::get('/', function () {
@@ -119,6 +121,12 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     Route::delete('plans/destroy', [PlanController::class, 'massDestroy'])->name('plans.massDestroy');
     Route::resource('plans',PlanController::class);
+
+    Route::delete('team/process/mass-remove', [TeamProcessController::class, 'massDestroy'])->name('team.process.remove');
+    Route::resource('team.team-process', TeamProcessController::class)->except('edit','update','show');
+
+    Route::delete('process/destroy', [ProcessController::class, 'massDestroy'])->name('processes.massDestroy');
+    Route::resource('processes',ProcessController::class);
 
 });
 

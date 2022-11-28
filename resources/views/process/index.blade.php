@@ -12,13 +12,13 @@
                     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                         <!--begin::Title-->
                         <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
-                            Teams</h1>
+                            Process</h1>
                         <!--end::Title-->
                         <!--begin::Breadcrumb-->
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
-                                <a href="{{ route('admin.team.index') }}">Teams</a>
+                                <a href="{{ route('admin.processes.index') }}">Process</a>
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->
@@ -38,7 +38,7 @@
                         <!--begin::Secondary button-->
                         <!--end::Secondary button-->
                         <!--begin::Primary button-->
-                        <a href="{{ route('admin.team.create') }}"
+                        <a href="{{ route('admin.processes.create') }}"
                             class="btn btn-sm fw-bold btn-primary">{{ trans('global.add') }}</a>
                         <!--end::Primary button-->
                     </div>
@@ -79,89 +79,89 @@
                                     <thead>
                                         <tr>
                                             <th width="10"></th>
-                                            <th>Team Name</th>
-                                            <th>Organisation</th>
+                                            <th>Process name</th>
+                                            <th>Total Duration</th>
                                             <th>Valid From</th>
                                             <th>Valid To</th>
+                                            <th>Status</th>
                                             <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse ($teams as $i=>$item)
-                                        <tr data-entry-id="{{ $item->id }}">
-                                            <td></td>
-                                            <td>{{$item->team_name}}</td>
-                                            <td>{{ $item->org->name }}</td>
-                                            <td>{{ $item->valid_from }}</td>
-                                            <td>{{ $item->valid_to }}</td>
-                                            <!--begin::Action=-->
-                                            <td class="text-end">
-                                                <a href="#" class="btn btn-light btn-active-light-primary btn-sm"
-                                                    data-kt-menu-trigger="click"
-                                                    data-kt-menu-placement="bottom-end">Actions
-                                                    <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
-                                                    <span class="svg-icon svg-icon-5 m-0">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                            height="24" viewBox="0 0 24 24" fill="none">
-                                                            <path
-                                                                d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z"
-                                                                fill="black" />
-                                                        </svg>
-                                                    </span>
-                                                    <!--end::Svg Icon-->
-                                                </a>
-                                                <!--begin::Menu-->
-                                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4"
-                                                    data-kt-menu="true">
-                                                    <!--begin::Menu item-->
-                                                    <div class="menu-item px-3">
-                                                        <a href="{{ route('admin.team.team-users.index',$item->id) }}"
-                                                            class="menu-link px-3"> {{ trans('global.team_users') }}</a>
-                                                    </div>
-                                                    <!--end::Menu item-->
-                                                     <!--begin::Menu item-->
-                                                     <div class="menu-item px-3">
-                                                        <a href="{{ route('admin.team.team-process.index',$item->id) }}"
-                                                            class="menu-link px-3"> {{ trans('global.team_process') }}</a>
-                                                    </div>
-                                                    <!--end::Menu item-->
-                                                    <!--begin::Menu item-->
-                                                    <div class="menu-item px-3">
-                                                        <a href="{{ route('admin.team.edit',$item->id) }}"
-                                                            class="menu-link px-3"> {{ trans('global.edit') }}
-                                                        </a>
-                                                    </div>
-                                                    <!--end::Menu item-->
-                                                    <!--begin::Menu item-->
-                                                    <div class="menu-item px-3">
-                                                        <form
-                                                            action="{{ route('admin.team.destroy', $item->id) }}"
-                                                            method="POST" id="frmDeleteschool-{{ $item->id }}"
-                                                            style="display: inline-block; width: 100%;">
-                                                            <input type="hidden" name="_method" value="DELETE">
-                                                            <input type="hidden" name="_token"
-                                                                value="{{ csrf_token() }}">
-                                                            <a href="#" class="menu-link px-3"
-                                                                onclick="deleteGridRecord('frmDeleteschool-{{ $item->id }}')">
-                                                                {{ trans('global.delete') }}
-                                                            </a>
-                                                        </form>
-                                                    </div>
-                                                    <!--end::Menu item-->
-                                                </div>
-                                                <!--end::Menu-->
-                                            </td>
-                                            <!--end::Action=-->
-                                        </tr>
-                                        @empty
+                                        @forelse ($process as $i=>$item)
+                                            <tr data-entry-id="{{ $item->id }}">
+                                                <td></td>
+                                                <td>{{ $item->process_name }}</td>
+                                                <td>{{ $item->total_duration }}</td>
+                                                <td>{{ appDateFormat($item->valid_from) }}</td>
+                                                <td>{{ appDateFormat($item->valid_to) }}</td>
+                                                <td>{!! $item->status == 'active'
+                                                    ? '<span class="badge badge-success">Active</span>'
+                                                    : '<span class="badge badge-danger">In-active</span>' !!}</td>
+                                                <!--begin::Action=-->
+                                                <td class="text-end">
+                                                    <a href="#" class="btn btn-light btn-active-light-primary btn-sm"
+                                                        data-kt-menu-trigger="click"
+                                                        data-kt-menu-placement="bottom-end">Actions
+                                                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
+                                                        <span class="svg-icon svg-icon-5 m-0">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                height="24" viewBox="0 0 24 24" fill="none">
+                                                                <path
+                                                                    d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z"
+                                                                    fill="black" />
+                                                            </svg>
+                                                        </span>
+                                                        <!--end::Svg Icon-->
+                                                    </a>
+                                                    <!--begin::Menu-->
+                                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4"
+                                                        data-kt-menu="true">
 
+                                                        <!--begin::Menu item-->
+                                                        <div class="menu-item px-3">
+                                                            <a href="{{ route('admin.processes.edit', $item->id) }}"
+                                                                class="menu-link px-3"> {{ trans('global.edit') }}
+                                                            </a>
+                                                        </div>
+                                                        <!--end::Menu item-->
+
+                                                        <!--begin::Menu item-->
+                                                        <div class="menu-item px-3">
+                                                            <a href="{{ route('admin.processes.show', $item->id) }}"
+                                                                class="menu-link px-3"> {{ trans('global.view') }}
+                                                            </a>
+                                                        </div>
+                                                        <!--end::Menu item-->
+                                                        <!--begin::Menu item-->
+                                                        <div class="menu-item px-3">
+                                                            <form action="{{ route('admin.processes.destroy', $item->id) }}"
+                                                                method="POST" id="frmDeleteschool-{{ $item->id }}"
+                                                                style="display: inline-block; width: 100%;">
+                                                                <input type="hidden" name="_method" value="DELETE">
+                                                                <input type="hidden" name="_token"
+                                                                    value="{{ csrf_token() }}">
+                                                                <a href="#" class="menu-link px-3"
+                                                                    onclick="deleteGridRecord('frmDeleteschool-{{ $item->id }}')">
+                                                                    {{ trans('global.delete') }}
+                                                                </a>
+                                                            </form>
+                                                        </div>
+                                                        <!--end::Menu item-->
+
+                                                    </div>
+                                                    <!--end::Menu-->
+                                                </td>
+                                                <!--end::Action=-->
+                                            </tr>
+                                        @empty
                                         @endforelse
 
                                     </tbody>
                                 </table>
-                                @if ($teams->count())
-                                {{ $teams->links() }}
-                            @endif
+                                @if ($process->count())
+                                    {{ $process->links() }}
+                                @endif
 
                             </div>
                             <!--end::Table-->
@@ -184,12 +184,11 @@
         var table;
         $(function() {
             let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
-
-            @can('delete-team')
+            @can('delete-plan')
                 let deleteButtonTrans = '{{ trans('global.delete') }}'
                 let deleteButton = {
                     text: deleteButtonTrans,
-                    url: "{{ route('admin.team.massDestroy') }}",
+                    url: "{{ route('admin.processes.massDestroy') }}",
                     className: 'btn btn-sm btn-danger',
                     action: function(e, dt, node, config) {
                         var ids = $.map(dt.rows({
@@ -247,11 +246,11 @@
                 paging: false,
                 language: {
                     infoEmpty: "{{ trans('global.grid_no_data') }}",
-                    @if ($teams->count())
+                    @if ($process->count())
                         info: '{{ trans('global.grid_pagination_count_status', [
-                            'firstItem' => $teams->firstItem(),
-                            'lastItem' => $teams->lastItem(),
-                            'total' => $teams->total(),
+                            'firstItem' => $process->firstItem(),
+                            'lastItem' => $process->lastItem(),
+                            'total' => $process->total(),
                         ]) }}',
                     @endif
                 },
@@ -283,7 +282,7 @@
                         requestParameters.push('s=' + $.trim(searchText));
                     }
 
-                    window.location.href = '{{ route('admin.team.index') }}' + generateQueryString(
+                    window.location.href = '{{ route('admin.processes.index') }}' + generateQueryString(
                         requestParameters);
                 } else {
                     table.search(this.value).draw();

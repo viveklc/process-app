@@ -214,6 +214,16 @@
             'show-plan',
             'update-plan',
             'delete-plan',
+            'create-team-process',
+            'read-team-process',
+            'update-team-process',
+            'delete-team-process',
+            'show-team-process',
+            'read-process',
+            'create-process',
+            'delete-process',
+            'update-process',
+            'show-process'
         ],
         'author' => [
             'read-language',
