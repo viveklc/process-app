@@ -17,13 +17,13 @@
                     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                         <!--begin::Title-->
                         <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
-                            Add Permission</h1>
+                            Add Role</h1>
                         <!--end::Title-->
                         <!--begin::Breadcrumb-->
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
-                                <a href="{{ route('admin.permissions.index') }}">Permissions</a>
+                                <a href="{{ route('admin.roles.index') }}">Roles</a>
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->
@@ -51,18 +51,34 @@
                         <!--begin::Card body-->
                         <div class="card-body pt-7">
                             <form id="kt_subscriptions_export_form" class="form" method="POST"
-                            action="{{ route('admin.permissions.store') }}" enctype="multipart/form-data">
+                            action="{{ route('admin.roles.store') }}" enctype="multipart/form-data">
                             @csrf
 
                             <div class="d-flex flex-column mb-8 fv-row">
                                 <!--begin::Label-->
                                 <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                    <span class="required">Permission Name</span>
+                                    <span class="required">Role Name</span>
                                 </label>
                                 <!--end::Label-->
                                 <input
                                     class="form-control form-control-solid {{ $errors->has('name') ? 'is-invalid' : '' }}"
                                     type="text" name="name" id="name" value="{{ old('name', '') }}" required>
+                            </div>
+
+                            <div class="d-flex flex-column mb-8 fv-row">
+                                <!--begin::Label-->
+                                <label class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                    <span class="required">Permissions</span>
+                                </label>
+                                <!--end::Label-->
+                                <select
+                                    class="form-control form-control-solid select2 {{ $errors->has('permission_name') ? 'is-invalid' : '' }}"
+                                    style="width: 100%;" name="permission_name[]" id="country-dropdown" multiple required>
+                                    @forelse ($permissions as $item)
+                                        <option value="{{ $item->name }}" {{ collect(old('permission_name'))->contains($item->name) ? 'selected' : '' }} >{{ Str::headline($item->name )}}</option>
+                                    @empty
+                                    @endforelse
+                                </select>
                             </div>
 
                             <div>

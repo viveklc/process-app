@@ -12,13 +12,13 @@
                     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                         <!--begin::Title-->
                         <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
-                            Permissions</h1>
+                            Plans</h1>
                         <!--end::Title-->
                         <!--begin::Breadcrumb-->
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
-                                <a href="{{ route('admin.permissions.index') }}">Permissions</a>
+                                <a href="{{ route('admin.roles.index') }}">Plans</a>
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->
@@ -38,7 +38,7 @@
                         <!--begin::Secondary button-->
                         <!--end::Secondary button-->
                         <!--begin::Primary button-->
-                        <a href="{{ route('admin.permissions.create') }}"
+                        <a href="{{ route('admin.plans.create') }}"
                             class="btn btn-sm fw-bold btn-primary">{{ trans('global.add') }}</a>
                         <!--end::Primary button-->
                     </div>
@@ -54,7 +54,11 @@
                     <!--begin::Card-->
                     <div class="card">
                         <!--begin::Card header-->
-                        <div class="card-header border-0 pt-6" style="display: flex; flex-wrap: wrap; justify-content: end; margin: 0;">
+                        <div class="card-header border-0 pt-6"
+                            style="display: flex;
+                flex-wrap: wrap;
+                justify-content: end;
+                margin: 0;">
                             <!--begin::Card title-->
                             <div class="">
                                 <input type="text" class="form-control form-control-sm"
@@ -75,15 +79,25 @@
                                     <thead>
                                         <tr>
                                             <th width="10"></th>
-                                            <th>Permission name</th>
+                                            <th>name</th>
+                                            <th>Price</th>
+                                            <th>Valid From</th>
+                                            <th>Valid To</th>
+                                            <th>Status</th>
                                             <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse ($permissions as $i=>$item)
+                                        @forelse ($plans as $i=>$item)
                                             <tr data-entry-id="{{ $item->id }}">
                                                 <td></td>
-                                                <td>{{ Str::headline($item->name) }}</td>
+                                                <td>{{ $item->plan_name }}</td>
+                                                <td>{{ $item->plan_price }}</td>
+                                                <td>{{ appDateFormat($item->valid_from) }}</td>
+                                                <td>{{ appDateFormat($item->valid_to) }}</td>
+                                                <td>{!! $item->status == 'active'
+                                                    ? '<span class="badge badge-success">Active</span>'
+                                                    : '<span class="badge badge-danger">In-active</span>' !!}</td>
                                                 <!--begin::Action=-->
                                                 <td class="text-end">
                                                     <a href="#" class="btn btn-light btn-active-light-primary btn-sm"
@@ -106,7 +120,7 @@
 
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <a href="{{ route('admin.permissions.edit', $item->id) }}"
+                                                            <a href="{{ route('admin.plans.edit', $item->id) }}"
                                                                 class="menu-link px-3"> {{ trans('global.edit') }}
                                                             </a>
                                                         </div>
@@ -114,19 +128,29 @@
 
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <a href="{{ route('admin.permissions.show', $item->id) }}"
+                                                            <a href="{{ route('admin.plans.show', $item->id) }}"
                                                                 class="menu-link px-3"> {{ trans('global.view') }}
                                                             </a>
+                                                        </div>
+                                                        <!--end::Menu item-->
+                                                        <!--begin::Menu item-->
+                                                        <div class="menu-item px-3">
+                                                            <form action="{{ route('admin.plans.destroy', $item->id) }}"
+                                                                method="POST" id="frmDeleteschool-{{ $item->id }}"
+                                                                style="display: inline-block; width: 100%;">
+                                                                <input type="hidden" name="_method" value="DELETE">
+                                                                <input type="hidden" name="_token"
+                                                                    value="{{ csrf_token() }}">
+                                                                <a href="#" class="menu-link px-3"
+                                                                    onclick="deleteGridRecord('frmDeleteschool-{{ $item->id }}')">
+                                                                    {{ trans('global.delete') }}
+                                                                </a>
+                                                            </form>
                                                         </div>
                                                         <!--end::Menu item-->
 
                                                     </div>
                                                     <!--end::Menu-->
-
-
-
-
-
                                                 </td>
                                                 <!--end::Action=-->
                                             </tr>
@@ -135,8 +159,8 @@
 
                                     </tbody>
                                 </table>
-                                @if ($permissions->count())
-                                    {{ $permissions->links() }}
+                                @if ($plans->count())
+                                    {{ $plans->links() }}
                                 @endif
 
                             </div>
@@ -160,19 +184,73 @@
         var table;
         $(function() {
             let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
+            @can('delete-plan')
+                let deleteButtonTrans = '{{ trans('global.delete') }}'
+                let deleteButton = {
+                    text: deleteButtonTrans,
+                    url: "{{ route('admin.plans.massDestroy') }}",
+                    className: 'btn btn-sm btn-danger',
+                    action: function(e, dt, node, config) {
+                        var ids = $.map(dt.rows({
+                            selected: true
+                        }).nodes(), function(entry) {
+                            return $(entry).data('entry-id')
+                        });
 
+                        if (ids.length === 0) {
+                            Swal.fire(
+                                '{{ trans('global.message') }}!',
+                                '{{ trans('global.grid.no_item_selected') }}',
+                            )
+                            return
+                        }
 
+                        Swal.fire({
+                            title: '{{ trans('global.are_you_sure') }}',
+                            text: '{{ trans('global.are_you_sure_delete_msg') }}',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#d33',
+                            cancelButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $.ajax({
+                                        headers: {
+                                            'x-csrf-token': _token
+                                        },
+                                        method: 'POST',
+                                        url: config.url,
+                                        data: {
+                                            ids: ids,
+                                            _method: 'DELETE'
+                                        }
+                                    })
+                                    .done(function() {
+                                        Swal.fire(
+                                            '{{ trans('global.delete') }}!',
+                                            '{{ trans('global.success') }}'
+                                        );
+
+                                        location.reload()
+                                    })
+                            }
+                        })
+                    }
+                }
+                dtButtons.push(deleteButton)
+            @endcan
 
             $.extend(true, $.fn.dataTable.defaults, {
                 orderCellsTop: true,
                 paging: false,
                 language: {
                     infoEmpty: "{{ trans('global.grid_no_data') }}",
-                    @if ($permissions->count())
+                    @if ($plans->count())
                         info: '{{ trans('global.grid_pagination_count_status', [
-                            'firstItem' => $permissions->firstItem(),
-                            'lastItem' => $permissions->lastItem(),
-                            'total' => $permissions->total(),
+                            'firstItem' => $plans->firstItem(),
+                            'lastItem' => $plans->lastItem(),
+                            'total' => $plans->total(),
                         ]) }}',
                     @endif
                 },
@@ -204,7 +282,7 @@
                         requestParameters.push('s=' + $.trim(searchText));
                     }
 
-                    window.location.href = '{{ route('admin.permissions.index') }}' + generateQueryString(
+                    window.location.href = '{{ route('admin.plans.index') }}' + generateQueryString(
                         requestParameters);
                 } else {
                     table.search(this.value).draw();

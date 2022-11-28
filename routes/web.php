@@ -25,6 +25,9 @@ use App\Http\Controllers\Team\TeamController;
 
 use App\Http\Controllers\OrgController;
 use App\Http\Controllers\DeptController;
+use App\Http\Controllers\Permission\PermissionController;
+use App\Http\Controllers\Plan\PlanController;
+use App\Http\Controllers\Role\RoleController;
 use App\Http\Controllers\Team\TeamUserController;
 
 Route::get('/', function () {
@@ -110,6 +113,13 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     Route::delete('depts/destroy', [DeptController::class, 'massDestroy'])->name('depts.massDestroy');
     Route::resource('depts', DeptController::class);
+
+    Route::resource('permissions',PermissionController::class)->except(['destroy']);
+    Route::resource('roles',RoleController::class)->except(['destroy']);
+
+    Route::delete('plans/destroy', [PlanController::class, 'massDestroy'])->name('plans.massDestroy');
+    Route::resource('plans',PlanController::class);
+
 });
 
 require __DIR__ . '/auth.php';
