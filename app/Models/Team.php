@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Models\Activity\ProcessInstance;
 use App\Models\Activity\UserInvite;
+use App\Models\Process\Process;
+use App\Models\Process\ProcessTeam;
 use App\Traits\CreatedUpdatedBy;
 use App\Traits\ModelAccessor;
 use App\Traits\ModelScopes;
@@ -41,13 +43,14 @@ class Team extends Model
         return $this->hasMany(ProcessInstance::class, 'team_id');
     }
 
-    public function scopeWithFilter($query,$filter){
-        return $query->when(!empty($filter->input('s','')) , function($query) use ($filter){
-            $query->where('team_name',$filter->input('s',''));
-        });
-    }
 
     public function org(){
         return $this->hasOne(Org::class,'id','org_id');
+    }
+
+    public function teamProcess($search=""){
+        return $this->belongsToMany(Process::class,'process_teams','team_id','process_id')
+        ->withPivot('valid_from','valid_to')
+        ->withTimestamps();
     }
 }

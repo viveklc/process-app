@@ -11,14 +11,14 @@
                     <!--begin::Page title-->
                     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                         <!--begin::Title-->
-                        <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Plans
+                        <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Processes
                         </h1>
                         <!--end::Title-->
                         <!--begin::Breadcrumb-->
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
-                                <a href="{{ route('admin.plans.index') }}">Plans</a>
+                                <a href="{{ route('admin.processes.index') }}">Processes</a>
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->
@@ -50,18 +50,18 @@
                                 <tbody>
                                     <tr>
                                         <th>
-                                            Name
+                                            Process name
                                         </th>
                                         <td>
-                                            {{ $plan->plan_name ?? '' }}
+                                            {{ $process->process_name ?? '' }}
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>
-                                            Price
+                                            Total Duration
                                         </th>
                                         <td>
-                                            {{ $plan->plan_price ?? '' }}
+                                            {{ $process->total_duration ?? '' }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -69,7 +69,7 @@
                                             Valid From
                                         </th>
                                         <td>
-                                            {{ appDateFormat($plan->valid_from) ?? '' }}
+                                            {{ appDateFormat($process->valid_from) ?? '' }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -77,7 +77,7 @@
                                             Valid To
                                         </th>
                                         <td>
-                                            {{ appDateFormat($plan->valid_to) ?? '' }}
+                                            {{ appDateFormat($process->valid_to) ?? '' }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -85,17 +85,10 @@
                                             Description
                                         </th>
                                         <td>
-                                            {{ $plan->plan_description ?? '' }}
+                                            {{ $process->process_description ?? '' }}
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <th>
-                                            Features
-                                        </th>
-                                        <td>
-                                            {{ $plan->plan_features ?? '' }}
-                                        </td>
-                                    </tr>
+
 
                                 </tbody>
 
@@ -104,13 +97,13 @@
                             <table class="table table-bordered table-striped">
                                 <tbody>
 
-                                    @forelse ($plan->planDetails as $item)
+                                    @forelse ($process->processDetails as $item)
                                         <tr>
                                             <th>
-                                                {{ Str::headline($item->plan_key_name) }}
+                                                {{ Str::headline($item->process_key_name) }}
                                             </th>
                                             <td>
-                                                {{ $item->plan_key_value }}
+                                                {{ $item->process_key_value }}
                                             </td>
                                         </tr>
                                     @empty

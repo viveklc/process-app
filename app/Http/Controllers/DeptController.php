@@ -25,7 +25,7 @@ class DeptController extends Controller
                 $query->where(function($query) use ($inputSearchString) {
                     $query->orWhere('name', 'LIKE', '%'.$inputSearchString.'%');
                 });
-            })          
+            })
             ->isActive()
             ->orderBy('name')
             ->paginate(config('app-config.datatable_default_row_count', 25))
@@ -44,7 +44,7 @@ class DeptController extends Controller
     public function create()
     {
         abort_if(!auth()->user()->can('create-dept'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-       
+
         $orgs = Org::select('id', 'name')
             ->isActive()
             ->orderBy('name')

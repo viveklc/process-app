@@ -140,7 +140,7 @@ class PlanController extends Controller
             'is_active' => 3
         ]);
 
-        return back()->with('success', 'Team deleted successfully');
+        return back()->with('success', 'Plan deleted successfully');
     }
 
     public function massDestroy(MassDestroyPlanRequest $request)

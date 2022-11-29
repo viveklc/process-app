@@ -20,6 +20,21 @@ class Process extends Model
 
     protected $guarded = [];
 
+    public const ADDITIONAL_DETAILS = [
+        'plan_type' => [
+            'value' => 'Plan Type',
+            'type'  =>  'type'
+        ],
+        'effective_from' => [
+            'value' => 'Effective From',
+            'type'  =>  'date'
+        ],
+        'test_field' => [
+            'value' => 'Test Field',
+            'type'  =>  'test'
+        ],
+    ];
+
     /** Spatie Activity Log */
     public function getActivitylogOptions(): LogOptions // spatie model log options
     {
@@ -34,7 +49,7 @@ class Process extends Model
 
     public function processDetails()
     {
-        return $this->hasMany(ProcessDetail::class);
+        return $this->hasMany(ProcessDetail::class,'process_id');
     }
 
     public function processRecurrences()
@@ -44,9 +59,9 @@ class Process extends Model
 
     public function processTeams()
     {
-        return $this->hasMany(ProcessTeam::class);
+        return $this->hasMany(ProcessTeam::class,'process_id');
     }
-    
+
     public function steps()
     {
         return $this->hasMany(Step::class);

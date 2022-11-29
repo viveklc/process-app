@@ -40,10 +40,9 @@ class TeamUserController extends Controller
     {
         abort_if(!auth()->user()->can('add-team-user'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $team = Team::find($request->team_id);
         $team->teamUser()->attach($request->user_id);
 
-        return redirect()->route('admin.team.user.index', $team->id)->with('success', 'User added to team');
+        return redirect()->route('admin.team.team-users.index', $team->id)->with('success', 'User added to team');
     }
 
     public function destroy(Team $team, $user_id)
