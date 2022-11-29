@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\CityController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\StateController;
 use App\Http\Controllers\ZipcodeController;
@@ -82,7 +82,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::delete('schools/destroy', [SchoolController::class, 'massDestroy'])->name('schools.massDestroy');
     Route::resource('schools', SchoolController::class);
 
-    Route::resource('users', UserController::class);
+    // Route::resource('users', UserController::class);
 
     Route::delete('levels/destroy', [LevelController::class, 'massDestroy'])->name('levels.massDestroy');
     Route::resource('levels', LevelController::class);
@@ -131,6 +131,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     Route::delete('dept/user/mass-remove', [DeptUserController::class, 'massDestroy'])->name('dept.users.remove');
     Route::resource('depts.dept-users',DeptUserController::class)->except('edit','show');
+
+    Route::delete('users/destroy',[UserController::class,'massDestroy'])->name('users.massDestroy');
+    Route::get('org/{user:org_id}',[UserController::class,'fetchUsersByOrgId'])->name('org.users');
+    Route::resource('users',UserController::class);
 
 });
 

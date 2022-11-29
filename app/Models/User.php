@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Models\Role;
 
 class User extends Authenticatable implements HasMedia
 {
@@ -32,7 +33,8 @@ class User extends Authenticatable implements HasMedia
      * @var array<int, string>
      */
     public $fillable  = [
-        'org_id', 'name', 'username', 'email', 'password', 'phone', 'image_url', 'is_org_admin'
+        'org_id', 'name', 'username', 'email', 'password', 'phone', 'image_url', 'is_org_admin', 'role_id', 'is_org_admin',
+        'is_active', 'status', 'createdby_userid', 'updatedby_userid'
     ];
 
     /**
@@ -191,6 +193,11 @@ class User extends Authenticatable implements HasMedia
         return $this->belongsTo(Org::class);
     }
 
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
     public function userDeptRoles()
     {
         return $this->belongsToMany(Dept::class, 'user_org_roles', 'user_id', 'dept_id')
@@ -199,12 +206,16 @@ class User extends Authenticatable implements HasMedia
 
     public function collegues()
     {
-        return $this->hasMany(User::class, 'is_colleague_of_user_id');
+        return $this->belongsToMany(User::class, 'user_relations', 'user_id', 'is_colleague_of_user_id')
+            ->withPivot('valid_from', 'valid_to')
+            ->withTimestamps();
     }
 
     public function reportToUsers()
     {
-        return $this->hasMany(User::class, 'reports_to_user_id');
+        return $this->belongsToMany(User::class, 'user_relations', 'user_id', 'reports_to_user_id')
+            ->withPivot('valid_from', 'valid_to')
+            ->withTimestamps();
     }
 
     public function invites()
