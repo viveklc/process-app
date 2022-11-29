@@ -41,6 +41,54 @@
             </div>
             <!--end:Menu item-->
 
+            <div class="menu-item">
+                <!--begin:Menu link-->
+                <a class="menu-link  {{ request()->is("admin/permissions*") ? 'active' : '' }}" href="{{ route('admin.permissions.index') }}">
+                <span class="menu-bullet">
+                <span class="bullet bullet-dot"></span>
+                </span>
+                <span class="menu-title">Permissions</span>
+                </a>
+                <!--end:Menu link-->
+            </div>
+            <!--end:Menu item-->
+
+            <div class="menu-item">
+                <!--begin:Menu link-->
+                <a class="menu-link  {{ request()->is("admin/roles*") ? 'active' : '' }}" href="{{ route('admin.roles.index') }}">
+                <span class="menu-bullet">
+                <span class="bullet bullet-dot"></span>
+                </span>
+                <span class="menu-title">Roles</span>
+                </a>
+                <!--end:Menu link-->
+            </div>
+            <!--end:Menu item-->
+
+            <div class="menu-item">
+                <!--begin:Menu link-->
+                <a class="menu-link  {{ request()->is("admin/plans*") ? 'active' : '' }}" href="{{ route('admin.plans.index') }}">
+                <span class="menu-bullet">
+                <span class="bullet bullet-dot"></span>
+                </span>
+                <span class="menu-title">Plans</span>
+                </a>
+                <!--end:Menu link-->
+            </div>
+            <!--end:Menu item-->
+            <div class="menu-item">
+                <!--begin:Menu link-->
+                <a class="menu-link  {{ request()->is("admin/processes*") ? 'active' : '' }}" href="{{ route('admin.processes.index') }}">
+                <span class="menu-bullet">
+                <span class="bullet bullet-dot"></span>
+                </span>
+                <span class="menu-title">Processes</span>
+                </a>
+                <!--end:Menu link-->
+            </div>
+            <!--end:Menu item-->
+
+
             <!--begin:Menu item-->
              <div class="menu-item">
                 <!--begin:Menu link-->
@@ -49,6 +97,19 @@
                 <span class="bullet bullet-dot"></span>
                 </span>
                 <span class="menu-title">Countries</span>
+                </a>
+                <!--end:Menu link-->
+             </div>
+            <!--end:Menu item-->
+
+            <!--begin:Menu item-->
+            <div class="menu-item">
+                <!--begin:Menu link-->
+                <a class="menu-link  {{ request()->is("admin/team*") ? 'active' : '' }}" href="{{ route('admin.team.index') }}">
+                <span class="menu-bullet">
+                <span class="bullet bullet-dot"></span>
+                </span>
+                <span class="menu-title">Teams</span>
                 </a>
                 <!--end:Menu link-->
              </div>
@@ -218,6 +279,32 @@
                 <span class="bullet bullet-dot"></span>
                 </span>
                 <span class="menu-title">Tags</span>
+                </a>
+                <!--end:Menu link-->
+             </div>
+            <!--end:Menu item-->
+
+            <!--begin:Menu item-->
+            <div class="menu-item">
+                <!--begin:Menu link-->
+                <a class="menu-link  {{ request()->is("admin/orgs*") ? 'active' : '' }}" href="{{ route('admin.orgs.index') }}">
+                <span class="menu-bullet">
+                <span class="bullet bullet-dot"></span>
+                </span>
+                <span class="menu-title">Orgs</span>
+                </a>
+                <!--end:Menu link-->
+             </div>
+            <!--end:Menu item-->
+
+            <!--begin:Menu item-->
+             <div class="menu-item">
+                <!--begin:Menu link-->
+                <a class="menu-link  {{ request()->is("admin/depts*") ? 'active' : '' }}" href="{{ route('admin.depts.index') }}">
+                <span class="menu-bullet">
+                <span class="bullet bullet-dot"></span>
+                </span>
+                <span class="menu-title">Depts</span>
                 </a>
                 <!--end:Menu link-->
              </div>

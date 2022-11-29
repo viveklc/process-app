@@ -21,12 +21,23 @@ use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\SchoolController;
+use App\Http\Controllers\Team\TeamController;
+
+use App\Http\Controllers\OrgController;
+use App\Http\Controllers\DeptController;
+use App\Http\Controllers\DeptUserController;
+use App\Http\Controllers\Permission\PermissionController;
+use App\Http\Controllers\Plan\PlanController;
+use App\Http\Controllers\Process\ProcessController;
+use App\Http\Controllers\Role\RoleController;
+use App\Http\Controllers\Team\TeamProcessController;
+use App\Http\Controllers\Team\TeamUserController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function() {
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
@@ -90,6 +101,37 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function() {
 
     Route::delete('books/destroy', [BookController::class, 'massDestroy'])->name('books.massDestroy');
     Route::resource('books', BookController::class);
+
+    /**
+     * team related routes
+     */
+    Route::delete('team/destroy', [TeamController::class, 'massDestroy'])->name('team.massDestroy');
+    Route::resource('team', TeamController::class);
+
+    Route::delete('team/user/mass-remove', [TeamUserController::class, 'removeUsersFromTeam'])->name('team.users.remove');
+    Route::resource('team.team-users',TeamUserController::class)->only(['index','store','create','destroy']);
+
+    Route::delete('orgs/destroy', [OrgController::class, 'massDestroy'])->name('orgs.massDestroy');
+    Route::resource('orgs', OrgController::class);
+
+    Route::delete('depts/destroy', [DeptController::class, 'massDestroy'])->name('depts.massDestroy');
+    Route::resource('depts', DeptController::class);
+
+    Route::resource('permissions',PermissionController::class)->except(['destroy']);
+    Route::resource('roles',RoleController::class)->except(['destroy']);
+
+    Route::delete('plans/destroy', [PlanController::class, 'massDestroy'])->name('plans.massDestroy');
+    Route::resource('plans',PlanController::class);
+
+    Route::delete('team/process/mass-remove', [TeamProcessController::class, 'massDestroy'])->name('team.process.remove');
+    Route::resource('team.team-process', TeamProcessController::class)->except('edit','update','show');
+
+    Route::delete('process/destroy', [ProcessController::class, 'massDestroy'])->name('processes.massDestroy');
+    Route::resource('processes',ProcessController::class);
+
+    Route::delete('dept/user/mass-remove', [DeptUserController::class, 'massDestroy'])->name('dept.users.remove');
+    Route::resource('depts.dept-users',DeptUserController::class)->except('edit','show');
+
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

@@ -10,6 +10,7 @@ use App\Http\Requests\StoreDepartmentRequest;
 use App\Http\Requests\UpdateDepartmentRequest;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\MassDestroyDepartmentRequest;
+use App\Models\Org;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class DepartmentController extends Controller
@@ -49,7 +50,7 @@ class DepartmentController extends Controller
     {
         abort_if(!auth()->user()->hasRole('admin'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $organizations = Organization::select('id', 'name')
+        $organizations = Org::select('id', 'name')
             ->isActive()
             ->orderBy('name')
             ->pluck('name', 'id')
@@ -94,7 +95,7 @@ class DepartmentController extends Controller
     {
         abort_if(!auth()->user()->hasRole('admin'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $organizations = Organization::select('id', 'name')
+        $organizations = Org::select('id', 'name')
             ->isActive()
             ->orderBy('name')
             ->pluck('name', 'id')

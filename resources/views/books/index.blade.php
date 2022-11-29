@@ -43,10 +43,10 @@
                         <!--begin::Secondary button-->
                         <!--end::Secondary button-->
                         <!--begin::Primary button-->
-                        @if (request()->get('subject_id'))
+                        {{-- @if (request()->get('subject_id')) --}}
                             <a href="{{ route('admin.books.create', ['subject_id' => request()->get('subject_id')]) }}"
                                 class="btn btn-sm fw-bold btn-primary">{{ trans('global.add') }}</a>
-                        @endif
+                        {{-- @endif --}}
                         <!--end::Primary button-->
                     </div>
                     <!--end::Actions-->

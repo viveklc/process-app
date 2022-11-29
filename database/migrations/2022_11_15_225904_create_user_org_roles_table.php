@@ -13,14 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('courses', function (Blueprint $table) {
+        Schema::create('user_org_roles', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
-            $table->text('short_description')->nullable();
-            $table->text('long_description')->nullable();
-            $table->string('tags')->nullable();
-            // OTHER COLUMNS DEFINATION
-
+            $table->unsignedInteger('user_id')->nullable()->index();
+            $table->unsignedInteger('dept_id')->nullable()->index();
+            $table->string('current_role')->nullable();
+            $table->timestamp('valid_from')->nullable();
+            $table->timestamp('valid_to')->nullable();
             $table->integer('is_active')->default('1')->comment('1[Active] 2[Inactive] 3[Deleted]');
             $table->string('status')->nullable();
             $table->unsignedBigInteger('createdby_userid')->nullable();
@@ -36,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('courses');
+        Schema::dropIfExists('user_org_roles');
     }
 };
