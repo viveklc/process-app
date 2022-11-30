@@ -30,6 +30,7 @@ use App\Http\Controllers\Permission\PermissionController;
 use App\Http\Controllers\Plan\PlanController;
 use App\Http\Controllers\Process\ProcessController;
 use App\Http\Controllers\Role\RoleController;
+use App\Http\Controllers\step\StepController;
 use App\Http\Controllers\Team\TeamProcessController;
 use App\Http\Controllers\Team\TeamUserController;
 
@@ -135,6 +136,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::delete('users/destroy',[UserController::class,'massDestroy'])->name('users.massDestroy');
     Route::get('org/{user:org_id}',[UserController::class,'fetchUsersByOrgId'])->name('org.users');
     Route::resource('users',UserController::class);
+
+    Route::delete('steps/destroy',[StepController::class,'massDestroy'])->name('steps.massDestroy');
+    Route::resource('steps',StepController::class);
 
 });
 

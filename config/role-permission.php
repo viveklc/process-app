@@ -226,7 +226,11 @@
             'show-process',
             'read-department-users',
             'create-department-users',
-            'delete-department-users'
+            'delete-department-users',
+            'read-step',
+            'create-step',
+            'update-step',
+            'delete-step'
         ],
         'author' => [
             'read-language',

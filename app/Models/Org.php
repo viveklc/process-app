@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Activity\ProcessInstance;
 use App\Models\Activity\UserInvite;
+use App\Models\Process\Step;
 use App\Traits\CreatedUpdatedBy;
 use App\Traits\ModelScopes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -63,6 +64,10 @@ class Org extends Model implements HasMedia
 
     public function teamOrg(){
         return $this->hasMany(Team::class,'org_id');
+    }
+
+    public function steps(){
+        return $this->hasMany(Step::class,'org_id');
     }
 
 

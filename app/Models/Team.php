@@ -6,6 +6,7 @@ use App\Models\Activity\ProcessInstance;
 use App\Models\Activity\UserInvite;
 use App\Models\Process\Process;
 use App\Models\Process\ProcessTeam;
+use App\Models\Process\Step;
 use App\Traits\CreatedUpdatedBy;
 use App\Traits\ModelAccessor;
 use App\Traits\ModelScopes;
@@ -46,6 +47,10 @@ class Team extends Model
 
     public function org(){
         return $this->hasOne(Org::class,'id','org_id');
+    }
+
+    public function step(){
+        return $this->hasMany(Step::class,'team_id');
     }
 
     public function teamProcess($search=""){
