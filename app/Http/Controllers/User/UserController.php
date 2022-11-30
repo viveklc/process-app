@@ -59,7 +59,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        abort_if(!auth()->user()->can('read-user'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(!auth()->user()->can('create-user'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $org = Org::query()
             ->select('id', 'name')
@@ -83,7 +83,7 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        abort_if(!auth()->user()->can('read-user'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(!auth()->user()->can('create-user'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $validated = $request->merge(['is_org_admin' => isset($request->is_org_admin) ? 1 : 2, 'password' => Hash::make($request->password)]);
         $user = User::create($validated->except('is_colleague_of_user_id', 'reports_to_user_id'));
@@ -107,7 +107,14 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+        abort_if(!auth()->user()->can('show-user'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $user->load('reportToUsers');
+        $user->load('collegues');
+        $user->load('org:id,name');
+        $user->load('role:id,name');
+        // dd($user);
+        return view('users.show', compact('user'));
     }
 
     /**
@@ -118,7 +125,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        abort_if(!auth()->user()->can('read-user'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(!auth()->user()->can('update-user'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $org = Org::query()
             ->select('id', 'name')
@@ -153,7 +160,7 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        abort_if(!auth()->user()->can('read-user'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(!auth()->user()->can('update-user'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $validated = $request->merge(['is_org_admin' => isset($request->is_org_admin) ? 1 : 2, 'password' => Hash::make($request->password)]);
         $user->update($validated->except('is_colleague_of_user_id', 'reports_to_user_id'));
@@ -192,6 +199,8 @@ class UserController extends Controller
 
     public function massDestroy(MassDestroyUserRequest $request)
     {
+        abort_if(!auth()->user()->can('delete-user'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         User::whereIn('id', $request->input('ids'))
             ->update([
                 'is_active' => 3,

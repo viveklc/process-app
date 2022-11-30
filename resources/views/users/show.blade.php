@@ -11,14 +11,14 @@
                     <!--begin::Page title-->
                     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                         <!--begin::Title-->
-                        <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Processes
+                        <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Users
                         </h1>
                         <!--end::Title-->
                         <!--begin::Breadcrumb-->
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
-                                <a href="{{ route('admin.processes.index') }}">Processes</a>
+                                <a href="{{ route('admin.users.index') }}">Users</a>
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->
@@ -50,42 +50,85 @@
                                 <tbody>
                                     <tr>
                                         <th>
-                                            Process name
+                                            name
                                         </th>
                                         <td>
-                                            {{ $process->process_name ?? '' }}
+                                            {{ $user->name ?? '' }}
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>
-                                            Total Duration
+                                            Organisation
                                         </th>
                                         <td>
-                                            {{ $process->total_duration ?? '' }}
+                                            {{ $user->org->name ?? '' }}
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>
-                                            Valid From
+                                            Username
                                         </th>
                                         <td>
-                                            {{ appDateFormat($process->valid_from) ?? '' }}
+                                            {{ $user->username }}
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>
-                                            Valid To
+                                            Email
                                         </th>
                                         <td>
-                                            {{ appDateFormat($process->valid_to) ?? '' }}
+                                            {{ $user->email }}
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>
-                                            Description
+                                            Mobile
                                         </th>
                                         <td>
-                                            {{ $process->process_description ?? '' }}
+                                            {{ $user->phone ?? '' }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Role
+                                        </th>
+                                        <td>
+                                            {{ $user->role->name ?? '' }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Is Organisatin Admin
+                                        </th>
+                                        <td>
+                                            {{ $user->is_org_admin == 1 ? 'Yes' : 'No' }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Collegues
+                                        </th>
+                                        <td>
+                                            @php
+                                                $collegues = collect($user->collegues)
+                                                    ->pluck('name')
+                                                    ->toArray();
+                                            @endphp
+                                            {{ implode(",",$collegues) ?? '' }}
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>
+                                            Reports To
+                                        </th>
+                                        <td>
+                                            @php
+                                                $reportToUsers = collect($user->reportToUsers)
+                                                    ->pluck('name')
+                                                    ->toArray();
+                                            @endphp
+                                            {{ implode(",",$reportToUsers) ?? '' }}
                                         </td>
                                     </tr>
 
@@ -93,25 +136,7 @@
                                 </tbody>
 
                             </table>
-                            <h3>Addition Information</h3>
-                            <table class="table table-bordered table-striped">
-                                <tbody>
 
-                                    @forelse ($process->processDetails as $item)
-                                        <tr>
-                                            <th>
-                                                {{ Str::headline($item->process_key_name) }}
-                                            </th>
-                                            <td>
-                                                {{ $item->process_key_value }}
-                                            </td>
-                                        </tr>
-                                    @empty
-                                    @endforelse
-
-                                </tbody>
-
-                            </table>
                         </div>
                         <!--end::Card body-->
                     </div>
