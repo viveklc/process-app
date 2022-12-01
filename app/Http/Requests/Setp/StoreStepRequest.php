@@ -35,7 +35,8 @@ class StoreStepRequest extends FormRequest
             'after_step_id' => ['nullable','exists:steps,id'],
             'is_substep' => ['nullable'],
             'substep_of_step_id' => ['required_if:is_substep,on'],
-            'has_attachments' => ['nullable','file'],
+            'has_attachments' => ['nullable','array','min:1'],
+            'has_attachments.*' => ['file'],
             'is_mandatory' => ['nullable'],
             'is_conditional' => ['nullable']
         ];

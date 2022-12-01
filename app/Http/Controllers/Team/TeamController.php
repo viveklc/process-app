@@ -79,11 +79,21 @@ class TeamController extends Controller
     {
         abort_if(!auth()->user()->can('create-team'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
+        // dd($request->all());
+
         try {
             $team = Team::create($request->safe()->except('user_id'));
             $team->teamUser()->attach($request->user_id, $request->only('valid_from', 'valid_to'));
 
-            return back()->with('success', 'Team created successfully');
+            if($request->hasFile('attachments')){
+                $team->addMultipleMediaFromRequest(['attachments'])
+                ->each(function($attachment){
+                    $attachment->toMediaCollection('attachments');
+                });
+            }
+
+            toast(__('global.crud_actions', ['module' => 'Team', 'action' => 'created']), 'success');
+            return back();
         } catch (Exception $e) {
 
             abort(403, $e->getMessage());
@@ -145,6 +155,14 @@ class TeamController extends Controller
         try {
             $team->update($request->safe()->except('user_id'));
             $team->teamUser()->sync($request->user_id, $request->only('valid_from', 'valid_to'));
+
+            if($request->hasFile('attachments')){
+                $team->media()->delete();
+                $team->addMultipleMediaFromRequest(['attachments'])
+                ->each(function($attachment){
+                    $attachment->toMediaCollection('attachments');
+                });
+            }
 
             return back()->with('success', 'Team Updated Successfully');
         } catch (Exception $e) {

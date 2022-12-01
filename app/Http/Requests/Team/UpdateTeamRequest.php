@@ -38,7 +38,9 @@ class UpdateTeamRequest extends FormRequest
                 ->where(function ($q) {
                     return $q->where('org_id', $this->request->get('org_id'));
                 })
-            ]
+            ],
+            'attachments' => ['nullable','array','min:1'],
+            'attachments.*' => ['file']
         ];
     }
 }

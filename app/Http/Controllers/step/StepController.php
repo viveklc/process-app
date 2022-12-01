@@ -13,6 +13,7 @@ use App\Models\Process\Step;
 use App\Models\Team;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Spatie\MediaLibrary\MediaCollections\FileAdder;
 use Symfony\Component\HttpFoundation\Response;
 
 class StepController extends Controller
@@ -71,23 +72,6 @@ class StepController extends Controller
             ->isActive()
             ->orderBy('name')
             ->get();
-        $depts = Dept::query()
-            ->select('name', 'id')
-            ->isActive()
-            ->orderBy('name')
-            ->get();
-
-        $teams = Team::query()
-            ->select('team_name as name', 'id')
-            ->isActive()
-            ->orderBy('team_name')
-            ->get();
-
-        $process = Process::query()
-            ->select('process_name as name', 'id')
-            ->isActive()
-            ->orderBy('process_name')
-            ->get();
 
         $steps = Step::query()
             ->select('name', 'id')
@@ -95,7 +79,7 @@ class StepController extends Controller
             ->orderBy('name')
             ->get();
 
-        return view('steps.create', compact('org', 'depts', 'teams', 'process', 'steps'));
+        return view('steps.create', compact('org', 'steps'));
     }
 
     /**
@@ -118,8 +102,12 @@ class StepController extends Controller
 
         $step = Step::create($validated->all());
 
-        if ($request->hasFile('has_attachments') && $request->file('has_attachments')->isValid()) {
-            $step->addMediaFromRequest('has_attachments')->toMediaCollection('has_attachments');
+        if ($request->hasFile('has_attachments')) {
+            // $step->addMediaFromRequest('has_attachments')->toMediaCollection('has_attachments');
+            $step->addMultipleMediaFromRequest(['has_attachments'])
+            ->each(function(FileAdder $fileAdder){
+                $fileAdder->toMediaCollection('has_attachment');
+            });
         }
 
         return back()->with('success', 'Step created successfully');
@@ -134,6 +122,13 @@ class StepController extends Controller
     public function show(Step $step)
     {
         abort_if(!auth()->user()->can('show-step'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $step->load('process:id,process_name');
+        $step->load('team:id,team_name');
+        $step->load('org:id,name');
+        $step->load('dept:id,name');
+
+        return view('steps.show',compact('step'));
     }
 
     /**
@@ -151,6 +146,7 @@ class StepController extends Controller
             ->isActive()
             ->orderBy('name')
             ->get();
+
         $depts = Dept::query()
             ->select('name', 'id')
             ->isActive()

@@ -47,5 +47,4 @@ class Step extends Model implements HasMedia
         return $this->belongsTo(Dept::class);
     }
 
-
 }

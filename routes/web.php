@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AjaxController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\CityController;
@@ -134,10 +135,13 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('depts.dept-users',DeptUserController::class)->except('edit','show');
 
     Route::delete('users/destroy',[UserController::class,'massDestroy'])->name('users.massDestroy');
-    Route::get('org/{user:org_id}',[UserController::class,'fetchUsersByOrgId'])->name('org.users');
+    Route::get('org/{user:org_id}',[AjaxController::class,'fetchUsersByOrgId'])->name('org.users');
     Route::resource('users',UserController::class);
 
     Route::delete('steps/destroy',[StepController::class,'massDestroy'])->name('steps.massDestroy');
+    Route::get('org/{org_id}/depts',[AjaxController::class,'deptsByOrgId'])->name('org.depts');
+    Route::get('org/{org_id}/teams',[AjaxController::class,'teamsByOrgId'])->name('org.teams');
+    Route::get('team/{team_id}/process',[AjaxController::class,'processByTeamId'])->name('team.process');
     Route::resource('steps',StepController::class);
 
 });

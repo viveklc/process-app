@@ -11,14 +11,14 @@
                     <!--begin::Page title-->
                     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                         <!--begin::Title-->
-                        <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Processes
+                        <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Steps
                         </h1>
                         <!--end::Title-->
                         <!--begin::Breadcrumb-->
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
-                                <a href="{{ route('admin.processes.index') }}">Processes</a>
+                                <a href="{{ route('admin.steps.index') }}">Steps</a>
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->
@@ -50,34 +50,10 @@
                                 <tbody>
                                     <tr>
                                         <th>
-                                            Process name
+                                            Step name
                                         </th>
                                         <td>
-                                            {{ $process->process_name ?? '' }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>
-                                            Total Duration
-                                        </th>
-                                        <td>
-                                            {{ $process->total_duration ?? '' }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>
-                                            Valid From
-                                        </th>
-                                        <td>
-                                            {{ appDateFormat($process->valid_from) ?? '' }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>
-                                            Valid To
-                                        </th>
-                                        <td>
-                                            {{ appDateFormat($process->valid_to) ?? '' }}
+                                            {{ $step->name ?? '' }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -85,33 +61,33 @@
                                             Description
                                         </th>
                                         <td>
-                                            {{ $process->process_description ?? '' }}
+                                            {{ $step->description ?? '' }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Sequence
+                                        </th>
+                                        <td>
+                                            {{ $step->sequence }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Before Step
+                                        </th>
+                                        <td>
+                                            {{ $step->sequence }}
                                         </td>
                                     </tr>
 
 
-                                </tbody>
 
-                            </table>
-                            <h3>Addition Information</h3>
-                            <table class="table table-bordered table-striped">
-                                <tbody>
-
-                                    @forelse ($process->processDetails as $item)
-                                        <tr>
-                                            <th>
-                                                {{ Str::headline($item->process_key_name) }}
-                                            </th>
-                                            <td>
-                                                {{ $item->process_key_value }}
-                                            </td>
-                                        </tr>
-                                    @empty
-                                    @endforelse
 
                                 </tbody>
 
                             </table>
+
                         </div>
                         <!--end::Card body-->
                     </div>

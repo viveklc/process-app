@@ -73,7 +73,7 @@
                                     <!--end::Label-->
                                     <select
                                         class="form-control form-control-solid select2 {{ $errors->has('org_id') ? 'is-invalid' : '' }}"
-                                        style="width: 100%;" name="org_id" id="country-dropdown">
+                                        style="width: 100%;" name="org_id" id="country-dropdown" onchange="mountDropDown(this.value)">
                                         <option value="">Select Organisation</option>
                                         @forelse ($org as $item)
                                             <option value="{{ $item->id }}"
@@ -92,16 +92,8 @@
                                     <!--end::Label-->
                                     <select
                                         class="form-control form-control-solid select2 {{ $errors->has('dept_id') ? 'is-invalid' : '' }}"
-                                        style="width: 100%;" name="dept_id" id="country-dropdown">
-                                        <option value="">Select Department</option>
-
-                                        @forelse ($depts as $item)
-                                            <option value="{{ $item->id }}"
-                                                {{ old('dept_id') == $item->id ? 'selected' : '' }}>{{ $item->name }}
-                                            </option>
-                                        @empty
-                                        @endforelse
-
+                                        style="width: 100%;" name="dept_id" id="department_dropdown">
+                                        <option value="">Select Department </option>
                                     </select>
                                 </div>
 
@@ -113,15 +105,8 @@
                                     <!--end::Label-->
                                     <select
                                         class="form-control form-control-solid select2 {{ $errors->has('team_id') ? 'is-invalid' : '' }}"
-                                        style="width: 100%;" name="team_id" id="country-dropdown">
+                                        style="width: 100%;" name="team_id" id="team_dropdown" onchange="getProcessByTeamId(this.value)">
                                         <option value="">Select Team</option>
-
-                                        @forelse ($teams as $item)
-                                            <option value="{{ $item->id }}"
-                                                {{ old('team_id') == $item->id ? 'selected' : '' }}>{{ $item->name }}
-                                            </option>
-                                        @empty
-                                        @endforelse
                                     </select>
                                 </div>
 
@@ -133,14 +118,8 @@
                                     <!--end::Label-->
                                     <select
                                         class="form-control form-control-solid select2 {{ $errors->has('process_id') ? 'is-invalid' : '' }}"
-                                        style="width: 100%;" name="process_id" id="country-dropdown">
+                                        style="width: 100%;" name="process_id" id="process_dropdown">
                                         <option value="">Select Process</option>
-                                        @forelse ($process as $item)
-                                            <option value="{{ $item->id }}"
-                                                {{ old('process_id') == $item->id ? 'selected' : '' }}>{{ $item->name }}
-                                            </option>
-                                        @empty
-                                        @endforelse
                                     </select>
                                 </div>
 
@@ -254,7 +233,7 @@
                                 <!--end::Label-->
                                 <input type="file"
                                     class="form-control form-control-solid  {{ $errors->has('has_attachments') ? 'is-invalid' : '' }}"
-                                    placeholder="Attachment" name="has_attachments"  />
+                                    placeholder="Attachment" name="has_attachments[]" multiple  />
                             </div>
                             <!--end::Input group-->
 
@@ -307,4 +286,89 @@
 
 
     <!--end:::Main-->
+@endsection
+@section('scripts')
+<script>
+
+    function mountDropDown(org_id){
+        getDeptsByOrgId(org_id)
+        getTeamsByOrgId(org_id)
+    }
+    function getDeptsByOrgId(org_id){
+            let url = '{{ route('admin.org.depts',':org_id') }}';
+
+            url = url.replace(':org_id',org_id);
+
+            $.ajax({
+                method : "GET",
+                url : url,
+                cache : false,
+                beforeSend : function(){
+
+                },
+                success : function(response){
+                    // console.log(response);
+                    var option = "<option value=''>select Departments</option>";
+                    $.each(response, function(index,value){
+
+                        option += "<option value='"+value.id+"'>"+value.name+"</option>";
+
+                    });
+                    $('#department_dropdown').html(option);
+
+                }
+            })
+    }
+
+    function getTeamsByOrgId(org_id){
+        let url = '{{ route('admin.org.teams',':org_id') }}';
+
+            url = url.replace(':org_id',org_id);
+
+            $.ajax({
+                method : "GET",
+                url : url,
+                cache : false,
+                beforeSend : function(){
+
+                },
+                success : function(response){
+                    // console.log(response);
+                    var option = "<option value=''>select Team</option>";
+                    $.each(response, function(index,value){
+
+                        option += "<option value='"+value.id+"'>"+value.name+"</option>";
+
+                    });
+                    $('#team_dropdown').html(option);
+
+                }
+            })
+    }
+
+    function getProcessByTeamId(team_id){
+        let url = '{{ route('admin.team.process',':team_id') }}';
+
+            url = url.replace(':team_id',team_id);
+
+            $.ajax({
+                method : "GET",
+                url : url,
+                cache : false,
+                beforeSend : function(){
+
+                },
+                success : function(response){
+                    var option = "<option value=''>select process</option>";
+                    $.each(response.team_process, function(index,value){
+
+                        option += "<option value='"+value.id+"'>"+value.process_name+"</option>";
+
+                    });
+                    $('#process_dropdown').html(option);
+
+                }
+            })
+    }
+</script>
 @endsection

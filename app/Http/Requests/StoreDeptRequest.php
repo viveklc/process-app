@@ -11,8 +11,8 @@ class StoreDeptRequest extends FormRequest
      * @return bool
      */
     public function authorize()
-    {       
-        return auth()->user()->can('create-dept'); 
+    {
+        return auth()->user()->can('create-dept');
     }
 
     /**
@@ -35,7 +35,9 @@ class StoreDeptRequest extends FormRequest
             'description' => [
                 'nullable',
                 'string'
-            ]
+            ],
+            'attachments' => ['nullable','array','min:1'],
+            'attachments.*' => ['file']
         ];
     }
 }

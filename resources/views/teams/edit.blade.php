@@ -105,6 +105,19 @@
                                         type="date" name="valid_to" id="valid_to" value="{{ old('valid_to', dbDateFormat($team->valid_to)) }}">
                                 </div>
 
+                                <!--begin::Input group-->
+                                <div class="d-flex flex-column mb-8 fv-row">
+                                    <!--begin::Label-->
+                                    <label class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="required">Attachment</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <input type="file"
+                                        class="form-control form-control-solid  {{ $errors->has('attachments') ? 'is-invalid' : '' }}"
+                                        placeholder="" name="attachments[]" multiple />
+                                </div>
+                                <!--end::Input group-->
+
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
