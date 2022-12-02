@@ -39,7 +39,7 @@ class StoreTeamRequest extends FormRequest
                 })
             ],
             'attachments' => ['nullable','array','min:1'],
-            'attachments.*' => ['file']
+            'attachments.*' => ['file'],
         ];
     }
 }

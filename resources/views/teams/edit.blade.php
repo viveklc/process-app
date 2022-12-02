@@ -51,8 +51,8 @@
                     <div class="card">
                         <!--begin::Card body-->
                         <div class="card-body pt-7">
-                            <form id="kt_subscriptions_export_form" class="form" method="POST"
-                                action="{{ route('admin.team.update',$team->id) }}" enctype="multipart/form-data">
+                            <form id="kt_subscriptions_export_form" class="form" method="POST" enctype="multipart/form-data"
+                                action="{{ route('admin.team.update',$team->id) }}" >
                                 @csrf
                                 @method('PUT')
                                 <div class="d-flex flex-column mb-8 fv-row">

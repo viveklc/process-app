@@ -12,11 +12,13 @@ use App\Models\Process\ProcessDetail;
 use App\Models\Process\ProcessRecurrence;
 use App\Models\Process\ProcessTeam;
 use App\Models\Process\Step;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Process extends Model
+class Process extends Model implements HasMedia
 {
     use HasFactory, LogsActivity;
-    use CreatedUpdatedBy, ModelScopes;
+    use CreatedUpdatedBy, ModelScopes, InteractsWithMedia;
 
     protected $guarded = [];
 

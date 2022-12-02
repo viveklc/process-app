@@ -41,7 +41,7 @@ class StepController extends Controller
                         $builder->orWhere('name', 'LIKE', '%' . $inputSearchString . '%');
                     });
                     $query->whereHas('team', function (Builder $builder) use ($inputSearchString) {
-                        $builder->orWhere('team_name', 'LIKE', '%' . $inputSearchString . '%');
+                        $builder->orWhere('teams.team_name', 'LIKE', '%' . $inputSearchString . '%');
                     });
                     $query->whereHas('dept', function (Builder $builder) use ($inputSearchString) {
                         $builder->orWhere('name', 'LIKE', '%' . $inputSearchString . '%');
@@ -92,21 +92,12 @@ class StepController extends Controller
     {
         abort_if(!auth()->user()->can('create-step'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $validated = $request->merge(
-            [
-                'is_substep' => isset($request->is_substep) ? 1 : 2,
-                'is_conditional' => isset($request->is_conditional) ? 1 : 2,
-                'is_mandatory' => isset($request->is_mandatory) ? 1 : 2
-            ]
-        );
+        $step = Step::create($request->safe()->except('attachments'));
 
-        $step = Step::create($validated->all());
-
-        if ($request->hasFile('has_attachments')) {
-            // $step->addMediaFromRequest('has_attachments')->toMediaCollection('has_attachments');
-            $step->addMultipleMediaFromRequest(['has_attachments'])
-            ->each(function(FileAdder $fileAdder){
-                $fileAdder->toMediaCollection('has_attachment');
+        if($request->hasFile('attachments')){
+            $step->addMultipleMediaFromRequest(['attachments'])
+            ->each(function($attachment){
+                $attachment->toMediaCollection('attachment');
             });
         }
 
@@ -127,6 +118,8 @@ class StepController extends Controller
         $step->load('team:id,team_name');
         $step->load('org:id,name');
         $step->load('dept:id,name');
+        $step->load('afterStep:id,name');
+        $step->load('beforeStep:id,name');
 
         return view('steps.show',compact('step'));
     }
@@ -149,29 +142,29 @@ class StepController extends Controller
 
         $depts = Dept::query()
             ->select('name', 'id')
+            ->where('org_id',$step->org_id)
             ->isActive()
             ->orderBy('name')
             ->get();
 
         $teams = Team::query()
             ->select('team_name as name', 'id')
+            ->where('org_id',$step->org_id)
             ->isActive()
             ->orderBy('team_name')
             ->get();
 
-        $process = Process::query()
-            ->select('process_name as name', 'id')
-            ->isActive()
-            ->orderBy('process_name')
-            ->get();
+        $teamProcess = Team::find($step->team_id);
+        $teamProcess->load('teamProcess');
 
-        $steps = Step::query()
+        $processSteps = Step::query()
             ->select('name', 'id')
+            ->where('process_id',$step->process_id)
             ->isActive()
             ->orderBy('name')
             ->get();
 
-        return view('steps.edit', compact('org', 'depts', 'teams', 'process', 'steps', 'step'));
+        return view('steps.edit', compact('org', 'depts', 'teams', 'teamProcess', 'processSteps', 'step'));
     }
 
     /**
@@ -185,15 +178,15 @@ class StepController extends Controller
     {
         abort_if(!auth()->user()->can('update-step'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $validated = $request->merge(
-            [
-                'is_substep' => isset($request->is_substep) ? 1 : 2,
-                'is_conditional' => isset($request->is_conditional) ? 1 : 2,
-                'is_mandatory' => isset($request->is_mandatory) ? 1 : 2
-            ]
-        );
+        $step->update($request->safe()->except('attachments'));
 
-        $step->update($validated->all());
+        if($request->hasFile('attachments')){
+            $step->media()->delete();
+            $step->addMultipleMediaFromRequest(['attachments'])
+            ->each(function($attachment){
+                $attachment->toMediaCollection('attachment');
+            });
+        }
 
         if ($request->hasFile('has_attachments') && $request->file('has_attachments')->isValid()) {
             $step->addMediaFromRequest('has_attachments')->toMediaCollection('has_attachments');

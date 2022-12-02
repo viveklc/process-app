@@ -37,7 +37,7 @@ class UpdateDeptRequest extends FormRequest
                 'string'
             ],
             'attachments' => ['nullable','array','min:1'],
-            'attachments.*' => ['file']
+            'attachments.*' => ['file'],
         ];
     }
 }

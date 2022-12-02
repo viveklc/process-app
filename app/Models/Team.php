@@ -20,7 +20,8 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 class Team extends Model implements HasMedia
 {
     use HasFactory, LogsActivity;
-    use CreatedUpdatedBy, ModelScopes,ModelAccessor, InteractsWithMedia;
+    use CreatedUpdatedBy, ModelScopes,ModelAccessor;
+    use InteractsWithMedia;
 
     protected $guarded = [];
 
@@ -55,7 +56,7 @@ class Team extends Model implements HasMedia
         return $this->hasMany(Step::class,'team_id');
     }
 
-    public function teamProcess($search=""){
+    public function teamProcess(){
         return $this->belongsToMany(Process::class,'process_teams','team_id','process_id')
         ->withPivot('valid_from','valid_to')
         ->withTimestamps();

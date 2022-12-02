@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dept;
+use App\Models\Process\Step;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -45,6 +46,16 @@ class AjaxController extends Controller
         $team->load('teamProcess');
 
         return response()->json($team);
+    }
+
+    public function stepByProcessId($process_id){
+        $step = Step::query()
+            ->select('id','name')
+            ->where('process_id',$process_id)
+            ->orderBy('name')
+            ->get();
+
+        return response()->json($step);
     }
 
 

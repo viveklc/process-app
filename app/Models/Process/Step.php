@@ -12,13 +12,14 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 use App\Models\Process\Process;
 use App\Models\Team;
-use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Step extends Model implements HasMedia
 {
     use HasFactory, LogsActivity;
-    use CreatedUpdatedBy, ModelScopes, InteractsWithMedia;
+    use CreatedUpdatedBy, ModelScopes;
+    use InteractsWithMedia;
 
     protected $guarded = [];
 
@@ -45,6 +46,14 @@ class Step extends Model implements HasMedia
 
     public function dept(){
         return $this->belongsTo(Dept::class);
+    }
+
+    public function afterStep(){
+        return $this->belongsTo(Step::class,'after_step_id');
+    }
+
+    public function beforeStep(){
+        return $this->belongsTo(Step::class,'before_step_id');
     }
 
 }

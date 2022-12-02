@@ -66,6 +66,38 @@
                                     </tr>
                                     <tr>
                                         <th>
+                                            Organization
+                                        </th>
+                                        <td>
+                                            {{ $step->org->name ?? '' }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Department
+                                        </th>
+                                        <td>
+                                            {{ $step->dept->name ?? '' }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Team
+                                        </th>
+                                        <td>
+                                            {{ $step->team->team_name ?? '' }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Process
+                                        </th>
+                                        <td>
+                                            {{ $step->process->process_name ?? '' }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
                                             Sequence
                                         </th>
                                         <td>
@@ -74,16 +106,34 @@
                                     </tr>
                                     <tr>
                                         <th>
+                                            Total Duration
+                                        </th>
+                                        <td>
+                                            {{ $step->total_duration }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
                                             Before Step
                                         </th>
                                         <td>
-                                            {{ $step->sequence }}
+                                            {{ $step->beforeStep->name }}
                                         </td>
                                     </tr>
 
+                                    <tr>
+                                        <th>
+                                            After Step
+                                        </th>
+                                        <td>
+                                            {{ $step->afterStep->name }}
+                                        </td>
+                                    </tr>
+                                    @forelse ($step->getMedia('attachment') as $item)
 
+                                    @empty
 
-
+                                    @endforelse
                                 </tbody>
 
                             </table>

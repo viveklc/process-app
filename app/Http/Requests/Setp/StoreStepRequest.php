@@ -33,12 +33,13 @@ class StoreStepRequest extends FormRequest
             'sequence' => ['required','numeric'],
             'before_step_id' => ['nullable','exists:steps,id'],
             'after_step_id' => ['nullable','exists:steps,id'],
-            'is_substep' => ['nullable'],
-            'substep_of_step_id' => ['required_if:is_substep,on'],
-            'has_attachments' => ['nullable','array','min:1'],
-            'has_attachments.*' => ['file'],
+            'is_substep' => ['nullable','in:1,2'],
+            'substep_of_step_id' => ['required_if:is_substep,1'],
+            'attachments' => ['nullable','array','min:1'],
+            'attachments.*' => ['file'],
             'is_mandatory' => ['nullable'],
-            'is_conditional' => ['nullable']
+            'is_conditional' => ['nullable','in:1,2'],
+            'status' => ['required','in:active,in-active']
         ];
     }
 }

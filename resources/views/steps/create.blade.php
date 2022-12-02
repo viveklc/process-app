@@ -50,8 +50,8 @@
                     <div class="card">
                         <!--begin::Card body-->
                         <div class="card-body pt-7">
-                            <form id="kt_subscriptions_export_form" class="form" method="POST"
-                                action="{{ route('admin.steps.store') }}" enctype="multipart/form-data">
+                            <form id="kt_subscriptions_export_form" class="form" method="POST" enctype="multipart/form-data"
+                                action="{{ route('admin.steps.store') }}">
                                 @csrf
 
                                 <div class="d-flex flex-column mb-8 fv-row">
@@ -118,7 +118,7 @@
                                     <!--end::Label-->
                                     <select
                                         class="form-control form-control-solid select2 {{ $errors->has('process_id') ? 'is-invalid' : '' }}"
-                                        style="width: 100%;" name="process_id" id="process_dropdown">
+                                        style="width: 100%;" name="process_id" id="process_dropdown" onchange="fetchSteps(this.value)">
                                         <option value="">Select Process</option>
                                     </select>
                                 </div>
@@ -142,16 +142,11 @@
                                     </label>
                                     <!--end::Label-->
                                     <select
-                                        class="form-control form-control-solid select2 {{ $errors->has('before_step_id') ? 'is-invalid' : '' }}"
+                                        class="form-control step form-control-solid select2 {{ $errors->has('before_step_id') ? 'is-invalid' : '' }}"
                                         style="width: 100%;" name="before_step_id" id="country-dropdown">
                                         <option value="">Select Before Step</option>
 
-                                        @forelse ($steps as $item)
-                                            <option value="{{ $item->id }}"
-                                                {{ old('before_step_id') == $item->id ? 'selected' : '' }}>{{ $item->name }}
-                                            </option>
-                                        @empty
-                                        @endforelse
+
                                     </select>
                                 </div>
 
@@ -162,16 +157,10 @@
                                     </label>
                                     <!--end::Label-->
                                     <select
-                                        class="form-control form-control-solid select2 {{ $errors->has('after_step_id') ? 'is-invalid' : '' }}"
+                                        class="form-control step form-control-solid select2 {{ $errors->has('after_step_id') ? 'is-invalid' : '' }}"
                                         style="width: 100%;" name="after_step_id" id="country-dropdown">
                                         <option value="">Select After Step</option>
 
-                                        @forelse ($steps as $item)
-                                            <option value="{{ $item->id }}"
-                                                {{ old('after_step_id') == $item->id ? 'selected' : '' }}>{{ $item->name }}
-                                            </option>
-                                        @empty
-                                        @endforelse
                                     </select>
                                 </div>
 
@@ -189,38 +178,40 @@
                                 </div>
 
                                 <div class="d-flex flex-column mb-8 fv-row">
+                                    <input type="hidden" name="is_conditional" id="" value="2">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class=""><input type="checkbox" name="is_conditional" id="is_conditional" >
+                                        <span class=""><input type="checkbox" name="is_conditional" id="is_conditional" value="1">
                                             &nbsp;&nbsp; Is Conditional</span>
                                     </label>
 
                                 </div>
 
                                 <div class="d-flex flex-column mb-8 fv-row">
+                                    <input type="hidden" name="is_substep" id="" value="2">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class=""><input type="checkbox" name="is_substep" id="is_substep" >
+                                        <span class=""><input type="checkbox" name="is_substep" id="is_substep" value="1" >
                                             &nbsp;&nbsp; Is Sub Step</span>
                                     </label>
 
                                 </div>
 
-                                <div class="d-flex flex-column mb-8 fv-row substepdiv">
+                                <div class="d-flex flex-column mb-8 fv-row " id="substepdiv">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
                                         <span class="">Sub Step</span>
                                     </label>
                                     <!--end::Label-->
                                     <select
-                                        class="form-control form-control-solid select2 {{ $errors->has('substep_of_step_id') ? 'is-invalid' : '' }}"
+                                        class="form-control step form-control-solid select2 {{ $errors->has('substep_of_step_id') ? 'is-invalid' : '' }}"
                                         style="width: 100%;" name="substep_of_step_id" id="country-dropdown">
-                                        @forelse ($steps as $item)
+                                        {{-- @forelse ($steps as $item)
                                             <option value="{{ $item->id }}"
                                                 {{ old('substep_of_step_id') == $item->id ? 'selected' : '' }}>{{ $item->name }}
                                             </option>
                                         @empty
-                                        @endforelse
+                                        @endforelse --}}
                                     </select>
                                 </div>
 
@@ -232,8 +223,8 @@
                                 </label>
                                 <!--end::Label-->
                                 <input type="file"
-                                    class="form-control form-control-solid  {{ $errors->has('has_attachments') ? 'is-invalid' : '' }}"
-                                    placeholder="Attachment" name="has_attachments[]" multiple  />
+                                    class="form-control form-control-solid  {{ $errors->has('attachments') ? 'is-invalid' : '' }}"
+                                    placeholder="Attachment" name="attachments[]" multiple  />
                             </div>
                             <!--end::Input group-->
 
@@ -289,6 +280,21 @@
 @endsection
 @section('scripts')
 <script>
+
+$(document).ready(function(){
+    $("#substepdiv").hide();
+
+    $("#is_substep").click(function () {
+            if ($(this).is(":checked")) {
+                // $("#substepdiv").show();
+                // alert('checked');
+                // $("#AddPassport").hide();
+            } else {
+                $("#substepdiv").hide();
+                // $("#AddPassport").show();
+            }
+        });
+})
 
     function mountDropDown(org_id){
         getDeptsByOrgId(org_id)
@@ -366,6 +372,31 @@
 
                     });
                     $('#process_dropdown').html(option);
+
+                }
+            })
+    }
+
+    function fetchSteps(process_id){
+        let url = '{{ route('admin.process.step',':process_id') }}';
+
+            url = url.replace(':process_id',process_id);
+
+            $.ajax({
+                method : "GET",
+                url : url,
+                cache : false,
+                beforeSend : function(){
+
+                },
+                success : function(response){
+                    var option = "<option value=''>select Step</option>";
+                    $.each(response, function(index,value){
+
+                        option += "<option value='"+value.id+"'>"+value.name+"</option>";
+
+                    });
+                    $('.step').html(option);
 
                 }
             })

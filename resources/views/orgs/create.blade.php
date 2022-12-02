@@ -57,7 +57,7 @@
                                     <!--end::Label-->
                                     <input type="text"
                                         class="form-control form-control-solid  {{ $errors->has('name') ? 'is-invalid' : '' }}"
-                                        placeholder="Name" name="name" 
+                                        placeholder="Name" name="name"
                                         value="{{ old('name', '') }}"
                                         required />
                                 </div>
@@ -83,10 +83,10 @@
                                         <span>Address</span>
                                         </label>
                                         <!--end::Label-->
-                                        <textarea class="form-control form-control-solid  {{ $errors->has('address') ? 'is-invalid' : '' }}" 
-                                            placeholder="Address" 
-                                            name="address" 
-                                            cols="30" 
+                                        <textarea class="form-control form-control-solid  {{ $errors->has('address') ? 'is-invalid' : '' }}"
+                                            placeholder="Address"
+                                            name="address"
+                                            cols="30"
                                             rows="5">{{ old('address', '') }}</textarea>
                                     </div>
                                 <!--end::Input group-->
@@ -95,15 +95,15 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span>Image</span>
+                                        <span class="required">Attachment</span>
                                     </label>
                                     <!--end::Label-->
                                     <input type="file"
-                                        class="form-control form-control-solid  {{ $errors->has('image_url') ? 'is-invalid' : '' }}"
-                                        placeholder="Image" name="image_url"  />
+                                        class="form-control form-control-solid  {{ $errors->has('attachments') ? 'is-invalid' : '' }}"
+                                        placeholder="" name="attachments[]" multiple />
                                 </div>
                                 <!--end::Input group-->
-                               
+
                                 <!-- begin::Input group-->
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
