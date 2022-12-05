@@ -120,6 +120,22 @@
                                         type="date" name="valid_to" id="valid_to" value="{{ old('valid_to', '') }}">
                                 </div>
 
+                                <div class="d-flex flex-column mb-8 fv-row">
+                                    <!--begin::Label-->
+                                    <label class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="">Priority</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <select
+                                        class="form-control form-control-solid select2 {{ $errors->has('process_priority') ? 'is-invalid' : '' }}"
+                                        style="width: 100%;" name="process_priority" id="country-dropdown">
+                                        <option value="">--select priority--</option>
+                                        <option value="1">High</option>
+                                        <option value="2">Medium</option>
+                                        <option value="3">Low</option>
+                                    </select>
+                                </div>
+
                                 <!--begin::Input group-->
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->

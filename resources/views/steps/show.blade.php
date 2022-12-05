@@ -130,7 +130,11 @@
                                         </td>
                                     </tr>
                                     @forelse ($step->getMedia('attachment') as $item)
-
+                                    <tr>
+                                        <td>
+                                            {{}}
+                                        </td>
+                                    </tr>
                                     @empty
 
                                     @endforelse

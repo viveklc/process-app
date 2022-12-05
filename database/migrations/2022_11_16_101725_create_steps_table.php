@@ -26,7 +26,7 @@ return new class extends Migration
             $table->integer('after_step_id')->nullable();
             $table->integer('is_substep')->nullable()->comment('1[Yes] 2[No]');
             $table->integer('substep_of_step_id')->nullable();
-            $table->string('has_attachments')->nullable();
+            $table->integer('has_attachments')->nullable();
             $table->integer('is_mandatory')->nullable()->comment('1[Yes] 2[No]');
             $table->integer('is_conditional')->nullable()->comment('1[Yes] 2[No]');
             $table->string('total_duration')->nullable();

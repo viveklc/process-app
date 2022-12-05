@@ -30,6 +30,7 @@ use App\Http\Controllers\DeptUserController;
 use App\Http\Controllers\Permission\PermissionController;
 use App\Http\Controllers\Plan\PlanController;
 use App\Http\Controllers\Process\ProcessController;
+use App\Http\Controllers\Process\ProcessInstanceController;
 use App\Http\Controllers\Role\RoleController;
 use App\Http\Controllers\step\StepController;
 use App\Http\Controllers\Team\TeamProcessController;
@@ -144,6 +145,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('team/{team_id}/process',[AjaxController::class,'processByTeamId'])->name('team.process');
     Route::get('process/{process_id}/steps',[AjaxController::class,'stepByProcessId'])->name('process.step');
     Route::resource('steps',StepController::class);
+
+    Route::delete('process/process-instance/destroy', [ProcessController::class, 'massDestroy'])->name('process.instance.massDestroy');
+    Route::resource('processes.process-instance',ProcessInstanceController::class);
 
 });
 

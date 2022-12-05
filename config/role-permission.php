@@ -230,7 +230,12 @@
             'read-step',
             'create-step',
             'update-step',
-            'delete-step'
+            'delete-step',
+            'read-process-instance',
+            'create-process-instance',
+            'update-process-instance',
+            'show-process-instance',
+            'delete-process-instance'
         ],
         'author' => [
             'read-language',

@@ -2,6 +2,7 @@
 
 namespace App\Models\Process;
 
+use App\Models\Activity\ProcessInstance;
 use App\Traits\CreatedUpdatedBy;
 use App\Traits\ModelScopes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -52,6 +53,10 @@ class Process extends Model implements HasMedia
     public function processDetails()
     {
         return $this->hasMany(ProcessDetail::class,'process_id');
+    }
+
+    public function processInstances(){
+        return $this->hasMany(ProcessInstance::class,'process_id');
     }
 
     public function processRecurrences()
