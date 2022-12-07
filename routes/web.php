@@ -31,6 +31,7 @@ use App\Http\Controllers\Permission\PermissionController;
 use App\Http\Controllers\Plan\PlanController;
 use App\Http\Controllers\Process\ProcessController;
 use App\Http\Controllers\Process\ProcessInstanceController;
+use App\Http\Controllers\Process\StepInstanceController;
 use App\Http\Controllers\Role\RoleController;
 use App\Http\Controllers\step\StepController;
 use App\Http\Controllers\Team\TeamProcessController;
@@ -146,8 +147,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('process/{process_id}/steps',[AjaxController::class,'stepByProcessId'])->name('process.step');
     Route::resource('steps',StepController::class);
 
-    Route::delete('process/process-instance/destroy', [ProcessController::class, 'massDestroy'])->name('process.instance.massDestroy');
+    Route::delete('process/process-instance/destroy', [ProcessInstanceController::class, 'massDestroy'])->name('process.instance.massDestroy');
     Route::resource('processes.process-instance',ProcessInstanceController::class);
+
+    Route::resource('process-instance.steps',StepInstanceController::class)->only('index','edit','update','destroy');
 
 });
 

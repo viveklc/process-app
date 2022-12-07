@@ -29,6 +29,7 @@
         'team_users' => 'Team Users',
         'team_process' => 'Team Process',
         'process_instance' => 'Instances',
+        'step_instance' => 'Steps',
         'dept_users' => 'Users',
         'please_select' => 'Please select :option',
         'please_select_all_required_field' => 'Please select all required fields',

@@ -235,7 +235,11 @@
             'create-process-instance',
             'update-process-instance',
             'show-process-instance',
-            'delete-process-instance'
+            'delete-process-instance',
+            'read-step-instance',
+            'update-step-instance',
+            'delete-step-instance',
+            'show-step-instance'
         ],
         'author' => [
             'read-language',

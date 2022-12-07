@@ -50,4 +50,9 @@ class ProcessInstance extends Model
     {
         return $this->hasMany(Comment::class, 'process_instances_id', 'id');
     }
+
+
+    public function stepInstances(){
+        return $this->hasMany(StepInstance::class,'process_instances_id');
+    }
 }

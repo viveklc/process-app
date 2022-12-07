@@ -35,6 +35,8 @@ class ProcessInstanceController extends Controller
                     $query->orWhere('process_instance_name', 'LIKE', '%' . $inputSearchString . '%');
                 });
             })
+            ->isActive()
+            ->orderBy('process_instance_name')
             ->get();
 
             // dd($processInstance);
@@ -84,7 +86,6 @@ class ProcessInstanceController extends Controller
             'process_priority' => $process->process_priority,
             'total_duration' => $process->total_duration
         ]);
-        // dd($request->all());
        $instance= $process->processInstances()->create($request->all());
        $this->cloneStep($process->id,$instance->id,$instance->process_instance_name,$instance->assigned_to_user_id);
 
@@ -152,11 +153,13 @@ class ProcessInstanceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Process $process, $process_instances_id)
+    public function destroy(Process $process, ProcessInstance $processInstance)
     {
         abort_if(!auth()->user()->can('delete-process-instance'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $process->processInstances()->detach($process_instances_id);
+        $processInstance->update([
+            'is_active' => 3
+        ]);
 
         return back()->with('success', 'process deleted successfully');
     }
@@ -166,7 +169,11 @@ class ProcessInstanceController extends Controller
         abort_if(!auth()->user()->can('delete-process-instance'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $process = Process::find($request->process_id);
-        $process->processInstances()->detach($request->ids);
+        $process->processInstances()->whereIn('id',$request->ids)
+        ->update([
+            'is_active' => 3,
+            'updatedby_userid' => auth()->user()->id,
+        ]);
 
         return response(null, Response::HTTP_NO_CONTENT);
 
