@@ -46,7 +46,7 @@
                         <!--begin::Card body-->
                         <div class="card-body pt-7">
                             <form id="kt_subscriptions_export_form" class="form" method="POST"
-                                action="{{ route('admin.depts.store') }}">
+                                enctype="multipart/form-data" action="{{ route('admin.depts.store') }}">
                                 @csrf
                                 <!--begin::Input group-->
                                 <div class="d-flex flex-column mb-8 fv-row">
@@ -55,12 +55,14 @@
                                         <span class="required">Org Name</span>
                                     </label>
                                     <!--end::Label-->
-                                    <select class="form-select form-control form-select-solid select2 {{ $errors->has('org_id') ? 'is-invalid' : '' }}"  style="width: 100%;" name="org_id" id="org_id" required >
-                                    @foreach ($orgs as $id => $orgName)
+                                    <select
+                                        class="form-select form-control form-select-solid select2 {{ $errors->has('org_id') ? 'is-invalid' : '' }}"
+                                        style="width: 100%;" name="org_id" id="org_id" required>
+                                        @foreach ($orgs as $id => $orgName)
                                             <option value="{{ $id }}"
                                                 {{ old('org_id') == $id ? 'selected' : '' }}>{{ $orgName }}
                                             </option>
-                                     @endforeach
+                                        @endforeach
                                     </select>
                                 </div>
                                 <!--end::Input group-->
@@ -74,19 +76,32 @@
                                     <!--end::Label-->
                                     <input type="text"
                                         class="form-control form-control-solid  {{ $errors->has('name') ? 'is-invalid' : '' }}"
-                                        placeholder="Name" name="name"
-                                        value="{{ old('name', '') }}" required />
+                                        placeholder="Name" name="name" value="{{ old('name', '') }}" required />
                                 </div>
                                 <!--end::Input group-->
 
-                                 <!--begin::Input group-->
+                                <!--begin::Input group-->
+                                <div class="d-flex flex-column mb-8 fv-row">
+                                    <!--begin::Label-->
+                                    <label class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="required">Attachment</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <input type="file"
+                                        class="form-control form-control-solid  {{ $errors->has('attachments') ? 'is-invalid' : '' }}"
+                                        placeholder="" name="attachments[]" multiple />
+                                </div>
+                                <!--end::Input group-->
+
+                                <!--begin::Input group-->
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
                                         <span class="required">Description</span>
                                     </label>
                                     <!--end::Label-->
-                                    <textarea class="form-control form-control-solid" placeholder="Description" name="description" cols="30" rows="5" >{{ old('description', '') }}</textarea>
+                                    <textarea class="form-control form-control-solid" placeholder="Description" name="description" cols="30"
+                                        rows="5">{{ old('description', '') }}</textarea>
                                 </div>
                                 <!--end::Input group-->
 

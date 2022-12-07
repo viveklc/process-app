@@ -11,7 +11,7 @@ class UpdateDeptRequest extends FormRequest
      * @return bool
      */
     public function authorize()
-    {       
+    {
         return auth()->user()->can('update-dept');
     }
 
@@ -35,7 +35,9 @@ class UpdateDeptRequest extends FormRequest
             'description' => [
                 'nullable',
                 'string'
-            ]
+            ],
+            'attachments' => ['nullable','array','min:1'],
+            'attachments.*' => ['file'],
         ];
     }
 }

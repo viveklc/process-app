@@ -66,13 +66,20 @@ class ProcessController extends Controller
     {
         abort_if(!auth()->user()->can('create-process'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $plan = Process::create($request->safe()->only('process_name', 'process_description', 'total_duration', 'valid_from', 'valid_to', 'status', 'org_id'));
+        $process = Process::create($request->safe()->only('process_name', 'process_description', 'total_duration', 'valid_from', 'valid_to', 'status', 'org_id'));
         $process_details = [];
         $input = $request->validated();
         foreach (Process::ADDITIONAL_DETAILS as $key => $value) {
             array_push($process_details, ['process_key_name' => $key, 'process_key_type' => $value['type'], 'process_key_value' => $input[$key]]);
         }
-        $plan->processDetails()->createMany($process_details);
+        $process->processDetails()->createMany($process_details);
+
+        if($request->hasFile('attachments')){
+            $process->addMultipleMediaFromRequest(['attachments'])
+            ->each(function($attachment){
+                $attachment->toMediaCollection('attachments');
+            });
+        }
 
         return back()->with('success', 'Process added successfully');
     }
@@ -125,6 +132,15 @@ class ProcessController extends Controller
         abort_if(!auth()->user()->can('update-process'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $process->update($request->safe()->only('process_name', 'process_description', 'total_duration', 'valid_from', 'valid_to', 'status', 'org_id'));
+
+        if($request->hasFile('attachments')){
+            $process->media()->delete();
+            $process->addMultipleMediaFromRequest(['attachments'])
+            ->each(function($attachment){
+                $attachment->toMediaCollection('attachments');
+            });
+        }
+
         $input = $request->validated();
         $process_details = [];
         foreach (Process::ADDITIONAL_DETAILS as $key => $value) {

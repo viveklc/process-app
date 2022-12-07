@@ -6,6 +6,7 @@ use App\Models\Activity\ProcessInstance;
 use App\Models\Activity\UserInvite;
 use App\Models\Process\Process;
 use App\Models\Process\ProcessTeam;
+use App\Models\Process\Step;
 use App\Traits\CreatedUpdatedBy;
 use App\Traits\ModelAccessor;
 use App\Traits\ModelScopes;
@@ -13,11 +14,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Team extends Model
+class Team extends Model implements HasMedia
 {
     use HasFactory, LogsActivity;
     use CreatedUpdatedBy, ModelScopes,ModelAccessor;
+    use InteractsWithMedia;
 
     protected $guarded = [];
 
@@ -48,7 +52,11 @@ class Team extends Model
         return $this->hasOne(Org::class,'id','org_id');
     }
 
-    public function teamProcess($search=""){
+    public function step(){
+        return $this->hasMany(Step::class,'team_id');
+    }
+
+    public function teamProcess(){
         return $this->belongsToMany(Process::class,'process_teams','team_id','process_id')
         ->withPivot('valid_from','valid_to')
         ->withTimestamps();

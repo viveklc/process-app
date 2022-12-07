@@ -12,13 +12,13 @@
                     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                         <!--begin::Title-->
                         <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
-                            Users</h1>
+                            Steps</h1>
                         <!--end::Title-->
                         <!--begin::Breadcrumb-->
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
-                                <a href="{{ route('admin.users.index') }}">Users</a>
+                                <a href="{{ route('admin.steps.index') }}">Steps</a>
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->
@@ -38,7 +38,7 @@
                         <!--begin::Secondary button-->
                         <!--end::Secondary button-->
                         <!--begin::Primary button-->
-                        <a href="{{ route('admin.users.create') }}"
+                        <a href="{{ route('admin.steps.create') }}"
                             class="btn btn-sm fw-bold btn-primary">{{ trans('global.add') }}</a>
                         <!--end::Primary button-->
                     </div>
@@ -79,29 +79,29 @@
                                     <thead>
                                         <tr>
                                             <th width="10"></th>
-                                            <th>Name</th>
+                                            <th>name</th>
                                             <th>Organisation</th>
-                                            <th>Username</th>
-                                            <th>Email</th>
-                                            <th>Mobile</th>
-                                            <th>Role</th>
-                                            {{-- <th>Status</th> --}}
+                                            <th>Department</th>
+                                            <th>Team</th>
+                                            <th>Process</th>
+                                            <th>Total Duration</th>
+                                            <th>Status</th>
                                             <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse ($users as $i=>$item)
+                                        @forelse ($steps as $i=>$item)
                                             <tr data-entry-id="{{ $item->id }}">
                                                 <td></td>
                                                 <td>{{ $item->name }}</td>
                                                 <td>{{ $item->org->name }}</td>
-                                                <td>{{ $item->username }}</td>
-                                                <td>{{ $item->email }}</td>
-                                                <td>{{ $item->phone }}</td>
-                                                <td>{{ $item->role->name }}</td>
-                                                {{-- <td>{!! $item->status == 'active'
+                                                <td>{{ $item->dept->name}}</td>
+                                                <td>{{ $item->team->team_name }}</td>
+                                                <td>{{ $item->process->process_name }}</td>
+                                                <td>{{ $item->total_duration }}</td>
+                                                <td>{!! $item->status == 'active'
                                                     ? '<span class="badge badge-success">Active</span>'
-                                                    : '<span class="badge badge-danger">In-active</span>' !!}</td> --}}
+                                                    : '<span class="badge badge-danger">In-active</span>' !!}</td>
                                                 <!--begin::Action=-->
                                                 <td class="text-end">
                                                     <a href="#" class="btn btn-light btn-active-light-primary btn-sm"
@@ -124,7 +124,7 @@
 
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <a href="{{ route('admin.users.edit', $item->id) }}"
+                                                            <a href="{{ route('admin.steps.edit', $item->id) }}"
                                                                 class="menu-link px-3"> {{ trans('global.edit') }}
                                                             </a>
                                                         </div>
@@ -132,14 +132,14 @@
 
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <a href="{{ route('admin.users.show', $item->id) }}"
+                                                            <a href="{{ route('admin.steps.show', $item->id) }}"
                                                                 class="menu-link px-3"> {{ trans('global.view') }}
                                                             </a>
                                                         </div>
                                                         <!--end::Menu item-->
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <form action="{{ route('admin.users.destroy', $item->id) }}"
+                                                            <form action="{{ route('admin.steps.destroy', $item->id) }}"
                                                                 method="POST" id="frmDeleteschool-{{ $item->id }}"
                                                                 style="display: inline-block; width: 100%;">
                                                                 <input type="hidden" name="_method" value="DELETE">
@@ -163,8 +163,8 @@
 
                                     </tbody>
                                 </table>
-                                @if ($users->count())
-                                    {{ $users->links() }}
+                                @if ($steps->count())
+                                    {{ $steps->links() }}
                                 @endif
 
                             </div>
@@ -188,11 +188,11 @@
         var table;
         $(function() {
             let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
-            @can('delete-user')
+            @can('delete-plan')
                 let deleteButtonTrans = '{{ trans('global.delete') }}'
                 let deleteButton = {
                     text: deleteButtonTrans,
-                    url: "{{ route('admin.users.massDestroy') }}",
+                    url: "{{ route('admin.steps.massDestroy') }}",
                     className: 'btn btn-sm btn-danger',
                     action: function(e, dt, node, config) {
                         var ids = $.map(dt.rows({
@@ -250,11 +250,11 @@
                 paging: false,
                 language: {
                     infoEmpty: "{{ trans('global.grid_no_data') }}",
-                    @if ($users->count())
+                    @if ($steps->count())
                         info: '{{ trans('global.grid_pagination_count_status', [
-                            'firstItem' => $users->firstItem(),
-                            'lastItem' => $users->lastItem(),
-                            'total' => $users->total(),
+                            'firstItem' => $steps->firstItem(),
+                            'lastItem' => $steps->lastItem(),
+                            'total' => $steps->total(),
                         ]) }}',
                     @endif
                 },
@@ -286,7 +286,7 @@
                         requestParameters.push('s=' + $.trim(searchText));
                     }
 
-                    window.location.href = '{{ route('admin.users.index') }}' + generateQueryString(
+                    window.location.href = '{{ route('admin.steps.index') }}' + generateQueryString(
                         requestParameters);
                 } else {
                     table.search(this.value).draw();

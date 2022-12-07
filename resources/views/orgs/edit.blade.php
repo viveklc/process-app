@@ -90,20 +90,14 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span>Image</span>
+                                        <span class="required">Attachment</span>
                                     </label>
                                     <!--end::Label-->
                                     <input type="file"
-                                        class="form-control form-control-solid  {{ $errors->has('image_url') ? 'is-invalid' : '' }}"
-                                        placeholder="Image" name="image_url"  />
-                                        <br />
-                                    @if($org->getFirstMediaUrl('Org'))
-                                        <a href="{{ $org->getFirstMediaUrl('Org') }}" target="_BLANK">
-                                            <img src="{{ $org->getFirstMediaUrl('Org', 'thumb') }}" />
-                                        </a>
-                                    @endif
+                                        class="form-control form-control-solid  {{ $errors->has('attachments') ? 'is-invalid' : '' }}"
+                                        placeholder="" name="attachments[]" multiple />
                                 </div>
-                                <!--end::Input group-->                              
+                                <!--end::Input group-->
 
                                 <!-- begin::Input group-->
                                 <div class="d-flex flex-column mb-8 fv-row">

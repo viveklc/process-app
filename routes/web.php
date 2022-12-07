@@ -1,9 +1,10 @@
 <?php
 
+use App\Http\Controllers\AjaxController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\CityController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\StateController;
 use App\Http\Controllers\ZipcodeController;
@@ -30,6 +31,7 @@ use App\Http\Controllers\Permission\PermissionController;
 use App\Http\Controllers\Plan\PlanController;
 use App\Http\Controllers\Process\ProcessController;
 use App\Http\Controllers\Role\RoleController;
+use App\Http\Controllers\step\StepController;
 use App\Http\Controllers\Team\TeamProcessController;
 use App\Http\Controllers\Team\TeamUserController;
 
@@ -82,7 +84,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::delete('schools/destroy', [SchoolController::class, 'massDestroy'])->name('schools.massDestroy');
     Route::resource('schools', SchoolController::class);
 
-    Route::resource('users', UserController::class);
+    // Route::resource('users', UserController::class);
 
     Route::delete('levels/destroy', [LevelController::class, 'massDestroy'])->name('levels.massDestroy');
     Route::resource('levels', LevelController::class);
@@ -131,6 +133,17 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     Route::delete('dept/user/mass-remove', [DeptUserController::class, 'massDestroy'])->name('dept.users.remove');
     Route::resource('depts.dept-users',DeptUserController::class)->except('edit','show');
+
+    Route::delete('users/destroy',[UserController::class,'massDestroy'])->name('users.massDestroy');
+    Route::get('org/{user:org_id}',[AjaxController::class,'fetchUsersByOrgId'])->name('org.users');
+    Route::resource('users',UserController::class);
+
+    Route::delete('steps/destroy',[StepController::class,'massDestroy'])->name('steps.massDestroy');
+    Route::get('org/{org_id}/depts',[AjaxController::class,'deptsByOrgId'])->name('org.depts');
+    Route::get('org/{org_id}/teams',[AjaxController::class,'teamsByOrgId'])->name('org.teams');
+    Route::get('team/{team_id}/process',[AjaxController::class,'processByTeamId'])->name('team.process');
+    Route::get('process/{process_id}/steps',[AjaxController::class,'stepByProcessId'])->name('process.step');
+    Route::resource('steps',StepController::class);
 
 });
 

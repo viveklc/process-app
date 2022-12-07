@@ -55,7 +55,7 @@ class TeamController extends Controller
         abort_if(!auth()->user()->can('create-team'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $org = Org::query()
-            ->select('name', 'id')
+            ->select('id','name')
             ->isActive()
             ->orderBy('id', 'DESC')
             ->get();
@@ -79,13 +79,22 @@ class TeamController extends Controller
     {
         abort_if(!auth()->user()->can('create-team'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        try {
+        // dd($request->all());
 
+        try {
             $team = Team::create($request->safe()->except('user_id'));
+
+            if($request->hasFile('attachments')){
+                $team->addMultipleMediaFromRequest(['attachments'])
+                ->each(function($attachment){
+                    $attachment->toMediaCollection('attachments');
+                });
+            }
 
             $team->teamUser()->attach($request->user_id, $request->only('valid_from', 'valid_to'));
 
-            return back()->with('success', 'Team created successfully');
+            // toast(__('global.crud_actions', ['module' => 'Team', 'action' => 'created']), 'success');
+            return back();
         } catch (Exception $e) {
 
             abort(403, $e->getMessage());
@@ -129,6 +138,7 @@ class TeamController extends Controller
 
             return view('teams.edit', compact('team', 'org', 'orgUsers', 'teamuserId'));
         } catch (Exception $e) {
+            return $e->getMessage();
         }
     }
 
@@ -144,14 +154,19 @@ class TeamController extends Controller
         abort_if(!auth()->user()->can('update-team'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         try {
-
-            $team->update($request->safe()->except('user_id'));
-
+            $team->update($request->safe()->except('user_id','attachments'));
             $team->teamUser()->sync($request->user_id, $request->only('valid_from', 'valid_to'));
+
+            if($request->hasFile('attachments')){
+                $team->media()->delete();
+                $team->addMultipleMediaFromRequest(['attachments'])
+                ->each(function($attachment){
+                    $attachment->toMediaCollection('attachments');
+                });
+            }
 
             return back()->with('success', 'Team Updated Successfully');
         } catch (Exception $e) {
-
             return $e->getMessage();
         }
     }

@@ -51,6 +51,7 @@ class DeptController extends Controller
             ->pluck('name', 'id')
             ->prepend('Please select', '');
 
+
         return view('depts.create',compact('orgs'));
     }
 
@@ -62,7 +63,17 @@ class DeptController extends Controller
      */
     public function store(StoreDeptRequest $request)
     {
+        abort_if(!auth()->user()->can('create-dept'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        // dd($request->validated());
         $dept = Dept::create($request->safe()->only('org_id', 'name', 'description'));
+
+        if($request->hasFile('attachments')){
+            $dept->addMultipleMediaFromRequest(['attachments'])
+            ->each(function($attachment){
+                $attachment->toMediaCollection('attachments');
+            });
+        }
+
         toast(__('global.crud_actions', ['module' => 'Dept', 'action' => 'created']), 'success');
 
         return redirect()->route('admin.depts.index');
@@ -108,6 +119,15 @@ class DeptController extends Controller
     public function update(UpdateDeptRequest $request, Dept $dept)
     {
         $dept->update($request->safe()->only(['org_id','name', 'description']));
+
+        if($request->hasFile('attachments')){
+            $dept->media()->delete();
+            $dept->addMultipleMediaFromRequest(['attachments'])
+            ->each(function($attachment){
+                $attachment->toMediaCollection('attachments');
+            });
+        }
+
         toast(__('global.crud_actions', ['module' => 'Dept', 'action' => 'updated']), 'success');
 
         return redirect()->route('admin.depts.index');

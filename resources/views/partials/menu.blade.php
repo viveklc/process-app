@@ -41,6 +41,19 @@
             </div>
             <!--end:Menu item-->
 
+            <!--begin:Menu item-->
+            <div class="menu-item">
+                <!--begin:Menu link-->
+                <a class="menu-link  {{ request()->is("admin/users*") ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
+                <span class="menu-bullet">
+                <span class="bullet bullet-dot"></span>
+                </span>
+                <span class="menu-title">Users</span>
+                </a>
+                <!--end:Menu link-->
+            </div>
+            <!--end:Menu item-->
+
             <div class="menu-item">
                 <!--begin:Menu link-->
                 <a class="menu-link  {{ request()->is("admin/permissions*") ? 'active' : '' }}" href="{{ route('admin.permissions.index') }}">
@@ -83,6 +96,19 @@
                 <span class="bullet bullet-dot"></span>
                 </span>
                 <span class="menu-title">Processes</span>
+                </a>
+                <!--end:Menu link-->
+            </div>
+            <!--end:Menu item-->
+
+            <!--end:Menu item-->
+            <div class="menu-item">
+                <!--begin:Menu link-->
+                <a class="menu-link  {{ request()->is("admin/steps*") ? 'active' : '' }}" href="{{ route('admin.steps.index') }}">
+                <span class="menu-bullet">
+                <span class="bullet bullet-dot"></span>
+                </span>
+                <span class="menu-title">Steps</span>
                 </a>
                 <!--end:Menu link-->
             </div>

@@ -11,14 +11,14 @@
                     <!--begin::Page title-->
                     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                         <!--begin::Title-->
-                        <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Users
+                        <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Steps
                         </h1>
                         <!--end::Title-->
                         <!--begin::Breadcrumb-->
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
-                                <a href="{{ route('admin.users.index') }}">Users</a>
+                                <a href="{{ route('admin.steps.index') }}">Steps</a>
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->
@@ -50,89 +50,90 @@
                                 <tbody>
                                     <tr>
                                         <th>
-                                            name
+                                            Step name
                                         </th>
                                         <td>
-                                            {{ $user->name ?? '' }}
+                                            {{ $step->name ?? '' }}
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>
-                                            Organisation
+                                            Description
                                         </th>
                                         <td>
-                                            {{ $user->org->name ?? '' }}
+                                            {{ $step->description ?? '' }}
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>
-                                            Username
+                                            Organization
                                         </th>
                                         <td>
-                                            {{ $user->username }}
+                                            {{ $step->org->name ?? '' }}
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>
-                                            Email
+                                            Department
                                         </th>
                                         <td>
-                                            {{ $user->email }}
+                                            {{ $step->dept->name ?? '' }}
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>
-                                            Mobile
+                                            Team
                                         </th>
                                         <td>
-                                            {{ $user->phone ?? '' }}
+                                            {{ $step->team->team_name ?? '' }}
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>
-                                            Role
+                                            Process
                                         </th>
                                         <td>
-                                            {{ $user->role->name ?? '' }}
+                                            {{ $step->process->process_name ?? '' }}
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>
-                                            Is Organisatin Admin
+                                            Sequence
                                         </th>
                                         <td>
-                                            {{ $user->is_org_admin == 1 ? 'Yes' : 'No' }}
+                                            {{ $step->sequence }}
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>
-                                            Collegues
+                                            Total Duration
                                         </th>
                                         <td>
-                                            @php
-                                                $collegues = collect($user->collegues)
-                                                    ->pluck('name')
-                                                    ->toArray();
-                                            @endphp
-                                            {{ implode(",",$collegues) ?? '' }}
+                                            {{ $step->total_duration }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Before Step
+                                        </th>
+                                        <td>
+                                            {{ $step->beforeStep->name }}
                                         </td>
                                     </tr>
 
                                     <tr>
                                         <th>
-                                            Reports To
+                                            After Step
                                         </th>
                                         <td>
-                                            @php
-                                                $reportToUsers = collect($user->reportToUsers)
-                                                    ->pluck('name')
-                                                    ->toArray();
-                                            @endphp
-                                            {{ implode(",",$reportToUsers) ?? '' }}
+                                            {{ $step->afterStep->name }}
                                         </td>
                                     </tr>
+                                    @forelse ($step->getMedia('attachment') as $item)
 
+                                    @empty
 
+                                    @endforelse
                                 </tbody>
 
                             </table>

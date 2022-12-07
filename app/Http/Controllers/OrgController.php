@@ -57,8 +57,11 @@ class OrgController extends Controller
     {
         $org = Org::create($request->safe()->only('name', 'plan_id', 'address', 'is_premium'));
 
-        if($request->hasFile('image_url') && $request->file('image_url')->isValid()) {
-            $org->addMedia($request->file('image_url'))->toMediaCollection('Org');
+        if($request->hasFile('attachments')){
+            $org->addMultipleMediaFromRequest(['attachments'])
+            ->each(function($attachment){
+                $attachment->toMediaCollection('attachments');
+            });
         }
         toast(__('global.crud_actions', ['module' => 'Org', 'action' => 'created']), 'success');
 
@@ -100,8 +103,12 @@ class OrgController extends Controller
     {
         $org->update($request->safe()->only(['name','plan_id', 'address', 'is_premium']));
 
-        if($request->hasFile('image_url') && $request->file('image_url')->isValid()) {
-            $org->addMedia($request->file('image_url'))->toMediaCollection('Org');
+        if($request->hasFile('attachments')){
+            $org->media()->delete();
+            $org->addMultipleMediaFromRequest(['attachments'])
+            ->each(function($attachment){
+                $attachment->toMediaCollection('attachments');
+            });
         }
         toast(__('global.crud_actions', ['module' => 'Org', 'action' => 'updated']), 'success');
 
