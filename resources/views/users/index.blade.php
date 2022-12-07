@@ -1,184 +1,249 @@
 @extends('layouts.admin')
 @section('content')
-{{-- @can('create-user')
-    <div style="margin-bottom: 10px;" class="row">
-        <div class="col-lg-12">
-            <a class="btn btn-success" href="{{  route('admin.users.create') }}">
-                {{ trans('global.add') }} {{ trans('crud.users.title_singular') }}
-            </a>
-        </div>
-    </div>
-@endcan --}}
+    <!--begin::Main-->
+    <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+        <!--begin::Content wrapper-->
+        <div class="d-flex flex-column flex-column-fluid">
+            <!--begin::Toolbar-->
+            <div id="kt_app_toolbar" class="app-toolbar py-3 py-lg-6">
+                <!--begin::Toolbar container-->
+                <div id="kt_app_toolbar_container" class="app-container container-xxl d-flex flex-stack">
+                    <!--begin::Page title-->
+                    <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
+                        <!--begin::Title-->
+                        <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
+                            Users</h1>
+                        <!--end::Title-->
+                        <!--begin::Breadcrumb-->
+                        <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
+                            <!--begin::Item-->
+                            <li class="breadcrumb-item text-muted">
+                                <a href="{{ route('admin.users.index') }}">Users</a>
+                            </li>
+                            <!--end::Item-->
+                            <!--begin::Item-->
+                            <li class="breadcrumb-item">
+                                <span class="bullet bg-gray-400 w-5px h-2px"></span>
+                            </li>
+                            <!--end::Item-->
+                            <!--begin::Item-->
+                            <li class="breadcrumb-item text-muted">List</li>
+                            <!--end::Item-->
+                        </ul>
+                        <!--end::Breadcrumb-->
+                    </div>
+                    <!--end::Page title-->
+                    <!--begin::Actions-->
+                    <div class="d-flex align-items-center gap-2 gap-lg-3">
+                        <!--begin::Secondary button-->
+                        <!--end::Secondary button-->
+                        <!--begin::Primary button-->
+                        <a href="{{ route('admin.users.create') }}"
+                            class="btn btn-sm fw-bold btn-primary">{{ trans('global.add') }}</a>
+                        <!--end::Primary button-->
+                    </div>
+                    <!--end::Actions-->
+                </div>
+                <!--end::Toolbar container-->
+            </div>
+            <!--end::Toolbar-->
+            <!--begin::Content-->
+            <div id="kt_app_content" class="app-content flex-column-fluid">
+                <!--begin::Content container-->
+                <div id="kt_app_content_container" class="app-container container-xxl">
+                    <!--begin::Card-->
+                    <div class="card">
+                        <!--begin::Card header-->
+                        <div class="card-header border-0 pt-6"
+                            style="display: flex;
+                flex-wrap: wrap;
+                justify-content: end;
+                margin: 0;">
+                            <!--begin::Card title-->
+                            <div class="">
+                                <input type="text" class="form-control form-control-sm"
+                                    style="float: right; width: 300px;" name="dataTableSearch" id="dataTableSearch"
+                                    value="{{ request()->input('s') }}" placeholder="Type and search in table" />
+                                <a href="javascript:;" id="dtToggleActionBtns"
+                                    style="float: right; margin-right: 20px; margin-top: 5px;"
+                                    onclick="toggleGridOptions()"><i class="fa-fw nav-icon fas fa-cogs"></i></a>
+                            </div>
+                            <!--begin::Card title-->
+                        </div>
+                        <!--end::Card header-->
+                        <!--begin::Card body-->
+                        <div class="card-body pt-0">
+                            <!--begin::Table-->
+                            <div class="table-responsive">
+                                <table class="table table-bordered datatable datatable-Cities">
+                                    <thead>
+                                        <tr>
+                                            <th width="10"></th>
+                                            <th>Name</th>
+                                            <th>Organisation</th>
+                                            <th>Username</th>
+                                            <th>Email</th>
+                                            <th>Mobile</th>
+                                            <th>Role</th>
+                                            {{-- <th>Status</th> --}}
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($users as $i=>$item)
+                                            <tr data-entry-id="{{ $item->id }}">
+                                                <td></td>
+                                                <td>{{ $item->name }}</td>
+                                                <td>{{ $item->org->name }}</td>
+                                                <td>{{ $item->username }}</td>
+                                                <td>{{ $item->email }}</td>
+                                                <td>{{ $item->phone }}</td>
+                                                <td>{{ $item->role->name }}</td>
+                                                {{-- <td>{!! $item->status == 'active'
+                                                    ? '<span class="badge badge-success">Active</span>'
+                                                    : '<span class="badge badge-danger">In-active</span>' !!}</td> --}}
+                                                <!--begin::Action=-->
+                                                <td class="text-end">
+                                                    <a href="#" class="btn btn-light btn-active-light-primary btn-sm"
+                                                        data-kt-menu-trigger="click"
+                                                        data-kt-menu-placement="bottom-end">Actions
+                                                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
+                                                        <span class="svg-icon svg-icon-5 m-0">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                height="24" viewBox="0 0 24 24" fill="none">
+                                                                <path
+                                                                    d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z"
+                                                                    fill="black" />
+                                                            </svg>
+                                                        </span>
+                                                        <!--end::Svg Icon-->
+                                                    </a>
+                                                    <!--begin::Menu-->
+                                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4"
+                                                        data-kt-menu="true">
 
-<div class="card">
-    <div class="card-header">
-        {{ trans('crud.users.title') }} {{ trans('global.list') }}
+                                                        <!--begin::Menu item-->
+                                                        <div class="menu-item px-3">
+                                                            <a href="{{ route('admin.users.edit', $item->id) }}"
+                                                                class="menu-link px-3"> {{ trans('global.edit') }}
+                                                            </a>
+                                                        </div>
+                                                        <!--end::Menu item-->
 
-        <input type="text" class="form-control form-control-sm" style="float: right; width: 300px;" name="dataTableSearch" id="dataTableSearch" value="{{ request()->input('s') }}" placeholder="Type and search in table" />
-        <a href="javascript:;" id="dtToggleActionBtns" style="float: right; margin-right: 20px;" onclick="toggleGridOptions()"><i class="fa-fw nav-icon fas fa-cogs"></i></a>
-    </div>
+                                                        <!--begin::Menu item-->
+                                                        <div class="menu-item px-3">
+                                                            <a href="{{ route('admin.users.show', $item->id) }}"
+                                                                class="menu-link px-3"> {{ trans('global.view') }}
+                                                            </a>
+                                                        </div>
+                                                        <!--end::Menu item-->
+                                                        <!--begin::Menu item-->
+                                                        <div class="menu-item px-3">
+                                                            <form action="{{ route('admin.users.destroy', $item->id) }}"
+                                                                method="POST" id="frmDeleteschool-{{ $item->id }}"
+                                                                style="display: inline-block; width: 100%;">
+                                                                <input type="hidden" name="_method" value="DELETE">
+                                                                <input type="hidden" name="_token"
+                                                                    value="{{ csrf_token() }}">
+                                                                <a href="#" class="menu-link px-3"
+                                                                    onclick="deleteGridRecord('frmDeleteschool-{{ $item->id }}')">
+                                                                    {{ trans('global.delete') }}
+                                                                </a>
+                                                            </form>
+                                                        </div>
+                                                        <!--end::Menu item-->
 
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table datatable datatable-Users">
-                <thead>
-                    <tr>
-                        <th width="10">
-                        </th>
-                        <th>
-                            {{ trans('crud.users.fields.name') }}
-                        </th>
-                        {{-- <th>
-                            {{ trans('crud.users.fields.email') }}
-                        </th> --}}
-                        <th>
-                            {{ trans('crud.users.fields.user_phone') }}
-                        </th>
-                        <th>
-                            {{ trans('crud.users.fields.signup_date') }}
-                        </th>
-                        <th>
-                            {{ trans('crud.users.fields.plan_type') }}
-                        </th>
-                        <th>
-                            {{ trans('crud.users.fields.user_type') }}
-                        </th>
-                        {{-- <th>
-                            {{ trans('crud.users.fields.user_name') }}
-                        </th> --}}
-                        <th>
-                            {{ trans('crud.users.fields.birthday') }}
-                        </th>
-                        <th>
-                            {{ trans('crud.users.fields.gender') }}
-                        </th>
-                        <th>
-                            {{ trans('crud.users.fields.status') }}
-                        </th>
-                        <th>
-                            &nbsp;
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($users as $user)
-                        <tr data-entry-id="{{ $user->id }}">
-                            <td>
-                                <span style="display: none;">{{ $user->id }}</span>
-                            </td>
-                            <td>
-                                {{ $user->name ?? '' }}
-                            </td>
-                            {{-- <td>
-                                {{ $user->email ?? '' }}
-                            </td> --}}
-                            <td>
-                                {{ $user->user_phone ?? '' }}
-                            </td>
+                                                    </div>
+                                                    <!--end::Menu-->
+                                                </td>
+                                                <!--end::Action=-->
+                                            </tr>
+                                        @empty
+                                        @endforelse
 
-                            <td>
-                                {{ $user->created_at ?? '' }}
-                            </td>
-                            <td>
-                                n/a
-                            </td>
-
-                            <td>
-                                {{ Str::headline($user->user_type) ?? '' }}
-                            </td>
-                            {{-- <td>
-                                {{ $user->user_name ?? '' }}
-                            </td> --}}
-                            <td>
-                                {{ $user->birthday ?? 'n/a' }}
-                            </td>
-                            <td>
-                                {{ $user->gender ?? 'n/a' }}
-                            </td>
-                            <td>
-                                @if ($user->is_active == 1)
-                                <span class="badge text-bg-success">{{ trans('global.activated') }}</span>
-                                @elseif ($user->is_active == 2)
-                                <span class="badge text-bg-warning">{{ trans('global.deactivated') }}</span>
-                                @elseif ($user->is_active == 3)
-                                    <span class="badge text-bg-danger">{{ trans('global.deleted') }}</span>
-                                @else
-                                    'n/a'
+                                    </tbody>
+                                </table>
+                                @if ($users->count())
+                                    {{ $users->links() }}
                                 @endif
-                            </td>
-                            <td>
-                                <div class="dropdown">
-                                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                        {{ trans('global.grid.actions') }}
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        {{-- @can('show-user')
-                                        <li>
-                                            <a class="dropdown-item dropdown-item-font" href="{{ route('admin.users.show', $user->id) }}">
-                                                {{ trans('global.view') }}
-                                            </a>
-                                        </li>
-                                        @endcan
-                                        @can('update-user')
-                                        <li>
-                                            <a class="dropdown-item dropdown-item-font" href="{{ route('admin.users.edit', $user->id) }}">
-                                                {{ trans('global.edit') }}
-                                            </a>
-                                        </li>
-                                        @endcan --}}
-                                        <li>
-                                            <a class="dropdown-item dropdown-item-font" href="javascript:;">
-                                                Personal details
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item dropdown-item-font" href="javascript:;">
-                                                Address details
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item dropdown-item-font" href="javascript:;">
-                                                Interests
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item dropdown-item-font" href="javascript:;">
-                                                Transaction details
-                                            </a>
-                                        </li>
-                                        @can('delete-user')
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li>
-                                            <form action="{{ route('admin.users.destroy', ['user' => $user->id]) }}" method="POST" id="frmDeleteUser-{{ $user->id }}" style="display: inline-block; width: 100%;">
-                                                <input type="hidden" name="_method" value="DELETE">
-                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                                <a class="dropdown-item dropdown-item-font text-danger" href="javascript:;" onclick="deleteGridRecord('frmDeleteUser-{{ $user->id }}')">
-                                                    {{ trans('global.delete') }}
-                                                </a>
-                                            </form>
-                                        </li>
-                                        @endcan
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            @if($users->count())
-                {{ $users->links() }}
-            @endif
-        </div>
-    </div>
-</div>
 
+                            </div>
+                            <!--end::Table-->
+                        </div>
+                        <!--end::Card body-->
+                    </div>
+                    <!--end::Card-->
+                </div>
+                <!--end::Content container-->
+            </div>
+            <!--end::Content-->
+        </div>
+        <!--end::Content wrapper-->
+    </div>
+    <!--end:::Main-->
 @endsection
 @section('scripts')
-@parent
+    @parent
     <script>
         var table;
-        $(function () {
+        $(function() {
             let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
+            @can('delete-user')
+                let deleteButtonTrans = '{{ trans('global.delete') }}'
+                let deleteButton = {
+                    text: deleteButtonTrans,
+                    url: "{{ route('admin.users.massDestroy') }}",
+                    className: 'btn btn-sm btn-danger',
+                    action: function(e, dt, node, config) {
+                        var ids = $.map(dt.rows({
+                            selected: true
+                        }).nodes(), function(entry) {
+                            return $(entry).data('entry-id')
+                        });
+
+                        if (ids.length === 0) {
+                            Swal.fire(
+                                '{{ trans('global.message') }}!',
+                                '{{ trans('global.grid.no_item_selected') }}',
+                            )
+                            return
+                        }
+
+                        Swal.fire({
+                            title: '{{ trans('global.are_you_sure') }}',
+                            text: '{{ trans('global.are_you_sure_delete_msg') }}',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#d33',
+                            cancelButtonColor: '#3085d6',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $.ajax({
+                                        headers: {
+                                            'x-csrf-token': _token
+                                        },
+                                        method: 'POST',
+                                        url: config.url,
+                                        data: {
+                                            ids: ids,
+                                            _method: 'DELETE'
+                                        }
+                                    })
+                                    .done(function() {
+                                        Swal.fire(
+                                            '{{ trans('global.delete') }}!',
+                                            '{{ trans('global.success') }}'
+                                        );
+
+                                        location.reload()
+                                    })
+                            }
+                        })
+                    }
+                }
+                dtButtons.push(deleteButton)
+            @endcan
 
             $.extend(true, $.fn.dataTable.defaults, {
                 orderCellsTop: true,
@@ -189,35 +254,44 @@
                         info: '{{ trans('global.grid_pagination_count_status', [
                             'firstItem' => $users->firstItem(),
                             'lastItem' => $users->lastItem(),
-                            'total' => $users->total()
+                            'total' => $users->total(),
                         ]) }}',
                     @endif
                 },
             });
 
-            table = $('.datatable-Users:not(.ajaxTable)').DataTable({ buttons: dtButtons })
+            table = $('.datatable-Cities:not(.ajaxTable)').DataTable({
+                buttons: dtButtons
+            })
             $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e) {
                 $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
             });
 
             // datatable search functionality
-            $('#dtToggleActionBtns').tooltip({'trigger':'hover', 'title': '{{ trans('global.grid.toggle_action_buttons_tooltip') }}'});
-            $('#dataTableSearch').tooltip({'trigger':'focus', 'title': '{{ trans('global.grid.search_tooltip') }}'});
+            $('#dtToggleActionBtns').tooltip({
+                'trigger': 'hover',
+                'title': '{{ trans('global.grid.toggle_action_buttons_tooltip') }}'
+            });
+            $('#dataTableSearch').tooltip({
+                'trigger': 'focus',
+                'title': '{{ trans('global.grid.search_tooltip') }}'
+            });
 
-            $('#dataTableSearch').on( 'keyup', function (e) {
-                if(e.which == 13) { // if user press enter in search text input
+            $('#dataTableSearch').on('keyup', function(e) {
+                if (e.which == 13) { // if user press enter in search text input
                     let requestParameters = [];
 
                     let searchText = $('#dataTableSearch').val();
-                    if($.trim(searchText) != '') {
-                        requestParameters.push('s='+$.trim(searchText));
+                    if ($.trim(searchText) != '') {
+                        requestParameters.push('s=' + $.trim(searchText));
                     }
 
-                    window.location.href = '{{ route("admin.users.index") }}'+generateQueryString(requestParameters);
+                    window.location.href = '{{ route('admin.users.index') }}' + generateQueryString(
+                        requestParameters);
                 } else {
                     table.search(this.value).draw();
                 }
             });
         })
-</script>
+    </script>
 @endsection
