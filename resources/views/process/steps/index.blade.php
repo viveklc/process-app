@@ -38,7 +38,7 @@
                         <!--begin::Secondary button-->
                         <!--end::Secondary button-->
                         <!--begin::Primary button-->
-                        <a href="{{ route('admin.steps.create') }}"
+                        <a href="{{ route('admin.process.steps.create',$processId) }}"
                             class="btn btn-sm fw-bold btn-primary">{{ trans('global.add') }}</a>
                         <!--end::Primary button-->
                     </div>
@@ -124,7 +124,7 @@
 
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <a href="{{ route('admin.steps.edit', $item->id) }}"
+                                                            <a href="{{ route('admin.process.steps.edit',['process'=>$processId,'step'=>$item->id]) }}"
                                                                 class="menu-link px-3"> {{ trans('global.edit') }}
                                                             </a>
                                                         </div>
@@ -132,14 +132,14 @@
 
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <a href="{{ route('admin.steps.show', $item->id) }}"
+                                                            <a href="{{ route('admin.process.steps.show', ['process'=>$processId,'step'=>$item->id]) }}"
                                                                 class="menu-link px-3"> {{ trans('global.view') }}
                                                             </a>
                                                         </div>
                                                         <!--end::Menu item-->
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <form action="{{ route('admin.steps.destroy', $item->id) }}"
+                                                            <form action="{{ route('admin.process.steps.destroy', ['process'=>$processId,'step'=>$item->id]) }}"
                                                                 method="POST" id="frmDeleteschool-{{ $item->id }}"
                                                                 style="display: inline-block; width: 100%;">
                                                                 <input type="hidden" name="_method" value="DELETE">
@@ -192,7 +192,7 @@
                 let deleteButtonTrans = '{{ trans('global.delete') }}'
                 let deleteButton = {
                     text: deleteButtonTrans,
-                    url: "{{ route('admin.steps.massDestroy') }}",
+                    url: "{{ route('admin.process.step.massDestroy') }}",
                     className: 'btn btn-sm btn-danger',
                     action: function(e, dt, node, config) {
                         var ids = $.map(dt.rows({
@@ -286,7 +286,7 @@
                         requestParameters.push('s=' + $.trim(searchText));
                     }
 
-                    window.location.href = '{{ route('admin.steps.index') }}' + generateQueryString(
+                    window.location.href = '{{ route('admin.process.steps.index',$processId) }}' + generateQueryString(
                         requestParameters);
                 } else {
                     table.search(this.value).draw();

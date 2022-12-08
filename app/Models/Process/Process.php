@@ -71,7 +71,7 @@ class Process extends Model implements HasMedia
 
     public function steps()
     {
-        return $this->hasMany(Step::class);
+        return $this->hasMany(Step::class)->isActive();
     }
 
 }

@@ -12,13 +12,13 @@
                     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                         <!--begin::Title-->
                         <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
-                            Steps</h1>
+                            Step Instances</h1>
                         <!--end::Title-->
                         <!--begin::Breadcrumb-->
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
-                                <a href="{{ route('admin.steps.index') }}">Steps</a>
+                                <a href="{{ route('admin.processes.process-instance.index',$processId) }}">Process Instances</a>
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->
@@ -34,14 +34,7 @@
                     </div>
                     <!--end::Page title-->
                     <!--begin::Actions-->
-                    <div class="d-flex align-items-center gap-2 gap-lg-3">
-                        <!--begin::Secondary button-->
-                        <!--end::Secondary button-->
-                        <!--begin::Primary button-->
-                        <a href="{{ route('admin.steps.create') }}"
-                            class="btn btn-sm fw-bold btn-primary">{{ trans('global.add') }}</a>
-                        <!--end::Primary button-->
-                    </div>
+
                     <!--end::Actions-->
                 </div>
                 <!--end::Toolbar container-->
@@ -122,7 +115,7 @@
 
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <a href="{{ route('admin.process-instance.steps.edit', ['process_instance'=>$id,'step'=>$item->id]) }}"
+                                                            <a href="{{ route('admin.process-instance.step-instance.edit', ['process_instance'=>$id,'step_instance'=>$item->id]) }}"
                                                                 class="menu-link px-3"> {{ trans('global.edit') }}
                                                             </a>
                                                         </div>
@@ -130,7 +123,7 @@
 
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <form action="{{ route('admin.steps.destroy', $item->id) }}"
+                                                            <form action="{{ route('admin.process-instance.step-instance.destroy', ['process_instance'=>$id,'step_instance'=>$item->id]) }}"
                                                                 method="POST" id="frmDeleteschool-{{ $item->id }}"
                                                                 style="display: inline-block; width: 100%;">
                                                                 <input type="hidden" name="_method" value="DELETE">
@@ -183,7 +176,7 @@
                 let deleteButtonTrans = '{{ trans('global.delete') }}'
                 let deleteButton = {
                     text: deleteButtonTrans,
-                    url: "{{ route('admin.steps.massDestroy') }}",
+                    url: "{{ route('admin.process.step-instance.massDestroy') }}",
                     className: 'btn btn-sm btn-danger',
                     action: function(e, dt, node, config) {
                         var ids = $.map(dt.rows({
@@ -277,7 +270,7 @@
                         requestParameters.push('s=' + $.trim(searchText));
                     }
 
-                    window.location.href = '{{ route('admin.steps.index') }}' + generateQueryString(
+                    window.location.href = '{{ route('admin.process-instance.step-instance.index',$id) }}' + generateQueryString(
                         requestParameters);
                 } else {
                     table.search(this.value).draw();

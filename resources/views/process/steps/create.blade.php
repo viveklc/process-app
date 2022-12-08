@@ -17,13 +17,13 @@
                     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                         <!--begin::Title-->
                         <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
-                            Update Step</h1>
+                            Add Step</h1>
                         <!--end::Title-->
                         <!--begin::Breadcrumb-->
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
-                                <a href="{{ route('admin.steps.index') }}">Step</a>
+                                <a href="{{ route('admin.process.steps.index',$process->id) }}">Steps</a>
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->
@@ -32,7 +32,7 @@
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->
-                            <li class="breadcrumb-item text-muted">Update</li>
+                            <li class="breadcrumb-item text-muted">Add</li>
                             <!--end::Item-->
                         </ul>
                         <!--end::Breadcrumb-->
@@ -50,10 +50,10 @@
                     <div class="card">
                         <!--begin::Card body-->
                         <div class="card-body pt-7">
-                            <form id="kt_subscriptions_export_form" class="form" method="POST"
-                                action="{{ route('admin.steps.update',$step->id) }}" enctype="multipart/form-data">
+                            <form id="kt_subscriptions_export_form" class="form" method="POST" enctype="multipart/form-data"
+                                action="{{ route('admin.process.steps.store',$process->id) }}">
                                 @csrf
-                                @method('PUT')
+                                <input type="hidden" name="org_id" value="{{ $process->org_id }}">
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
@@ -63,25 +63,7 @@
                                     <input
                                         class="form-control form-control-solid {{ $errors->has('name') ? 'is-invalid' : '' }}"
                                         type="text" name="name" id="name"
-                                        value="{{ old('name', $step->name) }}" required>
-                                </div>
-                                <div class="d-flex flex-column mb-8 fv-row">
-                                    <!--begin::Label-->
-                                    <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="required">Organisation</span>
-                                    </label>
-                                    <!--end::Label-->
-                                    <select
-                                        class="form-control form-control-solid select2 {{ $errors->has('org_id') ? 'is-invalid' : '' }}"
-                                        style="width: 100%;" name="org_id" id="country-dropdown" onchange="mountDropDown(this.value)">
-                                        <option value="">Select Organisation</option>
-                                        @forelse ($org as $item)
-                                            <option value="{{ $item->id }}"
-                                                {{ old('org_id',$step->org_id) == $item->id ? 'selected' : '' }}>{{ $item->name }}
-                                            </option>
-                                        @empty
-                                        @endforelse
-                                    </select>
+                                        value="{{ old('name', '') }}" required>
                                 </div>
 
                                 <div class="d-flex flex-column mb-8 fv-row">
@@ -93,13 +75,12 @@
                                     <select
                                         class="form-control form-control-solid select2 {{ $errors->has('dept_id') ? 'is-invalid' : '' }}"
                                         style="width: 100%;" name="dept_id" id="department_dropdown">
+                                        <option value="">Select Department </option>
                                         @forelse ($depts as $item)
-                                            <option value="{{ $item->id }}"
-                                                {{ old('dept_id',$step->dept_id) == $item->id ? 'selected' : '' }}>{{ $item->name }}
-                                            </option>
+                                            <option value="{{$item->id}}">{{$item->name}}</option>
                                         @empty
-                                        @endforelse
 
+                                        @endforelse
                                     </select>
                                 </div>
 
@@ -112,43 +93,26 @@
                                     <select
                                         class="form-control form-control-solid select2 {{ $errors->has('team_id') ? 'is-invalid' : '' }}"
                                         style="width: 100%;" name="team_id" id="team_dropdown" onchange="getProcessByTeamId(this.value)">
+                                        <option value="">Select Team</option>
                                         @forelse ($teams as $item)
-                                            <option value="{{ $item->id }}"
-                                                {{ old('team_id',$step->team_id) == $item->id ? 'selected' : '' }}>{{ $item->name }}
-                                            </option>
+                                            <option value="{{$item->id}}">{{$item->name}}</option>
                                         @empty
+
                                         @endforelse
                                     </select>
                                 </div>
 
-                                <div class="d-flex flex-column mb-8 fv-row">
-                                    <!--begin::Label-->
-                                    <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="required">Process</span>
-                                    </label>
-                                    <!--end::Label-->
-                                    <select
-                                        class="form-control form-control-solid select2 {{ $errors->has('process_id') ? 'is-invalid' : '' }}"
-                                        style="width: 100%;" name="process_id" id="process_dropdown" onchange="fetchSteps(this.value)">
-                                        @forelse ($teamProcess->teamProcess as $item)
-                                            <option value="{{ $item->id }}"
-                                                {{ old('process_id',$step->process_id) == $item->id ? 'selected' : '' }}>{{ $item->process_name }}
-                                            </option>
-                                        @empty
-                                        @endforelse
-                                    </select>
-                                </div>
 
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="">Sequence</span>
+                                        <span class="required">Sequence</span>
                                     </label>
                                     <!--end::Label-->
                                     <input
-                                        class="form-control form-control-solid {{ $errors->has('total_duration') ? 'is-invalid' : '' }}"
+                                        class="form-control form-control-solid {{ $errors->has('sequence') ? 'is-invalid' : '' }}"
                                         type="number" name="sequence" id="sequence"
-                                        value="{{ old('sequence',$step->sequence) }}" >
+                                        value="{{ old('sequence', '') }}" required>
                                 </div>
 
                                 <div class="d-flex flex-column mb-8 fv-row">
@@ -158,14 +122,15 @@
                                     </label>
                                     <!--end::Label-->
                                     <select
-                                        class="form-control form-control-solid select2 step {{ $errors->has('before_step_id') ? 'is-invalid' : '' }}"
+                                        class="form-control step form-control-solid select2 {{ $errors->has('before_step_id') ? 'is-invalid' : '' }}"
                                         style="width: 100%;" name="before_step_id" id="country-dropdown">
-                                        @forelse ($processSteps as $item)
-                                            <option value="{{ $item->id }}"
-                                                {{ old('before_step_id',$step->before_step_id) == $item->id ? 'selected' : '' }}>{{ $item->name }}
-                                            </option>
+                                        <option value="">Select Before Step</option>
+                                        @forelse ($process->steps as $item)
+                                            <option value="{{$item->id}}">{{ $item->name }}</option>
                                         @empty
+
                                         @endforelse
+
                                     </select>
                                 </div>
 
@@ -176,13 +141,13 @@
                                     </label>
                                     <!--end::Label-->
                                     <select
-                                        class="form-control form-control-solid select2 step {{ $errors->has('after_step_id') ? 'is-invalid' : '' }}"
+                                        class="form-control step form-control-solid select2 {{ $errors->has('after_step_id') ? 'is-invalid' : '' }}"
                                         style="width: 100%;" name="after_step_id" id="country-dropdown">
-                                        @forelse ($processSteps as $item)
-                                            <option value="{{ $item->id }}"
-                                                {{ old('after_step_id',$step->after_step_id) == $item->id ? 'selected' : '' }}>{{ $item->name }}
-                                            </option>
+                                        <option value="">Select After Step</option>
+                                        @forelse ($process->steps as $item)
+                                            <option value="{{$item->id}}">{{ $item->name }}</option>
                                         @empty
+
                                         @endforelse
                                     </select>
                                 </div>
@@ -197,14 +162,14 @@
                                     <input
                                         class="form-control form-control-solid {{ $errors->has('total_duration') ? 'is-invalid' : '' }}"
                                         type="text" name="total_duration" id="total_duration"
-                                        value="{{ old('total_duration', $step->total_duration) }}" >
+                                        value="{{ old('total_duration', '') }}" >
                                 </div>
 
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <input type="hidden" name="is_conditional" id="" value="2">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class=""><input type="checkbox" name="is_conditional" id="is_conditional" value="1" {{ $step->is_conditional == 1 ? 'checked' : '' }}  >
+                                        <span class=""><input type="checkbox" name="is_conditional" id="is_conditional" value="1">
                                             &nbsp;&nbsp; Is Conditional</span>
                                     </label>
 
@@ -214,31 +179,30 @@
                                     <input type="hidden" name="is_substep" id="" value="2">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class=""><input type="checkbox" name="is_substep" id="is_substep" value="1" {{ $step->is_substep == 1 ? 'checked' : '' }} >
+                                        <span class=""><input type="checkbox" name="is_substep" id="is_substep" value="1" >
                                             &nbsp;&nbsp; Is Sub Step</span>
                                     </label>
 
                                 </div>
 
-                                <div class="d-flex flex-column mb-8 fv-row substepdiv">
+                                <div class="d-flex flex-column mb-8 fv-row " id="substepdiv">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
                                         <span class="">Sub Step</span>
                                     </label>
                                     <!--end::Label-->
                                     <select
-                                        class="form-control form-control-solid select2 step {{ $errors->has('substep_of_step_id') ? 'is-invalid' : '' }}"
+                                        class="form-control step form-control-solid select2 {{ $errors->has('substep_of_step_id') ? 'is-invalid' : '' }}"
                                         style="width: 100%;" name="substep_of_step_id" id="country-dropdown">
-                                        @forelse ($processSteps as $item)
-                                            <option value="{{ $item->id }}"
-                                                {{ old('substep_of_step_id',$step->substep_of_step_id) == $item->id ? 'selected' : '' }}>{{ $item->name }}
-                                            </option>
+                                        @forelse ($process->steps as $item)
+                                            <option value="{{$item->id}}">{{ $item->name }}</option>
                                         @empty
+
                                         @endforelse
                                     </select>
                                 </div>
 
-                                 <!--begin::Input group-->
+                                <!--begin::Input group-->
                             <div class="d-flex flex-column mb-8 fv-row">
                                 <!--begin::Label-->
                                 <label class="d-flex align-items-center fs-6 fw-bold mb-2">
@@ -258,7 +222,7 @@
                                     </label>
                                     <!--end::Label-->
                                     <textarea class="form-control form-control-solid {{ $errors->has('description') ? 'is-invalid' : '' }}"
-                                        name="description" id="description">{{ old('description', $step->description) }}</textarea>
+                                        name="description" id="description">{{ old('description', '') }}</textarea>
                                 </div>
 
                                 <div class="d-flex flex-column mb-8 fv-row">
@@ -270,8 +234,8 @@
                                     <select
                                         class="form-control form-control-solid select2 {{ $errors->has('status') ? 'is-invalid' : '' }}"
                                         style="width: 100%;" name="status" id="country-dropdown">
-                                        <option value="active" {{ $step->status == 'active' ? 'selected' : '' }}>Active</option>
-                                        <option value="in-active" {{ $step->status == 'in-active' ? 'selected' : '' }} >In-active</option>
+                                        <option value="active">Active</option>
+                                        <option value="in-active">In-active</option>
                                     </select>
                                 </div>
 
@@ -296,16 +260,32 @@
     </div>
 
 
-
+{{--  --}}
 
 
     <!--end:::Main-->
 @endsection
-
 @section('scripts')
-<script>
+{{--
 
-    function mountDropDown(org_id){
+    <script>
+
+$(document).ready(function(){
+    $("#substepdiv").hide();
+
+    $("#is_substep").click(function () {
+            if ($(this).is(":checked")) {
+                // $("#substepdiv").show();
+                // alert('checked');
+                // $("#AddPassport").hide();
+            } else {
+                $("#substepdiv").hide();
+                // $("#AddPassport").show();
+            }
+        });
+})
+
+function mountDropDown(org_id){
         getDeptsByOrgId(org_id)
         getTeamsByOrgId(org_id)
     }
@@ -411,4 +391,5 @@
             })
     }
 </script>
+--}}
 @endsection

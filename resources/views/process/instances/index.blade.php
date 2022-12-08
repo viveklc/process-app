@@ -124,7 +124,7 @@
 
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <a href="{{ route('admin.process-instance.steps.index', $item->id) }}"
+                                                            <a href="{{ route('admin.process-instance.step-instance.index', $item->id) }}"
                                                                 class="menu-link px-3"> {{ trans('global.step_instance') }}
                                                             </a>
                                                         </div>

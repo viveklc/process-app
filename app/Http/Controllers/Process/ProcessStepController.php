@@ -1,35 +1,34 @@
 <?php
 
-namespace App\Http\Controllers\step;
+namespace App\Http\Controllers\Process;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Setp\MassDestroyStepRequest;
 use App\Http\Requests\Setp\StoreStepRequest;
 use App\Http\Requests\Setp\UpdateStepRequest;
 use App\Models\Dept;
-use App\Models\Org;
 use App\Models\Process\Process;
 use App\Models\Process\Step;
 use App\Models\Team;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Spatie\MediaLibrary\MediaCollections\FileAdder;
 use Symfony\Component\HttpFoundation\Response;
 
-class StepController extends Controller
+class ProcessStepController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(Request $request, Process $process)
     {
         abort_if(!auth()->user()->can('read-step'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $inputSearchString = $request->input('s', '');
 
-        $steps = Step::query()
+        $processId = $process->id;
+        $steps = $process->steps()
             ->with('org:id,name')
             ->with('team:id,team_name')
             ->with('dept:id,name')
@@ -55,7 +54,7 @@ class StepController extends Controller
             ->orderBy('name')
             ->paginate(config('app-config.per_page'));
 
-        return view('steps.index', compact('steps'));
+        return view('process.steps.index', compact('steps', 'processId'));
     }
 
     /**
@@ -63,23 +62,25 @@ class StepController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Process $process)
     {
         abort_if(!auth()->user()->can('create-step'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $org = Org::query()
-            ->select('name', 'id')
+        $process->load('steps');
+        $depts = Dept::query()
+            ->select('id', 'name')
+            ->where('org_id', auth()->user()->org_id)
             ->isActive()
             ->orderBy('name')
             ->get();
-
-        $steps = Step::query()
-            ->select('name', 'id')
+        $teams = Team::query()
+            ->select('id', 'team_name as name')
+            ->where('org_id', auth()->user()->org_id)
             ->isActive()
-            ->orderBy('name')
+            ->orderBy('team_name')
             ->get();
 
-        return view('steps.create', compact('org', 'steps'));
+        return view('process.steps.create', compact('process','depts','teams'));
     }
 
     /**
@@ -88,11 +89,11 @@ class StepController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreStepRequest $request)
+    public function store(StoreStepRequest $request,Process $process)
     {
         abort_if(!auth()->user()->can('create-step'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $step = Step::create($request->safe()->except('attachments'));
+        $step = $process->steps()->create($request->safe()->except('attachments'));
 
         if($request->hasFile('attachments')){
             $step->addMultipleMediaFromRequest(['attachments'])
@@ -110,7 +111,7 @@ class StepController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Step $step)
+    public function show(Process $process,Step $step)
     {
         abort_if(!auth()->user()->can('show-step'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
@@ -121,7 +122,7 @@ class StepController extends Controller
         $step->load('afterStep:id,name');
         $step->load('beforeStep:id,name');
 
-        return view('steps.show',compact('step'));
+        return view('process.steps.show',compact('step'));
     }
 
     /**
@@ -130,41 +131,25 @@ class StepController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Step $step)
+    public function edit(Process $process, Step $step)
     {
         abort_if(!auth()->user()->can('update-step'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $org = Org::query()
-            ->select('name', 'id')
-            ->isActive()
-            ->orderBy('name')
-            ->get();
-
+        $process->load('steps');
         $depts = Dept::query()
-            ->select('name', 'id')
-            ->where('org_id',$step->org_id)
+            ->select('id', 'name')
+            ->where('org_id', auth()->user()->org_id)
             ->isActive()
             ->orderBy('name')
             ->get();
-
         $teams = Team::query()
-            ->select('team_name as name', 'id')
-            ->where('org_id',$step->org_id)
+            ->select('id', 'team_name as name')
+            ->where('org_id', auth()->user()->org_id)
             ->isActive()
             ->orderBy('team_name')
             ->get();
 
-        $teamProcess = Team::find($step->team_id);
-        $teamProcess->load('teamProcess');
-
-        $processSteps = Step::query()
-            ->select('name', 'id')
-            ->where('process_id',$step->process_id)
-            ->isActive()
-            ->orderBy('name')
-            ->get();
-
-        return view('steps.edit', compact('org', 'depts', 'teams', 'teamProcess', 'processSteps', 'step'));
+        return view('process.steps.edit',compact('step','process','depts','teams'));
     }
 
     /**
@@ -174,7 +159,7 @@ class StepController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateStepRequest $request, Step $step)
+    public function update(UpdateStepRequest $request, Process $process, Step $step)
     {
         abort_if(!auth()->user()->can('update-step'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
@@ -188,10 +173,6 @@ class StepController extends Controller
             });
         }
 
-        if ($request->hasFile('has_attachments') && $request->file('has_attachments')->isValid()) {
-            $step->addMediaFromRequest('has_attachments')->toMediaCollection('has_attachments');
-        }
-
         return back()->with('success', 'Step udpated successfully');
     }
 
@@ -201,7 +182,7 @@ class StepController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Step $step)
+    public function destroy(Process $process, Step $step)
     {
         abort_if(!auth()->user()->can('delete-step'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
