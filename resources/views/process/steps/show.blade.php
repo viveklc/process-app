@@ -18,7 +18,7 @@
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
-                                <a href="{{ route('admin.steps.index') }}">Steps</a>
+                                <a href="{{ route('admin.process.steps.index',$process->id) }}">Steps</a>
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->
@@ -109,7 +109,7 @@
                                             Total Duration
                                         </th>
                                         <td>
-                                            {{ $step->total_duration }}
+                                            {{ $step->total_duration ?? ''}}
                                         </td>
                                     </tr>
                                     <tr>
@@ -117,7 +117,7 @@
                                             Before Step
                                         </th>
                                         <td>
-                                            {{ $step->beforeStep->name }}
+                                            {{ $step->beforeStep->name ?? '' }}
                                         </td>
                                     </tr>
 
@@ -126,7 +126,7 @@
                                             After Step
                                         </th>
                                         <td>
-                                            {{ $step->afterStep->name }}
+                                            {{ $step->afterStep->name ?? ''}}
                                         </td>
                                     </tr>
                                     @forelse ($step->getMedia('attachment') as $item)

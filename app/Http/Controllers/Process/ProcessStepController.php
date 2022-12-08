@@ -122,7 +122,7 @@ class ProcessStepController extends Controller
         $step->load('afterStep:id,name');
         $step->load('beforeStep:id,name');
 
-        return view('process.steps.show',compact('step'));
+        return view('process.steps.show',compact('step','process'));
     }
 
     /**
