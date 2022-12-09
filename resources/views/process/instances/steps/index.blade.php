@@ -12,13 +12,13 @@
                     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                         <!--begin::Title-->
                         <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
-                            Process</h1>
+                            Step Instances</h1>
                         <!--end::Title-->
                         <!--begin::Breadcrumb-->
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
-                                <a href="{{ route('admin.processes.index') }}">Process</a>
+                                <a href="{{ route('admin.processes.process-instance.index',$processId) }}">Process Instances</a>
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->
@@ -34,14 +34,7 @@
                     </div>
                     <!--end::Page title-->
                     <!--begin::Actions-->
-                    <div class="d-flex align-items-center gap-2 gap-lg-3">
-                        <!--begin::Secondary button-->
-                        <!--end::Secondary button-->
-                        <!--begin::Primary button-->
-                        <a href="{{ route('admin.processes.create') }}"
-                            class="btn btn-sm fw-bold btn-primary">{{ trans('global.add') }}</a>
-                        <!--end::Primary button-->
-                    </div>
+
                     <!--end::Actions-->
                 </div>
                 <!--end::Toolbar container-->
@@ -79,25 +72,27 @@
                                     <thead>
                                         <tr>
                                             <th width="10"></th>
-                                            <th>Process name</th>
+                                            <th>name</th>
+                                            <th>Organisation</th>
+                                            <th>Department</th>
+                                            <th>Team</th>
+                                            <th>Process Instance</th>
                                             <th>Total Duration</th>
-                                            <th>Valid From</th>
-                                            <th>Valid To</th>
-                                            <th>Status</th>
+
                                             <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse ($process as $i=>$item)
+                                        @forelse ($stepInstances as $i=>$item)
                                             <tr data-entry-id="{{ $item->id }}">
                                                 <td></td>
-                                                <td>{{ $item->process_name }}</td>
+                                                <td>{{ $item->name }}</td>
+                                                <td>{{ $item->org_name }}</td>
+                                                <td>{{ $item->dept_name}}</td>
+                                                <td>{{ $item->team_name }}</td>
+                                                <td>{{ $item->process_instance_name }}</td>
                                                 <td>{{ $item->total_duration }}</td>
-                                                <td>{{ appDateFormat($item->valid_from) }}</td>
-                                                <td>{{ appDateFormat($item->valid_to) }}</td>
-                                                <td>{!! $item->status == 'active'
-                                                    ? '<span class="badge badge-success">Active</span>'
-                                                    : '<span class="badge badge-danger">In-active</span>' !!}</td>
+
                                                 <!--begin::Action=-->
                                                 <td class="text-end">
                                                     <a href="#" class="btn btn-light btn-active-light-primary btn-sm"
@@ -118,26 +113,9 @@
                                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4"
                                                         data-kt-menu="true">
 
-
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <a href="{{ route('admin.process.steps.index', $item->id) }}"
-                                                                class="menu-link px-3"> Steps
-                                                            </a>
-                                                        </div>
-                                                        <!--end::Menu item-->
-
-                                                        <!--begin::Menu item-->
-                                                        <div class="menu-item px-3">
-                                                            <a href="{{ route('admin.processes.process-instance.index', $item->id) }}"
-                                                                class="menu-link px-3"> {{ trans('global.process_instance') }}
-                                                            </a>
-                                                        </div>
-                                                        <!--end::Menu item-->
-
-                                                        <!--begin::Menu item-->
-                                                        <div class="menu-item px-3">
-                                                            <a href="{{ route('admin.processes.edit', $item->id) }}"
+                                                            <a href="{{ route('admin.process-instance.step-instance.edit', ['process_instance'=>$id,'step_instance'=>$item->id]) }}"
                                                                 class="menu-link px-3"> {{ trans('global.edit') }}
                                                             </a>
                                                         </div>
@@ -145,14 +123,7 @@
 
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <a href="{{ route('admin.processes.show', $item->id) }}"
-                                                                class="menu-link px-3"> {{ trans('global.view') }}
-                                                            </a>
-                                                        </div>
-                                                        <!--end::Menu item-->
-                                                        <!--begin::Menu item-->
-                                                        <div class="menu-item px-3">
-                                                            <form action="{{ route('admin.processes.destroy', $item->id) }}"
+                                                            <form action="{{ route('admin.process-instance.step-instance.destroy', ['process_instance'=>$id,'step_instance'=>$item->id]) }}"
                                                                 method="POST" id="frmDeleteschool-{{ $item->id }}"
                                                                 style="display: inline-block; width: 100%;">
                                                                 <input type="hidden" name="_method" value="DELETE">
@@ -176,8 +147,8 @@
 
                                     </tbody>
                                 </table>
-                                @if ($process->count())
-                                    {{ $process->links() }}
+                                @if ($stepInstances->count())
+                                    {{ $stepInstances->links() }}
                                 @endif
 
                             </div>
@@ -205,7 +176,7 @@
                 let deleteButtonTrans = '{{ trans('global.delete') }}'
                 let deleteButton = {
                     text: deleteButtonTrans,
-                    url: "{{ route('admin.processes.massDestroy') }}",
+                    url: "{{ route('admin.process.step-instance.massDestroy') }}",
                     className: 'btn btn-sm btn-danger',
                     action: function(e, dt, node, config) {
                         var ids = $.map(dt.rows({
@@ -263,11 +234,11 @@
                 paging: false,
                 language: {
                     infoEmpty: "{{ trans('global.grid_no_data') }}",
-                    @if ($process->count())
+                    @if ($stepInstances->count())
                         info: '{{ trans('global.grid_pagination_count_status', [
-                            'firstItem' => $process->firstItem(),
-                            'lastItem' => $process->lastItem(),
-                            'total' => $process->total(),
+                            'firstItem' => $stepInstances->firstItem(),
+                            'lastItem' => $stepInstances->lastItem(),
+                            'total' => $stepInstances->total(),
                         ]) }}',
                     @endif
                 },
@@ -299,7 +270,7 @@
                         requestParameters.push('s=' + $.trim(searchText));
                     }
 
-                    window.location.href = '{{ route('admin.processes.index') }}' + generateQueryString(
+                    window.location.href = '{{ route('admin.process-instance.step-instance.index',$id) }}' + generateQueryString(
                         requestParameters);
                 } else {
                     table.search(this.value).draw();

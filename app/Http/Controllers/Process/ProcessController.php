@@ -66,7 +66,7 @@ class ProcessController extends Controller
     {
         abort_if(!auth()->user()->can('create-process'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $process = Process::create($request->safe()->only('process_name', 'process_description', 'total_duration', 'valid_from', 'valid_to', 'status', 'org_id'));
+        $process = Process::create($request->safe()->only('process_name', 'process_description', 'total_duration', 'valid_from', 'valid_to', 'status', 'org_id','process_priority'));
         $process_details = [];
         $input = $request->validated();
         foreach (Process::ADDITIONAL_DETAILS as $key => $value) {
@@ -131,7 +131,7 @@ class ProcessController extends Controller
     {
         abort_if(!auth()->user()->can('update-process'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $process->update($request->safe()->only('process_name', 'process_description', 'total_duration', 'valid_from', 'valid_to', 'status', 'org_id'));
+        $process->update($request->safe()->only('process_name', 'process_description', 'total_duration', 'valid_from', 'valid_to', 'status', 'org_id','process_priority'));
 
         if($request->hasFile('attachments')){
             $process->media()->delete();

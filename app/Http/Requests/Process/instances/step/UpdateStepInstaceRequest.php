@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Setp;
+namespace App\Http\Requests\Process\instances\step;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateStepRequest extends FormRequest
+class UpdateStepInstaceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,22 +24,23 @@ class UpdateStepRequest extends FormRequest
     public function rules()
     {
         return [
-            'org_id' => ['required','numeric','exists:orgs,id'],
-            'dept_id' => ['required','numeric','exists:depts,id'],
-            'team_id' => ['required','numeric','exists:teams,id'],
+
             'name' => ['required','string','min:2','max:100'],
-            'total_duration' => ['required','numeric'],
             'description' => ['nullable','string'],
             'sequence' => ['required','numeric'],
-            'before_step_id' => ['nullable','exists:steps,id'],
-            'after_step_id' => ['nullable','exists:steps,id'],
+            'before_step_instance_id' => ['nullable','exists:step_instances,id'],
+            'after_step_instance_id' => ['nullable','exists:step_instances,id'],
             'is_substep' => ['nullable','in:1,2'],
-            'substep_of_step_id' => ['required_if:is_substep,1'],
+            'is_child_of_step_id' => ['required_if:is_substep,1'],
             'attachments' => ['nullable','array','min:1'],
             'attachments.*' => ['file'],
             'is_mandatory' => ['nullable'],
             'is_conditional' => ['nullable','in:1,2'],
-            'status' => ['required','in:active,in-active']
+            'planned_start_on' => ['nullable','date_format:Y-m-d','date','after_or_equal:today'],
+            'planned_finish_on' => ['nullable','date_format:Y-m-d','date','after:planned_start_on'],
+            'actual_start_on' => ['nullable','date_format:Y-m-d','date','after_or_equal:today'],
+            'actual_finish_on' => ['nullable','date_format:Y-m-d','date','after:actual_start_on'],
+            // 'status' => ['required','in:active,in-active']
         ];
     }
 }

@@ -38,6 +38,7 @@ class StoreProcessRequest extends FormRequest
             'valid_from' => ['required','date_format:Y-m-d','date','after_or_equal:today'],
             'valid_to' => ['required','date_format:Y-m-d','date','after:valid_from'],
             'status' => ['required','string','in:active,in-active'],
+            'process_priority' => ['required','numeric','in:1,2,3'],
             'attachments' => ['nullable','array','min:1'],
             'attachments.*' => ['file'],
         ];

@@ -12,7 +12,7 @@
                     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                         <!--begin::Title-->
                         <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
-                            Process</h1>
+                             Process Instances</h1>
                         <!--end::Title-->
                         <!--begin::Breadcrumb-->
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
@@ -38,7 +38,7 @@
                         <!--begin::Secondary button-->
                         <!--end::Secondary button-->
                         <!--begin::Primary button-->
-                        <a href="{{ route('admin.processes.create') }}"
+                        <a href="{{ route('admin.processes.process-instance.create',$id) }}" id="add_user"
                             class="btn btn-sm fw-bold btn-primary">{{ trans('global.add') }}</a>
                         <!--end::Primary button-->
                     </div>
@@ -78,26 +78,23 @@
                                 <table class="table table-bordered datatable datatable-Cities">
                                     <thead>
                                         <tr>
-                                            <th width="10"></th>
-                                            <th>Process name</th>
-                                            <th>Total Duration</th>
-                                            <th>Valid From</th>
-                                            <th>Valid To</th>
-                                            <th>Status</th>
+                                            <th width="10">#</th>
+                                            <th>Instance name</th>
+                                            <th>Start Date </th>
+                                            <th>Due Date</th>
+                                            <th>Duration</th>
                                             <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse ($process as $i=>$item)
+                                        @forelse ($processInstance as $i=>$item)
                                             <tr data-entry-id="{{ $item->id }}">
                                                 <td></td>
-                                                <td>{{ $item->process_name }}</td>
-                                                <td>{{ $item->total_duration }}</td>
-                                                <td>{{ appDateFormat($item->valid_from) }}</td>
-                                                <td>{{ appDateFormat($item->valid_to) }}</td>
-                                                <td>{!! $item->status == 'active'
-                                                    ? '<span class="badge badge-success">Active</span>'
-                                                    : '<span class="badge badge-danger">In-active</span>' !!}</td>
+                                                <td>{{ $item->process_instance_name }}</td>
+                                                <td>{{ appDateFormat($item->start_date) }}</td>
+                                                <td>{{ appDateFormat($item->due_date) }}</td>
+                                                <td>{{ $item->total_duration}}</td>
+
                                                 <!--begin::Action=-->
                                                 <td class="text-end">
                                                     <a href="#" class="btn btn-light btn-active-light-primary btn-sm"
@@ -117,27 +114,9 @@
                                                     <!--begin::Menu-->
                                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4"
                                                         data-kt-menu="true">
-
-
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <a href="{{ route('admin.process.steps.index', $item->id) }}"
-                                                                class="menu-link px-3"> Steps
-                                                            </a>
-                                                        </div>
-                                                        <!--end::Menu item-->
-
-                                                        <!--begin::Menu item-->
-                                                        <div class="menu-item px-3">
-                                                            <a href="{{ route('admin.processes.process-instance.index', $item->id) }}"
-                                                                class="menu-link px-3"> {{ trans('global.process_instance') }}
-                                                            </a>
-                                                        </div>
-                                                        <!--end::Menu item-->
-
-                                                        <!--begin::Menu item-->
-                                                        <div class="menu-item px-3">
-                                                            <a href="{{ route('admin.processes.edit', $item->id) }}"
+                                                            <a href="{{ route('admin.processes.process-instance.edit', ["process"=>$id,"process_instance"=>$item->id]) }}"
                                                                 class="menu-link px-3"> {{ trans('global.edit') }}
                                                             </a>
                                                         </div>
@@ -145,14 +124,15 @@
 
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <a href="{{ route('admin.processes.show', $item->id) }}"
-                                                                class="menu-link px-3"> {{ trans('global.view') }}
+                                                            <a href="{{ route('admin.process-instance.step-instance.index', $item->id) }}"
+                                                                class="menu-link px-3"> {{ trans('global.step_instance') }}
                                                             </a>
                                                         </div>
                                                         <!--end::Menu item-->
+
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <form action="{{ route('admin.processes.destroy', $item->id) }}"
+                                                            <form action="{{ route('admin.processes.process-instance.destroy', ['process'=>$id,'process_instance'=>$item->id]) }}"
                                                                 method="POST" id="frmDeleteschool-{{ $item->id }}"
                                                                 style="display: inline-block; width: 100%;">
                                                                 <input type="hidden" name="_method" value="DELETE">
@@ -165,20 +145,17 @@
                                                             </form>
                                                         </div>
                                                         <!--end::Menu item-->
-
                                                     </div>
                                                     <!--end::Menu-->
                                                 </td>
                                                 <!--end::Action=-->
                                             </tr>
                                         @empty
+
                                         @endforelse
 
                                     </tbody>
                                 </table>
-                                @if ($process->count())
-                                    {{ $process->links() }}
-                                @endif
 
                             </div>
                             <!--end::Table-->
@@ -194,18 +171,22 @@
         <!--end::Content wrapper-->
     </div>
     <!--end:::Main-->
+
 @endsection
 @section('scripts')
     @parent
     <script>
+
+
         var table;
         $(function() {
             let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
-            @can('delete-plan')
+
+            @can('delete-process-instance')
                 let deleteButtonTrans = '{{ trans('global.delete') }}'
                 let deleteButton = {
                     text: deleteButtonTrans,
-                    url: "{{ route('admin.processes.massDestroy') }}",
+                    url: "{{ route('admin.process.instance.massDestroy') }}",
                     className: 'btn btn-sm btn-danger',
                     action: function(e, dt, node, config) {
                         var ids = $.map(dt.rows({
@@ -232,6 +213,7 @@
                             confirmButtonText: 'Ok'
                         }).then((result) => {
                             if (result.isConfirmed) {
+                                console.log(ids);
                                 $.ajax({
                                         headers: {
                                             'x-csrf-token': _token
@@ -240,6 +222,7 @@
                                         url: config.url,
                                         data: {
                                             ids: ids,
+                                            process_id: '{{ $id }}',
                                             _method: 'DELETE'
                                         }
                                     })
@@ -263,13 +246,7 @@
                 paging: false,
                 language: {
                     infoEmpty: "{{ trans('global.grid_no_data') }}",
-                    @if ($process->count())
-                        info: '{{ trans('global.grid_pagination_count_status', [
-                            'firstItem' => $process->firstItem(),
-                            'lastItem' => $process->lastItem(),
-                            'total' => $process->total(),
-                        ]) }}',
-                    @endif
+
                 },
             });
 
@@ -299,7 +276,7 @@
                         requestParameters.push('s=' + $.trim(searchText));
                     }
 
-                    window.location.href = '{{ route('admin.processes.index') }}' + generateQueryString(
+                    window.location.href = '{{ route('admin.processes.process-instance.index',$id) }}' + generateQueryString(
                         requestParameters);
                 } else {
                     table.search(this.value).draw();

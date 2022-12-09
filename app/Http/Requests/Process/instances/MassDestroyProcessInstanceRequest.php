@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Process;
+namespace App\Http\Requests\Process\instances;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class MassDestroyProcessRequest extends FormRequest
+class MassDestroyProcessInstanceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,7 @@ class MassDestroyProcessRequest extends FormRequest
     {
         return [
             'ids'   => 'required|array',
-            'ids.*' => 'exists:processes,id',
+            'ids.*' => 'exists:process_instances,id',
         ];
     }
 }
