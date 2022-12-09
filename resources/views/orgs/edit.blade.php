@@ -71,6 +71,11 @@
                                         <!--end::Label-->
                                         <select class="form-select form-control form-select-solid select2 {{ $errors->has('plan_id') ? 'is-invalid' : '' }}"  style="width: 100%;" name="plan_id">
                                             <option value="">Please Select</option>
+                                            @forelse ($plans as $item)
+                                                <option value="{{ $item->id }}" {{ old('plan_id', $item->id) == $org->plan_id ? 'selected' : '' }}>{{ $item->plan_name }}</option>
+                                            @empty
+
+                                            @endforelse
                                         </select>
                                     </div>
                                 <!--end::Input group-->

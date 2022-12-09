@@ -30,7 +30,7 @@ class UpdateOrgRequest extends FormRequest
             ],
             'plan_id' => [
                 'nullable',
-                'exists:plans,id'
+                'exists:payment_plans,id'
             ],
             'address' => [
                 'nullable'

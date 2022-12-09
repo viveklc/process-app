@@ -33,7 +33,8 @@ class PlanController extends Controller
             })
             ->isActive()
             ->orderBy('id', 'DESC')
-            ->paginate(config('app-config.per_page'));
+            ->paginate(config('app-config.per_page'))
+            ->withQueryString();
 
         return view('plans.index', compact('plans'));
     }
@@ -70,7 +71,8 @@ class PlanController extends Controller
 
         $plan->planDetails()->createMany($plan_details);
 
-        return back()->with('success', 'Plan added successfully');
+        toast(__('global.crud_actions', ['module' => 'Plan', 'action' => 'created']), 'success');
+        return back();
     }
 
     /**
@@ -123,7 +125,8 @@ class PlanController extends Controller
         $plan->planDetails()->delete();
         $plan->planDetails()->createMany($plan_details);
 
-        return back()->with('success', 'Plan updated successfully');
+        toast(__('global.crud_actions', ['module' => 'Plan', 'action' => 'updated']), 'success');
+        return back();
     }
 
     /**
@@ -140,7 +143,8 @@ class PlanController extends Controller
             'is_active' => 3
         ]);
 
-        return back()->with('success', 'Plan deleted successfully');
+        toast(__('global.crud_actions', ['module' => 'Plan', 'action' => 'deleted']), 'success');
+        return back();
     }
 
     public function massDestroy(MassDestroyPlanRequest $request)
@@ -151,6 +155,7 @@ class PlanController extends Controller
                 'updatedby_userid' => auth()->user()->id,
             ]);
 
+        toast(__('global.crud_actions', ['module' => 'Plan', 'action' => 'deleted']), 'success');
         return response(null, Response::HTTP_NO_CONTENT);
     }
 }

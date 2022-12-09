@@ -62,7 +62,7 @@
                                 <!--end::Label-->
                                 <select
                                     class="form-control form-control-solid select2 {{ $errors->has('process_id') ? 'is-invalid' : '' }}"
-                                    style="width: 100%;" name="process_id[]" id="country-dropdown" multiple>
+                                    style="width: 100%;" name="process_id[]" id="country-dropdown" multiple required>
                                     @forelse ($process as $item)
                                         <option value="{{ $item->id }}" {{ collect(old('process_id'))->contains($item->id) ? 'selected' : '' }}>{{ $item->process_name }}</option>
                                     @empty
@@ -78,7 +78,7 @@
                                 <input
                                     class="form-control form-control-solid {{ $errors->has('valid_from') ? 'is-invalid' : '' }}"
                                     type="date" name="valid_from" id="valid_from"
-                                    value="{{ old('valid_from', '') }}">
+                                    value="{{ old('valid_from', '') }}" required>
                             </div>
 
                             <div class="d-flex flex-column mb-8 fv-row">
@@ -89,7 +89,7 @@
                                 <!--end::Label-->
                                 <input
                                     class="form-control form-control-solid {{ $errors->has('valid_to') ? 'is-invalid' : '' }}"
-                                    type="date" name="valid_to" id="valid_to" value="{{ old('valid_to', '') }}">
+                                    type="date" name="valid_to" id="valid_to" value="{{ old('valid_to', '') }}" required>
                             </div>
 
                             <div>

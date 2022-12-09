@@ -31,7 +31,8 @@ class TeamProcessController extends Controller
                     $query->orWhere('process_name', 'LIKE', '%' . $inputSearchString . '%');
                 });
             })
-            ->paginate(config('app-config.per_page'));
+            ->paginate(config('app-config.per_page'))
+            ->withQueryString();
 
 
         return view('teams.team-process.index', compact('teamProcess', 'id'));
@@ -48,11 +49,11 @@ class TeamProcessController extends Controller
 
         $team_id = $team->id;
         $process = Process::whereNotIn('id', collect($team->teamProcess)->pluck('id')->toArray())
-        ->select('id', 'process_name')
-        ->isActive()
-        ->get();
+            ->select('id', 'process_name')
+            ->isActive()
+            ->get();
 
-        return view('teams.team-process.add',compact('process','team_id'));
+        return view('teams.team-process.add', compact('process', 'team_id'));
     }
 
     /**
@@ -61,13 +62,14 @@ class TeamProcessController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreTeamProcessRequest $request,Team $team)
+    public function store(StoreTeamProcessRequest $request, Team $team)
     {
         abort_if(!auth()->user()->can('create-team-process'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $team->teamProcess()->attach($request->process_id,$request->safe()->only('valid_from','valid_to'));
+        $team->teamProcess()->attach($request->process_id, $request->safe()->only('valid_from', 'valid_to'));
 
-        return back()->with('success','Process assigned successfully');
+        toast(__('global.crud_actions', ['module' => 'Process', 'action' => 'assigned']), 'success');
+        return redirect()->route('admin.team.team-process.index',$team->id);
     }
 
     /**
@@ -76,13 +78,14 @@ class TeamProcessController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Team $team,$process_id)
+    public function destroy(Team $team, $process_id)
     {
         abort_if(!auth()->user()->can('delete-team-process'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $team->teamProcess()->detach($process_id);
 
-        return back()->with('success', 'process deleted successfully');
+        toast(__('global.crud_actions', ['module' => 'Process', 'action' => 'removed']), 'success');
+        return back();
     }
 
     public function massDestroy(MassDestroyTeamProcessRequest $request)
@@ -92,7 +95,7 @@ class TeamProcessController extends Controller
         $process = Team::find($request->team_id);
         $process->teamProcess()->detach($request->ids);
 
+        toast(__('global.crud_actions', ['module' => 'Process', 'action' => 'removed']), 'success');
         return response(null, Response::HTTP_NO_CONTENT);
-
     }
 }

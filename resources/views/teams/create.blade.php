@@ -61,7 +61,7 @@
                                     <!--end::Label-->
                                     <select
                                         class="form-control form-control-solid select2 {{ $errors->has('org_id') ? 'is-invalid' : '' }}"
-                                        style="width: 100%;" name="org_id" id="country-dropdown">
+                                        style="width: 100%;" name="org_id" id="country-dropdown" onchange="getUserByOrgId(this.value)">
                                         <option value="">Select Organisation</option>
                                         @forelse ($org as $item)
                                             <option value="{{ $item->id }}"
@@ -126,7 +126,7 @@
                                     <!--end::Label-->
                                     <select
                                         class="form-control form-control-solid select2 {{ $errors->has('user_id[]') ? 'is-invalid' : '' }}"
-                                        style="width: 100%;" name="user_id[]" id="country-dropdown" multiple>
+                                        style="width: 100%;" name="user_id[]" id="team_user_dropDown" multiple>
                                         @forelse ($orgUsers->users as $item)
                                             <option value="{{ $item->id }}"
                                                 {{ collect(old('user_id'))->contains($item->id) ? 'selected' : '' }}>
@@ -183,10 +183,32 @@
 
     <!--end:::Main-->
 @endsection
+@section('scripts')
 <script>
-    $(document).ready(function() {
-        $('#example-getting-started').multiselect();
+    function getUserByOrgId(org_id){
+        let url = '{{ route('admin.org.users',':org_id') }}';
 
+            url = url.replace(':org_id',org_id);
 
-    });
+            $.ajax({
+                method : "GET",
+                url : url,
+                cache : false,
+                beforeSend : function(){
+
+                },
+                success : function(response){
+                    // console.log(response);
+                    var option = "<option value=''>select Team User</option>";
+                    $.each(response, function(index,value){
+
+                        option += "<option value='"+value.id+"'>"+value.name+"</option>";
+
+                    });
+                    $('#team_user_dropDown').html(option);
+
+                }
+            })
+    }
 </script>
+@endsection

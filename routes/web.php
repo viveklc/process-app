@@ -34,7 +34,6 @@ use App\Http\Controllers\Process\ProcessInstanceController;
 use App\Http\Controllers\Process\ProcessStepController;
 use App\Http\Controllers\Process\StepInstanceController;
 use App\Http\Controllers\Role\RoleController;
-use App\Http\Controllers\step\StepController;
 use App\Http\Controllers\Team\TeamProcessController;
 use App\Http\Controllers\Team\TeamUserController;
 
@@ -138,12 +137,12 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('depts.dept-users',DeptUserController::class)->except('edit','show');
 
     Route::delete('users/destroy',[UserController::class,'massDestroy'])->name('users.massDestroy');
-    Route::get('org/{user:org_id}',[AjaxController::class,'fetchUsersByOrgId'])->name('org.users');
+    Route::get('org/{org_id}',[AjaxController::class,'fetchUsersByOrgId'])->name('org.users');
     Route::resource('users',UserController::class);
 
-    Route::delete('steps/destroy',[StepController::class,'massDestroy'])->name('steps.massDestroy');
+    // Route::delete('steps/destroy',[StepController::class,'massDestroy'])->name('steps.massDestroy');
     Route::get('org/{org_id}/depts',[AjaxController::class,'deptsByOrgId'])->name('org.depts');
-    Route::resource('steps',StepController::class);
+    // Route::resource('steps',StepController::class);
 
     Route::delete('process/process-instance/destroy', [ProcessInstanceController::class, 'massDestroy'])->name('process.instance.massDestroy');
     Route::resource('processes.process-instance',ProcessInstanceController::class);

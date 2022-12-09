@@ -20,7 +20,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 class Team extends Model implements HasMedia
 {
     use HasFactory, LogsActivity;
-    use CreatedUpdatedBy, ModelScopes,ModelAccessor;
+    use CreatedUpdatedBy, ModelScopes;
     use InteractsWithMedia;
 
     protected $guarded = [];

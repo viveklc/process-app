@@ -33,7 +33,8 @@ class ProcessController extends Controller
             })
             ->isActive()
             ->orderBy('id', 'DESC')
-            ->paginate(config('app-config.per_page'));
+            ->paginate(config('app-config.per_page'))
+            ->withQueryString();
 
         return view('process.index', compact('process'));
     }
@@ -81,7 +82,8 @@ class ProcessController extends Controller
             });
         }
 
-        return back()->with('success', 'Process added successfully');
+        toast(__('global.crud_actions', ['module' => 'Process', 'action' => 'created']), 'success');
+        return back();
     }
 
     /**
@@ -95,6 +97,7 @@ class ProcessController extends Controller
         abort_if(!auth()->user()->can('show-process'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $process->load('processDetails');
+        $process->load('media');
 
         return view('process.show', compact('process'));
     }
@@ -116,7 +119,7 @@ class ProcessController extends Controller
             ->get();
 
         $process->load('processDetails');
-        // dd($process);
+
         return view('process.edit', compact('process', 'org'));
     }
 
@@ -149,7 +152,8 @@ class ProcessController extends Controller
         $process->processDetails()->delete();
         $process->processDetails()->createMany($process_details);
 
-        return back()->with('success', 'Process updated successfully');
+        toast(__('global.crud_actions', ['module' => 'Process', 'action' => 'updated']), 'success');
+        return back();
     }
 
     /**
@@ -166,7 +170,8 @@ class ProcessController extends Controller
             'is_active' => 3
         ]);
 
-        return back()->with('success', 'Process deleted successfully');
+        toast(__('global.crud_actions', ['module' => 'Process', 'action' => 'deleted']), 'success');
+        return back();
     }
 
     /**
@@ -181,6 +186,7 @@ class ProcessController extends Controller
                 'updatedby_userid' => auth()->user()->id,
             ]);
 
+        toast(__('global.crud_actions', ['module' => 'Processes', 'action' => 'deleted']), 'success');
         return response(null, Response::HTTP_NO_CONTENT);
     }
 }

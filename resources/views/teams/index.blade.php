@@ -92,8 +92,8 @@
                                             <td></td>
                                             <td>{{$item->team_name}}</td>
                                             <td>{{ $item->org->name }}</td>
-                                            <td>{{ $item->valid_from }}</td>
-                                            <td>{{ $item->valid_to }}</td>
+                                            <td>{{ appDateFormat($item->valid_from) }}</td>
+                                            <td>{{ appDateFormat($item->valid_to) }}</td>
                                             <!--begin::Action=-->
                                             <td class="text-end">
                                                 <a href="#" class="btn btn-light btn-active-light-primary btn-sm"
@@ -129,6 +129,13 @@
                                                     <div class="menu-item px-3">
                                                         <a href="{{ route('admin.team.edit',$item->id) }}"
                                                             class="menu-link px-3"> {{ trans('global.edit') }}
+                                                        </a>
+                                                    </div>
+                                                    <!--end::Menu item-->
+                                                    <!--begin::Menu item-->
+                                                    <div class="menu-item px-3">
+                                                        <a href="{{ route('admin.team.show',$item->id) }}"
+                                                            class="menu-link px-3"> {{ trans('global.view') }}
                                                         </a>
                                                     </div>
                                                     <!--end::Menu item-->

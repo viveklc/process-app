@@ -58,7 +58,8 @@ class PermissionController extends Controller
            $role = Role::where('name','admin')->first();
            $permission->assignRole($role);
 
-            return back()->with('success', 'Permission created successfully');
+           toast(__('global.crud_actions', ['module' => 'Permission', 'action' => 'created']), 'success');
+            return redirect()->route('admin.permissions.index');
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -99,7 +100,8 @@ class PermissionController extends Controller
         try {
             $permission->update($request->validated());
 
-            return back()->with('success', 'Permission updated successfully');
+            toast(__('global.crud_actions', ['module' => 'Permission', 'action' => 'updated']), 'success');
+            return redirect()->route('admin.permissions.index');
         } catch (Exception $e) {
             return $e->getMessage();
         }

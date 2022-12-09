@@ -11,14 +11,14 @@
                     <!--begin::Page title-->
                     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                         <!--begin::Title-->
-                        <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Steps
+                        <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Process Instance
                         </h1>
                         <!--end::Title-->
                         <!--begin::Breadcrumb-->
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
-                                <a href="{{ route('admin.process.steps.index',$process->id) }}">Steps</a>
+                                <a href="{{ route('admin.processes.index') }}">Process Instances</a>
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->
@@ -50,58 +50,10 @@
                                 <tbody>
                                     <tr>
                                         <th>
-                                            Step name
+                                            Process name
                                         </th>
                                         <td>
-                                            {{ $step->name ?? '' }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>
-                                            Description
-                                        </th>
-                                        <td>
-                                            {{ $step->description ?? '' }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>
-                                            Organization
-                                        </th>
-                                        <td>
-                                            {{ $step->org->name ?? '' }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>
-                                            Department
-                                        </th>
-                                        <td>
-                                            {{ $step->dept->name ?? '' }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>
-                                            Team
-                                        </th>
-                                        <td>
-                                            {{ $step->team->team_name ?? '' }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>
-                                            Process
-                                        </th>
-                                        <td>
-                                            {{ $step->process->process_name ?? '' }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>
-                                            Sequence
-                                        </th>
-                                        <td>
-                                            {{ $step->sequence }}
+                                            {{ $processInstance->process_instance_name ?? '' }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -109,34 +61,44 @@
                                             Total Duration
                                         </th>
                                         <td>
-                                            {{ $step->total_duration ?? ''}}
+                                            {{ $processInstance->total_duration ?? '' }}
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>
-                                            Before Step
+                                            Valid From
                                         </th>
                                         <td>
-                                            {{ $step->beforeStep->name ?? '' }}
+                                            {{ appDateFormat($processInstance->valid_from) ?? '' }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Valid To
+                                        </th>
+                                        <td>
+                                            {{ appDateFormat($processInstance->valid_to) ?? '' }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Description
+                                        </th>
+                                        <td>
+                                            {{ $processInstance->process_description ?? '' }}
                                         </td>
                                     </tr>
 
-                                    <tr>
-                                        <th>
-                                            After Step
-                                        </th>
-                                        <td>
-                                            {{ $step->afterStep->name ?? ''}}
-                                        </td>
-                                    </tr>
 
                                 </tbody>
 
                             </table>
+
+
                             <h2>Attachments : </h2>
                             <ul class="list-group">
 
-                                @forelse ($step->media as $item)
+                                @forelse ($processInstance->media as $item)
                                 <li class="list-group-item"> <a href="{{ $item->original_url }}"
                                     target="__blank">{{ $item->original_url }}</a> </li>
                                 @empty

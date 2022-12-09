@@ -70,6 +70,10 @@ class Org extends Model implements HasMedia
         return $this->hasMany(Step::class,'org_id');
     }
 
+    public function plan(){
+        return $this->belongsTo(PaymentPlan::class,'plan_id');
+    }
+
 
 
 

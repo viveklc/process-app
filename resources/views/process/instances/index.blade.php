@@ -114,6 +114,15 @@
                                                     <!--begin::Menu-->
                                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4"
                                                         data-kt-menu="true">
+
+
+                                                        <!--begin::Menu item-->
+                                                        <div class="menu-item px-3">
+                                                            <a href="{{ route('admin.process-instance.step-instance.index', $item->id) }}"
+                                                                class="menu-link px-3"> {{ trans('global.step_instance') }}
+                                                            </a>
+                                                        </div>
+                                                        <!--end::Menu item-->
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
                                                             <a href="{{ route('admin.processes.process-instance.edit', ["process"=>$id,"process_instance"=>$item->id]) }}"
@@ -124,8 +133,8 @@
 
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <a href="{{ route('admin.process-instance.step-instance.index', $item->id) }}"
-                                                                class="menu-link px-3"> {{ trans('global.step_instance') }}
+                                                            <a href="{{ route('admin.processes.process-instance.show', ["process"=>$id,"process_instance"=>$item->id]) }}"
+                                                                class="menu-link px-3"> {{ trans('global.view') }}
                                                             </a>
                                                         </div>
                                                         <!--end::Menu item-->
