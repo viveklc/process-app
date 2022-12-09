@@ -210,17 +210,5 @@ class UserController extends Controller
         return response(null, Response::HTTP_NO_CONTENT);
     }
 
-    public function fetchUsersByOrgId($org_id)
-    {
-        abort_if(!auth()->user()->can('read-user'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $users = User::query()
-            ->select('id', 'name')
-            ->where('org_id', $org_id)
-            ->isActive()
-            ->orderBy('name')
-            ->get();
-
-        return response()->json($users);
-    }
 }

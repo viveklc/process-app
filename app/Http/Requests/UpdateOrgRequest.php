@@ -11,7 +11,7 @@ class UpdateOrgRequest extends FormRequest
      * @return bool
      */
     public function authorize()
-    {       
+    {
         return auth()->user()->can('update-org');
     }
 
@@ -35,12 +35,8 @@ class UpdateOrgRequest extends FormRequest
             'address' => [
                 'nullable'
             ],
-            'image_url' => [
-                'nullable',
-                'image',
-                'mimes:jpeg,png,jpg',
-                'max:2048'
-            ],
+            'attachments' => ['nullable','array','min:1'],
+            'attachments.*' => ['file'],
             'is_premium' => [
                 'nullable',
                 'integer',

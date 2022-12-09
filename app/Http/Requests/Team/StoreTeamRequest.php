@@ -28,8 +28,8 @@ class StoreTeamRequest extends FormRequest
             'user_id' => ['required', 'array','min:1'],
             'user_id.*' => ['required','numeric','distinct','exists:users,id'],
             'org_id' => ['required', 'numeric', 'exists:orgs,id'],
-            'valid_from' => ['required','date_format:Y-m-d','date','after_or_equal:today'],
-            'valid_to' => ['required','date_format:Y-m-d','date','after:valid_from'],
+            // 'valid_from' => ['required','date_format:Y-m-d','date','after_or_equal:today'],
+            // 'valid_to' => ['required','date_format:Y-m-d','date','after:valid_from'],
             'team_description' => ['nullable'],
             'team_remarks' => ['nullable'],
             'team_name' =>  [
@@ -37,7 +37,9 @@ class StoreTeamRequest extends FormRequest
                 Rule::unique('teams', 'team_name')->where(function ($q) {
                     return $q->where('org_id', $this->request->get('org_id'));
                 })
-            ]
+            ],
+            'attachments' => ['nullable','array','min:1'],
+            'attachments.*' => ['file'],
         ];
     }
 }

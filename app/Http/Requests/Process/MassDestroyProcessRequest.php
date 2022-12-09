@@ -24,7 +24,8 @@ class MassDestroyProcessRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'ids'   => 'required|array',
+            'ids.*' => 'exists:processes,id',
         ];
     }
 }

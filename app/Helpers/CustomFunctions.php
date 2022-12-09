@@ -33,6 +33,17 @@ if (!function_exists('appDateFormat')) {
 
 if(!function_exists('dbDateFormat')){
     function dbDateFormat($date){
-        return Carbon::parse($date)->format('Y-m-d');
+        if(!is_null($date)){
+            return Carbon::parse($date)->format('Y-m-d');
+        }else{
+            return null;
+        }
+
+    }
+}
+
+if(!function_exists('DateTimeFormat')){
+    function DateTimeFormat($datetime){
+        return Carbon::parse($datetime)->format('Y-m-d H:i');
     }
 }

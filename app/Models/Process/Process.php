@@ -2,6 +2,7 @@
 
 namespace App\Models\Process;
 
+use App\Models\Activity\ProcessInstance;
 use App\Traits\CreatedUpdatedBy;
 use App\Traits\ModelScopes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,11 +13,13 @@ use App\Models\Process\ProcessDetail;
 use App\Models\Process\ProcessRecurrence;
 use App\Models\Process\ProcessTeam;
 use App\Models\Process\Step;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Process extends Model
+class Process extends Model implements HasMedia
 {
     use HasFactory, LogsActivity;
-    use CreatedUpdatedBy, ModelScopes;
+    use CreatedUpdatedBy, ModelScopes, InteractsWithMedia;
 
     protected $guarded = [];
 
@@ -52,6 +55,10 @@ class Process extends Model
         return $this->hasMany(ProcessDetail::class,'process_id');
     }
 
+    public function processInstances(){
+        return $this->hasMany(ProcessInstance::class,'process_id');
+    }
+
     public function processRecurrences()
     {
         return $this->hasMany(ProcessRecurrence::class);
@@ -64,7 +71,7 @@ class Process extends Model
 
     public function steps()
     {
-        return $this->hasMany(Step::class);
+        return $this->hasMany(Step::class)->isActive();
     }
 
 }

@@ -51,8 +51,8 @@
                     <div class="card">
                         <!--begin::Card body-->
                         <div class="card-body pt-7">
-                            <form id="kt_subscriptions_export_form" class="form" method="POST"
-                                action="{{ route('admin.team.update',$team->id) }}" enctype="multipart/form-data">
+                            <form id="kt_subscriptions_export_form" class="form" method="POST" enctype="multipart/form-data"
+                                action="{{ route('admin.team.update',$team->id) }}" >
                                 @csrf
                                 @method('PUT')
                                 <div class="d-flex flex-column mb-8 fv-row">
@@ -104,6 +104,19 @@
                                         class="form-control form-control-solid {{ $errors->has('valid_to') ? 'is-invalid' : '' }}"
                                         type="date" name="valid_to" id="valid_to" value="{{ old('valid_to', dbDateFormat($team->valid_to)) }}">
                                 </div>
+
+                                <!--begin::Input group-->
+                                <div class="d-flex flex-column mb-8 fv-row">
+                                    <!--begin::Label-->
+                                    <label class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="required">Attachment</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <input type="file"
+                                        class="form-control form-control-solid  {{ $errors->has('attachments') ? 'is-invalid' : '' }}"
+                                        placeholder="" name="attachments[]" multiple />
+                                </div>
+                                <!--end::Input group-->
 
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->

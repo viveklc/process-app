@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AjaxController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\CityController;
@@ -29,7 +30,11 @@ use App\Http\Controllers\DeptUserController;
 use App\Http\Controllers\Permission\PermissionController;
 use App\Http\Controllers\Plan\PlanController;
 use App\Http\Controllers\Process\ProcessController;
+use App\Http\Controllers\Process\ProcessInstanceController;
+use App\Http\Controllers\Process\ProcessStepController;
+use App\Http\Controllers\Process\StepInstanceController;
 use App\Http\Controllers\Role\RoleController;
+use App\Http\Controllers\step\StepController;
 use App\Http\Controllers\Team\TeamProcessController;
 use App\Http\Controllers\Team\TeamUserController;
 
@@ -133,8 +138,21 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('depts.dept-users',DeptUserController::class)->except('edit','show');
 
     Route::delete('users/destroy',[UserController::class,'massDestroy'])->name('users.massDestroy');
-    Route::get('org/{user:org_id}',[UserController::class,'fetchUsersByOrgId'])->name('org.users');
+    Route::get('org/{user:org_id}',[AjaxController::class,'fetchUsersByOrgId'])->name('org.users');
     Route::resource('users',UserController::class);
+
+    Route::delete('steps/destroy',[StepController::class,'massDestroy'])->name('steps.massDestroy');
+    Route::get('org/{org_id}/depts',[AjaxController::class,'deptsByOrgId'])->name('org.depts');
+    Route::resource('steps',StepController::class);
+
+    Route::delete('process/process-instance/destroy', [ProcessInstanceController::class, 'massDestroy'])->name('process.instance.massDestroy');
+    Route::resource('processes.process-instance',ProcessInstanceController::class);
+
+    Route::delete('process/step-instance/destroy', [StepInstanceController::class, 'massDestroy'])->name('process.step-instance.massDestroy');
+    Route::resource('process-instance.step-instance',StepInstanceController::class)->only('index','edit','update','destroy');
+
+    Route::delete('process/step/destroy', [ProcessStepController::class, 'massDestroy'])->name('process.step.massDestroy');
+    Route::resource('process.steps',ProcessStepController::class);
 
 });
 

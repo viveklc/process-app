@@ -143,7 +143,6 @@
                                         <span class=""><input type="checkbox" name="is_org_admin" id="">
                                             &nbsp;&nbsp; Is Organisation admin</span>
                                     </label>
-
                                 </div>
 
                                 <div class="d-flex flex-column mb-8 fv-row">

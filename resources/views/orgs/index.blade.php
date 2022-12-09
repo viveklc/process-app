@@ -114,10 +114,10 @@
                                             <td>
                                                 {{ $org->address ?? '' }}
                                             </td>
-                                            <td>
+                                            <td >
                                                 @if($org->getFirstMediaUrl('Org') !== null)
                                                     <a href="{{ $org->getFirstMediaUrl('Org') }}" target="_BLANK">
-                                                        <img src="{{ $org->getFirstMediaUrl('Org', 'thumb') }}" />
+                                                        <img src="{{ $org->getFirstMediaUrl('Org', 'thumb') }}"  style="width: 250px"/>
                                                     </a>
                                                 @endif
                                             </td>

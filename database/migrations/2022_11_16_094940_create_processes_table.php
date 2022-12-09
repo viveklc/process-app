@@ -20,6 +20,7 @@ return new class extends Migration
             $table->text('process_description')->nullable();
             $table->dateTime('valid_from')->nullable();
             $table->dateTime('valid_to')->nullable();
+            $table->integer('process_priority')->nullable()->comment('1[hight] 2 [low] 3[medium]');
             $table->string('is_recurring')->nullable();
             $table->string('total_duration')->nullable();
             $table->integer('is_active')->default('1')->comment('1[Active] 2[Inactive] 3[Deleted]');

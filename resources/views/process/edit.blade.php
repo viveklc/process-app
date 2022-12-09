@@ -50,8 +50,8 @@
                     <div class="card">
                         <!--begin::Card body-->
                         <div class="card-body pt-7">
-                            <form id="kt_subscriptions_export_form" class="form" method="POST"
-                                action="{{ route('admin.processes.update',$process->id) }}" enctype="multipart/form-data">
+                            <form id="kt_subscriptions_export_form" class="form" method="POST" enctype="multipart/form-data"
+                                action="{{ route('admin.processes.update',$process->id) }}" >
                                 @csrf
                                 @method('PUT')
                                 <div class="d-flex flex-column mb-8 fv-row">
@@ -119,6 +119,34 @@
                                         class="form-control form-control-solid {{ $errors->has('valid_to') ? 'is-invalid' : '' }}"
                                         type="date" name="valid_to" id="valid_to" value="{{ old('valid_to', dbDateFormat($process->valid_to)) }}">
                                 </div>
+
+                                <div class="d-flex flex-column mb-8 fv-row">
+                                    <!--begin::Label-->
+                                    <label class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="required">Priority</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <select
+                                        class="form-control form-control-solid select2 {{ $errors->has('process_priority') ? 'is-invalid' : '' }}"
+                                        style="width: 100%;" name="process_priority" id="country-dropdown">
+                                        <option value="1" {{ $process->process_priority == 1 ? 'selected' : '' }} >High</option>
+                                        <option value="2" {{ $process->process_priority == 2 ? 'selected' : '' }} >Medium</option>
+                                        <option value="3" {{ $process->process_priority == 3 ? 'selected' : '' }} >Low</option>
+                                    </select>
+                                </div>
+
+                                 <!--begin::Input group-->
+                                 <div class="d-flex flex-column mb-8 fv-row">
+                                    <!--begin::Label-->
+                                    <label class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="required">Attachment</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <input type="file"
+                                        class="form-control form-control-solid  {{ $errors->has('attachments') ? 'is-invalid' : '' }}"
+                                        placeholder="" name="attachments[]" multiple />
+                                </div>
+                                <!--end::Input group-->
 
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->

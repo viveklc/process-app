@@ -26,10 +26,10 @@ return new class extends Migration
             $table->integer('after_step_id')->nullable();
             $table->integer('is_substep')->nullable()->comment('1[Yes] 2[No]');
             $table->integer('substep_of_step_id')->nullable();
-            $table->integer('has_attachments')->nullable()->comment('1[Yes] 2[No]');
+            $table->integer('has_attachments')->nullable();
             $table->integer('is_mandatory')->nullable()->comment('1[Yes] 2[No]');
             $table->integer('is_conditional')->nullable()->comment('1[Yes] 2[No]');
-            $table->integer('total_duration')->nullable();
+            $table->string('total_duration')->nullable();
             $table->integer('is_active')->default('1')->comment('1[Active] 2[Inactive] 3[Deleted]');
             $table->string('status')->nullable();
             $table->unsignedBigInteger('createdby_userid')->nullable();
