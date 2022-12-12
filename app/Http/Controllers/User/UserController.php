@@ -163,7 +163,7 @@ class UserController extends Controller
     {
         abort_if(!auth()->user()->can('update-user'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $validated = $request->merge(['is_org_admin' => isset($request->is_org_admin) ? 1 : 2, 'password' => Hash::make($request->password)]);
+        $validated = $request->merge(['is_org_admin' => isset($request->is_org_admin) ? 1 : 2]);
         $user->update($validated->except('is_colleague_of_user_id', 'reports_to_user_id'));
         $user->reportToUsers()->sync(
             $request->reports_to_user_id,

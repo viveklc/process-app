@@ -46,9 +46,19 @@ class StepInstanceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(ProcessInstance $processInstance, StepInstance $stepInstance)
     {
         abort_if(!auth()->user()->can('show-step-instance'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $stepInstance->load('process:id,process_name');
+        $stepInstance->load('team:id,team_name');
+        $stepInstance->load('org:id,name');
+        $stepInstance->load('dept:id,name');
+        $stepInstance->load('afterStep:id,name');
+        $stepInstance->load('beforeStep:id,name');
+        $stepInstance->load('media');
+        // dd($stepInstance);
+        return view('process.instances.steps.show',compact('stepInstance','processInstance'));
     }
 
     /**
@@ -85,7 +95,8 @@ class StepInstanceController extends Controller
 
         $stepInstance->update($request->validated());
 
-        return back()->with('success','Step Instance updated successfully');
+        toast(__('global.crud_actions', ['module' => 'Step instance', 'action' => 'updated']), 'success');
+        return back();
     }
 
     /**
@@ -102,7 +113,8 @@ class StepInstanceController extends Controller
             'is_active' => 3
         ]);
 
-        return back()->with('success', 'step instance deleted successfully');
+        toast(__('global.crud_actions', ['module' => 'Step instance', 'action' => 'deleted']), 'success');
+        return back();
     }
 
     public function massDestroy(MassDestroyStepInstaceRequest $request)
@@ -115,6 +127,7 @@ class StepInstanceController extends Controller
             'updatedby_userid' => auth()->user()->id,
         ]);
 
+        toast(__('global.crud_actions', ['module' => 'Step instance', 'action' => 'deleted']), 'success');
         return response(null, Response::HTTP_NO_CONTENT);
 
     }

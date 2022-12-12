@@ -148,7 +148,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('processes.process-instance',ProcessInstanceController::class);
 
     Route::delete('process/step-instance/destroy', [StepInstanceController::class, 'massDestroy'])->name('process.step-instance.massDestroy');
-    Route::resource('process-instance.step-instance',StepInstanceController::class)->only('index','edit','update','destroy');
+    Route::resource('process-instance.step-instance',StepInstanceController::class)->only('index','edit','update','destroy','show');
 
     Route::delete('process/step/destroy', [ProcessStepController::class, 'massDestroy'])->name('process.step.massDestroy');
     Route::resource('process.steps',ProcessStepController::class);

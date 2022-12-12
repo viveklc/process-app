@@ -87,6 +87,7 @@
                                     <select
                                         class="form-control form-control-solid select2 step {{ $errors->has('before_step_instance_id') ? 'is-invalid' : '' }}"
                                         style="width: 100%;" name="before_step_instance_id" id="country-dropdown">
+                                        <option value="">-- select step --</option>
                                         @forelse ($processSteps as $item)
                                             <option value="{{ $item->id }}"
                                                 {{ old('before_step_instance_id',$stepInstance->before_step_instance_id) == $item->id ? 'selected' : '' }}>{{ $item->name }}
@@ -105,6 +106,7 @@
                                     <select
                                         class="form-control form-control-solid select2 step {{ $errors->has('after_step_instance_id') ? 'is-invalid' : '' }}"
                                         style="width: 100%;" name="after_step_instance_id" id="country-dropdown">
+                                        <option value="">-- select step --</option>
                                         @forelse ($processSteps as $item)
                                             <option value="{{ $item->id }}"
                                                 {{ old('after_step_instance_id',$stepInstance->after_step_instance_id) == $item->id ? 'selected' : '' }}>{{ $item->name }}
@@ -143,6 +145,7 @@
                                     <select
                                         class="form-control form-control-solid select2 step {{ $errors->has('substep_of_step_id') ? 'is-invalid' : '' }}"
                                         style="width: 100%;" name="substep_of_step_id" id="country-dropdown">
+                                        <option value="">-- select step --</option>
                                         @forelse ($processSteps as $item)
                                             <option value="{{ $item->id }}"
                                                 {{ old('substep_of_step_id',$stepInstance->substep_of_step_id) == $item->id ? 'selected' : '' }}>{{ $item->name }}

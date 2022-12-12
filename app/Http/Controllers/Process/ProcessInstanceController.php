@@ -202,7 +202,7 @@ class ProcessInstanceController extends Controller
         ->get();
         foreach($steps as $step)
         {
-            StepInstance::create([
+           $stepInsance= StepInstance::create([
                 'name' => $step->name,
                 'description' => $step->description,
                 'org_id' => $step->org_id,
@@ -226,8 +226,15 @@ class ProcessInstanceController extends Controller
                 'is_mandatory' => $step->is_mandatory,
                 'planned_total_duration' => $step->total_duration,
                 'assigned_to_user_id' => $step->assigned_to_user_id,
+                'planned_total_duration' => $step->total_duration
 
             ]);
+
+            // copy media
+            $stepMedia = $step->media;
+            foreach($stepMedia as $media){
+                $media->copy($stepInsance,'attachments');
+            }
         }
 
         return true;
