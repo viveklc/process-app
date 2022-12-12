@@ -96,7 +96,7 @@
                                             <td>{{ appDateFormat($item->valid_to) }}</td>
                                             <!--begin::Action=-->
                                             <td class="text-end">
-                                                <a href="#" class="btn btn-light btn-active-light-primary btn-sm"
+                                                <a href="#" class="btn  btn-sm"
                                                     data-kt-menu-trigger="click"
                                                     data-kt-menu-placement="bottom-end">Actions
                                                     <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->

@@ -39,8 +39,6 @@ class ProcessInstanceController extends Controller
             ->orderBy('process_instance_name')
             ->get();
 
-            // dd($processInstance);
-
         return view('process.instances.index', compact('processInstance','id'));
     }
 

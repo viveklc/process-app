@@ -144,11 +144,11 @@
                                     <!--end::Label-->
                                     <select
                                         class="form-control form-control-solid select2 step {{ $errors->has('substep_of_step_id') ? 'is-invalid' : '' }}"
-                                        style="width: 100%;" name="substep_of_step_id" id="country-dropdown">
+                                        style="width: 100%;" name="is_child_of_step_id" id="country-dropdown">
                                         <option value="">-- select step --</option>
                                         @forelse ($processSteps as $item)
                                             <option value="{{ $item->id }}"
-                                                {{ old('substep_of_step_id',$stepInstance->substep_of_step_id) == $item->id ? 'selected' : '' }}>{{ $item->name }}
+                                                {{ old('is_child_of_step_id',$stepInstance->substep_of_step_id) == $item->id ? 'selected' : '' }}>{{ $item->name }}
                                             </option>
                                         @empty
                                         @endforelse
