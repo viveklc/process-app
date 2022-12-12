@@ -96,7 +96,8 @@ class UserController extends Controller
             ['valid_from' => Carbon::today(), 'valid_to' => Carbon::now()->addYear(10), 'createdby_userid' => auth()->user()->id]
         );
 
-        return back()->with('success', 'User created successfully');
+        toast(__('global.crud_actions', ['module' => 'User', 'action' => 'created']), 'success');
+        return back();
     }
 
     /**
@@ -162,7 +163,7 @@ class UserController extends Controller
     {
         abort_if(!auth()->user()->can('update-user'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $validated = $request->merge(['is_org_admin' => isset($request->is_org_admin) ? 1 : 2, 'password' => Hash::make($request->password)]);
+        $validated = $request->merge(['is_org_admin' => isset($request->is_org_admin) ? 1 : 2]);
         $user->update($validated->except('is_colleague_of_user_id', 'reports_to_user_id'));
         $user->reportToUsers()->sync(
             $request->reports_to_user_id,
@@ -173,7 +174,8 @@ class UserController extends Controller
             ['valid_from' => Carbon::today(), 'valid_to' => Carbon::now()->addYear(10), 'createdby_userid' => auth()->user()->id]
         );
 
-        return back()->with('success', 'User updated successfully');
+        toast(__('global.crud_actions', ['module' => 'User', 'action' => 'updated']), 'success');
+        return back();
     }
 
     /**
@@ -190,6 +192,7 @@ class UserController extends Controller
             'is_active' => 3
         ]);
 
+        toast(__('global.crud_actions', ['module' => 'User', 'action' => 'deleted']), 'success');
         return back()->with('success', 'User deleted successfully');
     }
 
@@ -207,6 +210,7 @@ class UserController extends Controller
                 'updatedby_userid' => auth()->user()->id,
             ]);
 
+        toast(__('global.crud_actions', ['module' => 'User', 'action' => 'deleted']), 'success');
         return response(null, Response::HTTP_NO_CONTENT);
     }
 

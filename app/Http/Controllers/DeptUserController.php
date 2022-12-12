@@ -32,7 +32,8 @@ class DeptUserController extends Controller
                     $query->orWhere('phone', 'LIKE', '%' . $inputSearchString . '%');
                 });
             })
-            ->paginate(config('app-config.per_page'));
+            ->paginate(config('app-config.per_page'))
+            ->withQueryString();
 
         return view('depts.dept-users.index', compact('deptUsers', 'id'));
     }
@@ -66,7 +67,9 @@ class DeptUserController extends Controller
 
         $dept->deptUsers()->attach($request->user_id);
 
-        return redirect()->route('admin.depts.dept-users.index', $dept->id)->with('success', 'User added to Department');
+        toast(__('global.crud_actions', ['module' => 'Department user', 'action' => 'created']), 'success');
+
+        return redirect()->route('admin.depts.dept-users.index', $dept->id);
     }
 
     /**
@@ -81,7 +84,9 @@ class DeptUserController extends Controller
 
         $dept->deptUsers()->detach($user_id);
 
-        return back()->with('success', 'User deleted successfully');
+        toast(__('global.crud_actions', ['module' => 'Department user', 'action' => 'deleted']), 'success');
+
+        return back();
     }
 
     public function massDestroy(MassDestroyDeptUserRequest $request)
@@ -90,6 +95,8 @@ class DeptUserController extends Controller
 
         $team = Dept::find($request->dept_id);
         $team->deptUsers()->detach($request->ids);
+
+        toast(__('global.crud_actions', ['module' => 'Department users', 'action' => 'deleted']), 'success');
 
         return response(null, Response::HTTP_NO_CONTENT);
     }

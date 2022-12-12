@@ -112,6 +112,20 @@
                                 </tbody>
 
                             </table>
+
+                            <h2>Attachments : </h2>
+                            <ul class="list-group">
+
+                                @forelse ($process->media as $item)
+                                <li class="list-group-item"> <a href="{{ $item->original_url }}"
+                                    target="__blank">{{ $item->original_url }}</a> </li>
+                                @empty
+                                   <li class="list-group-item">No attachment found</li>
+                                @endforelse
+
+
+
+                            </ul>
                         </div>
                         <!--end::Card body-->
                     </div>

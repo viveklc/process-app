@@ -80,7 +80,7 @@
                                         <tr>
                                             <th width="10"></th>
                                             <th>Process name</th>
-                                            <th>Total Duration</th>
+                                            <th>Total Duration(In Sec.)</th>
                                             <th>Valid From</th>
                                             <th>Valid To</th>
                                             <th>Status</th>

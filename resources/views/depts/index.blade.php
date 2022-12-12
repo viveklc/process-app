@@ -12,13 +12,13 @@
                     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                         <!--begin::Title-->
                         <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
-                            Depts</h1>
+                            Departments</h1>
                         <!--end::Title-->
                         <!--begin::Breadcrumb-->
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
-                                <a href="{{ route('admin.depts.index') }}">Dept</a>
+                                <a href="{{ route('admin.depts.index') }}">Departments</a>
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->
@@ -80,15 +80,14 @@
                                         <tr>
                                             <th width="10">
                                             </th>
-                                            <th>
-                                                Org Name
-                                            </th>
+
                                             <th>
                                                 Name
                                             </th>
                                             <th>
-                                                Description
+                                                Organisation
                                             </th>
+
                                             <th class="notexport">
                                                 &nbsp;
                                             </th>
@@ -99,15 +98,14 @@
                                             <tr data-entry-id="{{ $dept->id }}">
                                                 <td>
                                                 </td>
-                                                <td>
-                                                    {{ $dept->org->name ?? '' }}
-                                                </td>
+
                                                 <td>
                                                     {{ $dept->name ?? '' }}
                                                 </td>
                                                 <td>
-                                                    {{ $dept->description ?? '' }}
+                                                    {{ $dept->org->name ?? '' }}
                                                 </td>
+
 
                                                 <!--begin::Action=-->
                                                 <td class="text-end">
@@ -134,19 +132,20 @@
                                                                 class="menu-link px-3"> {{ trans('global.dept_users') }}</a>
                                                         </div>
                                                         <!--end::Menu item-->
+                                                         <!--begin::Menu item-->
+                                                         <div class="menu-item px-3">
+                                                            <a href="{{ route('admin.depts.edit', $dept->id) }}"
+                                                                class="menu-link px-3"> {{ trans('global.edit') }}
+                                                            </a>
+                                                        </div>
+                                                        <!--end::Menu item-->
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
                                                             <a href="{{ route('admin.depts.show', $dept->id) }}"
                                                                 class="menu-link px-3"> {{ trans('global.view') }}</a>
                                                         </div>
                                                         <!--end::Menu item-->
-                                                        <!--begin::Menu item-->
-                                                        <div class="menu-item px-3">
-                                                            <a href="{{ route('admin.depts.edit', $dept->id) }}"
-                                                                class="menu-link px-3"> {{ trans('global.edit') }}
-                                                            </a>
-                                                        </div>
-                                                        <!--end::Menu item-->
+
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
                                                             <form action="{{ route('admin.depts.destroy', $dept->id) }}"

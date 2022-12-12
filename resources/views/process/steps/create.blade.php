@@ -77,7 +77,7 @@
                                         style="width: 100%;" name="dept_id" id="department_dropdown">
                                         <option value="">Select Department </option>
                                         @forelse ($depts as $item)
-                                            <option value="{{$item->id}}">{{$item->name}}</option>
+                                            <option value="{{$item->id}}" {{ old('dept_id') == $item->id ? 'selected' : '' }}>{{$item->name}}</option>
                                         @empty
 
                                         @endforelse
@@ -95,7 +95,7 @@
                                         style="width: 100%;" name="team_id" id="team_dropdown" onchange="getProcessByTeamId(this.value)">
                                         <option value="">Select Team</option>
                                         @forelse ($teams as $item)
-                                            <option value="{{$item->id}}">{{$item->name}}</option>
+                                            <option value="{{$item->id}}" {{ old('team_id') == $item->id ? 'selected' : '' }}>{{$item->name}}</option>
                                         @empty
 
                                         @endforelse
@@ -118,6 +118,18 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="required">Total Duration</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <input
+                                        class="form-control form-control-solid {{ $errors->has('total_duration') ? 'is-invalid' : '' }}"
+                                        type="text" name="total_duration" id="total_duration"
+                                        value="{{ old('total_duration', '') }}" required>
+                                </div>
+
+                                <div class="d-flex flex-column mb-8 fv-row">
+                                    <!--begin::Label-->
+                                    <label class="d-flex align-items-center fs-6 fw-bold mb-2">
                                         <span class="">Before Step</span>
                                     </label>
                                     <!--end::Label-->
@@ -126,7 +138,7 @@
                                         style="width: 100%;" name="before_step_id" id="country-dropdown">
                                         <option value="">Select Before Step</option>
                                         @forelse ($process->steps as $item)
-                                            <option value="{{$item->id}}">{{ $item->name }}</option>
+                                            <option value="{{$item->id}}" {{ old('before_step_id') == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
                                         @empty
 
                                         @endforelse
@@ -145,7 +157,7 @@
                                         style="width: 100%;" name="after_step_id" id="country-dropdown">
                                         <option value="">Select After Step</option>
                                         @forelse ($process->steps as $item)
-                                            <option value="{{$item->id}}">{{ $item->name }}</option>
+                                            <option value="{{$item->id}}" {{ old('after_step_id') == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
                                         @empty
 
                                         @endforelse
@@ -153,17 +165,7 @@
                                 </div>
 
 
-                                <div class="d-flex flex-column mb-8 fv-row">
-                                    <!--begin::Label-->
-                                    <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="">Total Duration</span>
-                                    </label>
-                                    <!--end::Label-->
-                                    <input
-                                        class="form-control form-control-solid {{ $errors->has('total_duration') ? 'is-invalid' : '' }}"
-                                        type="text" name="total_duration" id="total_duration"
-                                        value="{{ old('total_duration', '') }}" >
-                                </div>
+
 
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <input type="hidden" name="is_conditional" id="" value="2">
@@ -195,7 +197,7 @@
                                         class="form-control step form-control-solid select2 {{ $errors->has('substep_of_step_id') ? 'is-invalid' : '' }}"
                                         style="width: 100%;" name="substep_of_step_id" id="country-dropdown">
                                         @forelse ($process->steps as $item)
-                                            <option value="{{$item->id}}">{{ $item->name }}</option>
+                                            <option value="{{$item->id}}" {{ old('substep_of_step_id') == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
                                         @empty
 
                                         @endforelse

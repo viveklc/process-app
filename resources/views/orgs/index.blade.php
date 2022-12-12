@@ -89,9 +89,7 @@
                                             <th>
                                                 Address
                                             </th>
-                                            <th>
-                                                Image
-                                            </th>
+
                                             <th>
                                                 Is Premium
                                             </th>
@@ -109,18 +107,12 @@
                                                 {{ $org->name ?? '' }}
                                             </td>
                                             <td>
-                                                {{ $org->plan_id ?? '' }}
+                                                {{ $org->plan->plan_name ?? '' }}
                                             </td>
                                             <td>
                                                 {{ $org->address ?? '' }}
                                             </td>
-                                            <td >
-                                                @if($org->getFirstMediaUrl('Org') !== null)
-                                                    <a href="{{ $org->getFirstMediaUrl('Org') }}" target="_BLANK">
-                                                        <img src="{{ $org->getFirstMediaUrl('Org', 'thumb') }}"  style="width: 250px"/>
-                                                    </a>
-                                                @endif
-                                            </td>
+
                                             <td>
                                                 {{ ($org->is_premium == 1 ? 'Yes':'No') ?? '' }}
                                             </td>

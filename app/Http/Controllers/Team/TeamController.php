@@ -27,7 +27,9 @@ class TeamController extends Controller
         $inputSearchString = $request->input('s', '');
 
         $teams = Team::with('org:id,name')
-            ->where('teams.org_id', auth()->user()->org_id)
+            ->when(auth()->user()->org_id, function ($query) {
+                $query->where('teams.org_id', auth()->user()->org_id);
+            })
             ->when(!empty($inputSearchString), function ($query) use ($inputSearchString) {
                 $query->where(function ($query) use ($inputSearchString) {
                     $query->orWhere('team_name', 'LIKE', '%' . $inputSearchString . '%');
@@ -40,7 +42,8 @@ class TeamController extends Controller
             })
             ->isActive()
             ->orderBy('id', 'DESC')
-            ->paginate(config('app-config.per_page'));
+            ->paginate(config('app-config.per_page'))
+            ->withQueryString();
 
         return view('teams.index', compact('teams'));
     }
@@ -55,16 +58,19 @@ class TeamController extends Controller
         abort_if(!auth()->user()->can('create-team'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $org = Org::query()
-            ->select('id','name')
+            ->select('id', 'name')
             ->isActive()
             ->orderBy('id', 'DESC')
             ->get();
 
         $orgUsers = Org::query()
-            ->with('users:id,org_id,name')
-            ->where('id', auth()->user()->org_id)
+            ->with('users', function ($query) {
+                $query->when(auth()->user()->org_id, function ($query) {
+                    $query->where('org_id', auth()->user()->org_id);
+                });
+            })
             ->isActive()
-            ->first();
+            ->firstOrFail();
 
         return view('teams.create', compact('org', 'orgUsers'));
     }
@@ -79,26 +85,20 @@ class TeamController extends Controller
     {
         abort_if(!auth()->user()->can('create-team'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        // dd($request->all());
+        $team = Team::create($request->safe()->except('user_id','attachments'));
 
-        try {
-            $team = Team::create($request->safe()->except('user_id'));
-
-            if($request->hasFile('attachments')){
-                $team->addMultipleMediaFromRequest(['attachments'])
-                ->each(function($attachment){
+        if ($request->hasFile('attachments')) {
+            $team->addMultipleMediaFromRequest(['attachments'])
+                ->each(function ($attachment) {
                     $attachment->toMediaCollection('attachments');
                 });
-            }
-
-            $team->teamUser()->attach($request->user_id, $request->only('valid_from', 'valid_to'));
-
-            // toast(__('global.crud_actions', ['module' => 'Team', 'action' => 'created']), 'success');
-            return back();
-        } catch (Exception $e) {
-
-            abort(403, $e->getMessage());
         }
+
+        $team->teamUser()->attach($request->user_id, $request->only('valid_from', 'valid_to'));
+
+        toast(__('global.crud_actions', ['module' => 'Team', 'action' => 'created']), 'success');
+
+        return back();
     }
 
     /**
@@ -107,9 +107,14 @@ class TeamController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Team $team)
     {
-        //
+        abort_if(!auth()->user()->can('show-team'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $team->load('org:id,name');
+        $team->load('media');
+
+        return view('teams.show',compact('team'));
     }
 
     /**
@@ -154,18 +159,19 @@ class TeamController extends Controller
         abort_if(!auth()->user()->can('update-team'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         try {
-            $team->update($request->safe()->except('user_id','attachments'));
+            $team->update($request->safe()->except('user_id', 'attachments'));
             $team->teamUser()->sync($request->user_id, $request->only('valid_from', 'valid_to'));
 
-            if($request->hasFile('attachments')){
+            if ($request->hasFile('attachments')) {
                 $team->media()->delete();
                 $team->addMultipleMediaFromRequest(['attachments'])
-                ->each(function($attachment){
-                    $attachment->toMediaCollection('attachments');
-                });
+                    ->each(function ($attachment) {
+                        $attachment->toMediaCollection('attachments');
+                    });
             }
 
-            return back()->with('success', 'Team Updated Successfully');
+            toast(__('global.crud_actions', ['module' => 'Team', 'action' => 'updated']), 'success');
+            return back();
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -185,6 +191,7 @@ class TeamController extends Controller
             'is_active' => 3
         ]);
 
+        toast(__('global.crud_actions', ['module' => 'Team', 'action' => 'deleted']), 'success');
         return back()->with('success', 'Team deleted successfully');
     }
 
@@ -196,7 +203,7 @@ class TeamController extends Controller
                 'updatedby_userid' => auth()->user()->id,
             ]);
 
+        toast(__('global.crud_actions', ['module' => 'Team', 'action' => 'deleted']), 'success');
         return response(null, Response::HTTP_NO_CONTENT);
     }
-
 }

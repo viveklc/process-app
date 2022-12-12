@@ -27,7 +27,7 @@
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->
-                            <li class="breadcrumb-item text-muted">List</li>
+                            <li class="breadcrumb-item text-muted">Steps</li>
                             <!--end::Item-->
                         </ul>
                         <!--end::Breadcrumb-->
@@ -77,7 +77,7 @@
                                             <th>Department</th>
                                             <th>Team</th>
                                             <th>Process Instance</th>
-                                            <th>Total Duration</th>
+                                            <th>Total Duration(Sec)</th>
 
                                             <th></th>
                                         </tr>
@@ -91,7 +91,7 @@
                                                 <td>{{ $item->dept_name}}</td>
                                                 <td>{{ $item->team_name }}</td>
                                                 <td>{{ $item->process_instance_name }}</td>
-                                                <td>{{ $item->total_duration }}</td>
+                                                <td>{{ $item->planned_total_duration }}</td>
 
                                                 <!--begin::Action=-->
                                                 <td class="text-end">
@@ -117,6 +117,14 @@
                                                         <div class="menu-item px-3">
                                                             <a href="{{ route('admin.process-instance.step-instance.edit', ['process_instance'=>$id,'step_instance'=>$item->id]) }}"
                                                                 class="menu-link px-3"> {{ trans('global.edit') }}
+                                                            </a>
+                                                        </div>
+                                                        <!--end::Menu item-->
+
+                                                        <!--begin::Menu item-->
+                                                        <div class="menu-item px-3">
+                                                            <a href="{{ route('admin.process-instance.step-instance.show', ['process_instance'=>$id,'step_instance'=>$item->id]) }}"
+                                                                class="menu-link px-3"> {{ trans('global.view') }}
                                                             </a>
                                                         </div>
                                                         <!--end::Menu item-->

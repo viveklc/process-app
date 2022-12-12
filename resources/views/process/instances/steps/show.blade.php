@@ -11,14 +11,14 @@
                     <!--begin::Page title-->
                     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                         <!--begin::Title-->
-                        <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Steps
+                        <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Step Instances
                         </h1>
                         <!--end::Title-->
                         <!--begin::Breadcrumb-->
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
-                                <a href="{{ route('admin.process.steps.index',$process->id) }}">Steps</a>
+                                <a href="{{ route('admin.process-instance.step-instance.index',$processInstance->id) }}">Step Instances</a>
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->
@@ -50,10 +50,10 @@
                                 <tbody>
                                     <tr>
                                         <th>
-                                            Step name
+                                            Step instance name
                                         </th>
                                         <td>
-                                            {{ $step->name ?? '' }}
+                                            {{ $stepInstance->name ?? '' }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -61,7 +61,7 @@
                                             Description
                                         </th>
                                         <td>
-                                            {{ $step->description ?? '' }}
+                                            {{ $stepInstance->description ?? '' }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -69,7 +69,7 @@
                                             Organization
                                         </th>
                                         <td>
-                                            {{ $step->org->name ?? '' }}
+                                            {{ $stepInstance->org->name ?? '' }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -77,7 +77,7 @@
                                             Department
                                         </th>
                                         <td>
-                                            {{ $step->dept->name ?? '' }}
+                                            {{ $stepInstance->dept->name ?? '' }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -85,7 +85,7 @@
                                             Team
                                         </th>
                                         <td>
-                                            {{ $step->team->team_name ?? '' }}
+                                            {{ $stepInstance->team->team_name ?? '' }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -93,7 +93,7 @@
                                             Process
                                         </th>
                                         <td>
-                                            {{ $step->process->process_name ?? '' }}
+                                            {{ $stepInstance->process->process_name ?? '' }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -101,7 +101,7 @@
                                             Sequence
                                         </th>
                                         <td>
-                                            {{ $step->sequence }}
+                                            {{ $stepInstance->sequence }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -109,7 +109,7 @@
                                             Total Duration
                                         </th>
                                         <td>
-                                            {{ $step->total_duration ?? ''}}
+                                            {{ $stepInstance->planned_total_duration ?? ''}}
                                         </td>
                                     </tr>
                                     <tr>
@@ -117,7 +117,7 @@
                                             Before Step
                                         </th>
                                         <td>
-                                            {{ $step->beforeStep->name ?? '' }}
+                                            {{ $stepInstance->beforeStep->name ?? '' }}
                                         </td>
                                     </tr>
 
@@ -126,7 +126,43 @@
                                             After Step
                                         </th>
                                         <td>
-                                            {{ $step->afterStep->name ?? ''}}
+                                            {{ $stepInstance->afterStep->name ?? ''}}
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>
+                                            Planned Start On
+                                        </th>
+                                        <td>
+                                            {{ appDateFormat($stepInstance->planned_start_on) ?? ''}}
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>
+                                            Planned Finish On
+                                        </th>
+                                        <td>
+                                            {{ appDateFormat($stepInstance->planned_finish_on) ?? ''}}
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>
+                                            Actual Start On
+                                        </th>
+                                        <td>
+                                            {{ appDateFormat($stepInstance->actual_start_on) ?? ''}}
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>
+                                            Actual Finish On
+                                        </th>
+                                        <td>
+                                            {{ appDateFormat($stepInstance->actual_finish_on) ?? ''}}
                                         </td>
                                     </tr>
 
@@ -136,7 +172,7 @@
                             <h2>Attachments : </h2>
                             <ul class="list-group">
 
-                                @forelse ($step->media as $item)
+                                @forelse ($stepInstance->media as $item)
                                 <li class="list-group-item"> <a href="{{ $item->original_url }}"
                                     target="__blank">{{ $item->original_url }}</a> </li>
                                 @empty

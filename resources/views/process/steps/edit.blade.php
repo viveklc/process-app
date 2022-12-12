@@ -119,6 +119,18 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="required">Total Duration</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <input
+                                        class="form-control form-control-solid {{ $errors->has('total_duration') ? 'is-invalid' : '' }}"
+                                        type="text" name="total_duration" id="total_duration"
+                                        value="{{ old('total_duration', $step->total_duration) }}" required>
+                                </div>
+
+                                <div class="d-flex flex-column mb-8 fv-row">
+                                    <!--begin::Label-->
+                                    <label class="d-flex align-items-center fs-6 fw-bold mb-2">
                                         <span class="">Before Step</span>
                                     </label>
                                     <!--end::Label-->
@@ -154,17 +166,7 @@
                                 </div>
 
 
-                                <div class="d-flex flex-column mb-8 fv-row">
-                                    <!--begin::Label-->
-                                    <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="">Total Duration</span>
-                                    </label>
-                                    <!--end::Label-->
-                                    <input
-                                        class="form-control form-control-solid {{ $errors->has('total_duration') ? 'is-invalid' : '' }}"
-                                        type="text" name="total_duration" id="total_duration"
-                                        value="{{ old('total_duration', $step->total_duration) }}" >
-                                </div>
+
 
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <input type="hidden" name="is_conditional" id="" value="2">

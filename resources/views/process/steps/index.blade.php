@@ -18,7 +18,7 @@
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
-                                <a href="{{ route('admin.steps.index') }}">Steps</a>
+                                <a href="{{ route('admin.processes.index') }}">Processes</a>
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->

@@ -29,7 +29,8 @@ class RoleController extends Controller
                 $query->where('name', 'LIKE', '%' . $inputSearchString . '%');
             })
             ->orderBy('name')
-            ->paginate(config('app-config.per_page'));
+            ->paginate(config('app-config.per_page'))
+            ->withQueryString();
 
         return view('roles.index', compact('roles'));
     }
@@ -61,7 +62,8 @@ class RoleController extends Controller
             $role = Role::create($request->safe()->except('permission_name'));
             $role->givePermissionTo($request->permission_name);
 
-            return back()->with('success', 'Role created successfully');
+            toast(__('global.crud_actions', ['module' => 'Role', 'action' => 'created']), 'success');
+            return redirect()->route('admin.roles.index');
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -110,7 +112,8 @@ class RoleController extends Controller
             $role->update($request->only('name'));
             $role->syncPermissions($request->permission_name);
 
-            return back()->with('success', 'Role updated successfully');
+            toast(__('global.crud_actions', ['module' => 'Role', 'action' => 'updated']), 'success');
+            return redirect()->route('admin.roles.index');
         } catch (Exception $e) {
 
             return $e->getMessage();

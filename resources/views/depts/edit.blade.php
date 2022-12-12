@@ -82,7 +82,7 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="required">Attachment</span>
+                                        <span class="">Attachment</span>
                                     </label>
                                     <!--end::Label-->
                                     <input type="file"
@@ -95,7 +95,7 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="required">Description</span>
+                                        <span class="">Description</span>
                                     </label>
                                     <!--end::Label-->
                                     <textarea class="form-control form-control-solid" placeholder="Description" name="description" cols="30" rows="5" >{{ old('description', $dept->description) }}</textarea>

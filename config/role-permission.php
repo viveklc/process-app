@@ -230,6 +230,7 @@
             'read-step',
             'create-step',
             'update-step',
+            'show-step',
             'delete-step',
             'read-process-instance',
             'create-process-instance',

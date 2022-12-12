@@ -18,7 +18,18 @@ class TeamUserController extends Controller
 
         $id = $team->id;
         $inputSearchString = $request->input('s', '');
-        $teamUsers = $team->teamUser;
+        $teamUsers = $team->teamUser()
+        ->when($inputSearchString, function($query) use ($inputSearchString){
+            $query->where(function($query) use ($inputSearchString){
+                $query->orWhere('name','LIKE','%'.$inputSearchString.'%');
+                $query->orWhere('email','LIKE','%'.$inputSearchString.'%');
+                $query->orWhere('phone','LIKE','%'.$inputSearchString.'%');
+            });
+        })
+        ->where('team_users.is_active',1)
+        ->orderBy('name')
+        ->paginate(config('app-config.per_page'))
+        ->withQueryString();
 
         return view('teams.team-users.index', compact('teamUsers', 'id'));
     }
@@ -42,17 +53,18 @@ class TeamUserController extends Controller
 
         $team->teamUser()->attach($request->user_id);
 
+        toast(__('global.crud_actions', ['module' => 'Team user', 'action' => 'added']), 'success');
         return redirect()->route('admin.team.team-users.index', $team->id)->with('success', 'User added to team');
     }
 
     public function destroy(Team $team, $user_id)
     {
-        // dd($team);
         abort_if(!auth()->user()->can('delete-team-user'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $team->teamUser()->detach($user_id);
 
-        return back()->with('success', 'User deleted successfully');
+        toast(__('global.crud_actions', ['module' => 'Team user', 'action' => 'deleted']), 'success');
+        return back();
     }
 
     public function removeUsersFromTeam(MassRemoveUserFromTeamRequest $request)
@@ -62,6 +74,7 @@ class TeamUserController extends Controller
         $team = Team::find($request->team_id);
         $team->teamUser()->detach($request->ids);
 
+        toast(__('global.crud_actions', ['module' => 'Team users', 'action' => 'deleted']), 'success');
         return response(null, Response::HTTP_NO_CONTENT);
     }
 }

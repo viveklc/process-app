@@ -87,10 +87,15 @@ class ProcessInstanceController extends Controller
             'total_duration' => $process->total_duration
         ]);
        $instance= $process->processInstances()->create($request->all());
+        // copy media
+        $processMedia = $process->media;
+        foreach($processMedia as $media){
+            $media->copy($instance,'attachments');
+        }
        $this->cloneStep($process->id,$instance->id,$instance->process_instance_name,$instance->assigned_to_user_id);
 
-        return back()->with('success','Process instance created successfully');
-
+       toast(__('global.crud_actions', ['module' => 'Process instance', 'action' => 'created']), 'success');
+        return back();
     }
 
     /**
@@ -99,9 +104,13 @@ class ProcessInstanceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Process $process, ProcessInstance $processInstance)
     {
-        //
+        abort_if(!auth()->user()->can('show-process-instance'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $processInstance->load('media');
+
+        return view('process.instances.show',compact('processInstance'));
     }
 
     /**
@@ -144,7 +153,8 @@ class ProcessInstanceController extends Controller
 
         $processInstance->update($request->validated());
 
-        return back()->with('success','Instance updated successfully');
+        toast(__('global.crud_actions', ['module' => 'Process instance', 'action' => 'updated']), 'success');
+        return back();
     }
 
     /**
@@ -161,7 +171,8 @@ class ProcessInstanceController extends Controller
             'is_active' => 3
         ]);
 
-        return back()->with('success', 'process deleted successfully');
+        toast(__('global.crud_actions', ['module' => 'Process instance', 'action' => 'deleted']), 'success');
+        return back();
     }
 
     public function massDestroy(MassDestroyProcessInstanceRequest $request)
@@ -175,6 +186,7 @@ class ProcessInstanceController extends Controller
             'updatedby_userid' => auth()->user()->id,
         ]);
 
+        toast(__('global.crud_actions', ['module' => 'Process instance', 'action' => 'deleted']), 'success');
         return response(null, Response::HTTP_NO_CONTENT);
 
     }
@@ -190,7 +202,7 @@ class ProcessInstanceController extends Controller
         ->get();
         foreach($steps as $step)
         {
-            StepInstance::create([
+           $stepInsance= StepInstance::create([
                 'name' => $step->name,
                 'description' => $step->description,
                 'org_id' => $step->org_id,
@@ -214,8 +226,15 @@ class ProcessInstanceController extends Controller
                 'is_mandatory' => $step->is_mandatory,
                 'planned_total_duration' => $step->total_duration,
                 'assigned_to_user_id' => $step->assigned_to_user_id,
+                'planned_total_duration' => $step->total_duration
 
             ]);
+
+            // copy media
+            $stepMedia = $step->media;
+            foreach($stepMedia as $media){
+                $media->copy($stepInsance,'attachments');
+            }
         }
 
         return true;

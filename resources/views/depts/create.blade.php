@@ -12,13 +12,13 @@
                     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                         <!--begin::Title-->
                         <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
-                            Depts</h1>
+                            Departments</h1>
                         <!--end::Title-->
                         <!--begin::Breadcrumb-->
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
-                                <a href="{{ route('admin.depts.index') }}">Dept</a>
+                                <a href="{{ route('admin.depts.index') }}">Departments</a>
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->
@@ -52,16 +52,15 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="required">Org Name</span>
+                                        <span class="required">Organisation Name</span>
                                     </label>
                                     <!--end::Label-->
                                     <select
                                         class="form-select form-control form-select-solid select2 {{ $errors->has('org_id') ? 'is-invalid' : '' }}"
                                         style="width: 100%;" name="org_id" id="org_id" required>
-                                        @foreach ($orgs as $id => $orgName)
-                                            <option value="{{ $id }}"
-                                                {{ old('org_id') == $id ? 'selected' : '' }}>{{ $orgName }}
-                                            </option>
+                                        <option value="">--Select Organisation--</option>
+                                        @foreach ($orgs as $item)
+                                            <option value="{{$item->id }}" {{ old('org_id') == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -84,7 +83,7 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="required">Attachment</span>
+                                        <span class="">Attachment</span>
                                     </label>
                                     <!--end::Label-->
                                     <input type="file"
@@ -97,7 +96,7 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="required">Description</span>
+                                        <span class="">Description</span>
                                     </label>
                                     <!--end::Label-->
                                     <textarea class="form-control form-control-solid" placeholder="Description" name="description" cols="30"

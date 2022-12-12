@@ -2,18 +2,24 @@
 
 namespace App\Models\Activity;
 
+use App\Models\Dept;
+use App\Models\Org;
+use App\Models\Process\Process;
 use App\Models\Process\Step;
+use App\Models\Team;
 use App\Traits\CreatedUpdatedBy;
 use App\Traits\ModelScopes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class StepInstance extends Model
+class StepInstance extends Model implements HasMedia
 {
     use HasFactory, LogsActivity;
-    use CreatedUpdatedBy, ModelScopes;
+    use CreatedUpdatedBy, ModelScopes, InteractsWithMedia;
 
     protected $guarded = [];
 
@@ -26,6 +32,23 @@ class StepInstance extends Model
     public function comments()
     {
         return $this->hasMany(Comment::class, 'step_instance_id');
+    }
+
+    public function process()
+    {
+        return $this->belongsTo(Process::class);
+    }
+
+    public function team(){
+        return $this->belongsTo(Team::class);
+    }
+
+    public function org(){
+        return $this->belongsTo(Org::class);
+    }
+
+    public function dept(){
+        return $this->belongsTo(Dept::class);
     }
 
 

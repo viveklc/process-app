@@ -36,23 +36,26 @@ class ProcessStepController extends Controller
             ->when($inputSearchString, function ($query) use ($inputSearchString) {
                 $query->where(function ($query) use ($inputSearchString) {
                     $query->orWhere('name', 'LIKE', '%' . $inputSearchString . '%');
-                    $query->whereHas('org', function (Builder $builder) use ($inputSearchString) {
-                        $builder->orWhere('name', 'LIKE', '%' . $inputSearchString . '%');
-                    });
-                    $query->whereHas('team', function (Builder $builder) use ($inputSearchString) {
-                        $builder->orWhere('teams.team_name', 'LIKE', '%' . $inputSearchString . '%');
-                    });
-                    $query->whereHas('dept', function (Builder $builder) use ($inputSearchString) {
-                        $builder->orWhere('name', 'LIKE', '%' . $inputSearchString . '%');
-                    });
-                    $query->whereHas('process', function (Builder $builder) use ($inputSearchString) {
-                        $builder->orWhere('process_name', 'LIKE', '%' . $inputSearchString . '%');
+                    $query->orWhere(function($query) use ($inputSearchString){
+                        $query->whereHas('org', function (Builder $builder) use ($inputSearchString) {
+                            $builder->orWhere('name', 'LIKE', '%' . $inputSearchString . '%');
+                        });
+                        $query->whereHas('team', function (Builder $builder) use ($inputSearchString) {
+                            $builder->orWhere('teams.team_name', 'LIKE', '%' . $inputSearchString . '%');
+                        });
+                        $query->whereHas('dept', function (Builder $builder) use ($inputSearchString) {
+                            $builder->orWhere('name', 'LIKE', '%' . $inputSearchString . '%');
+                        });
+                        $query->whereHas('process', function (Builder $builder) use ($inputSearchString) {
+                            $builder->orWhere('process_name', 'LIKE', '%' . $inputSearchString . '%');
+                        });
                     });
                 });
             })
             ->isActive()
             ->orderBy('name')
-            ->paginate(config('app-config.per_page'));
+            ->paginate(config('app-config.per_page'))
+            ->withQueryString();
 
         return view('process.steps.index', compact('steps', 'processId'));
     }
@@ -102,7 +105,8 @@ class ProcessStepController extends Controller
             });
         }
 
-        return back()->with('success', 'Step created successfully');
+        toast(__('global.crud_actions', ['module' => 'Step', 'action' => 'created']), 'success');
+        return back();
     }
 
     /**
@@ -121,6 +125,7 @@ class ProcessStepController extends Controller
         $step->load('dept:id,name');
         $step->load('afterStep:id,name');
         $step->load('beforeStep:id,name');
+        $step->load('media');
 
         return view('process.steps.show',compact('step','process'));
     }
@@ -173,7 +178,8 @@ class ProcessStepController extends Controller
             });
         }
 
-        return back()->with('success', 'Step udpated successfully');
+        toast(__('global.crud_actions', ['module' => 'Step', 'action' => 'updated']), 'success');
+        return back();
     }
 
     /**
@@ -190,6 +196,7 @@ class ProcessStepController extends Controller
             'is_active' => 3
         ]);
 
+        toast(__('global.crud_actions', ['module' => 'Step', 'action' => 'deleted']), 'success');
         return back()->with('success', 'Step deleted successfully');
     }
 
@@ -203,6 +210,7 @@ class ProcessStepController extends Controller
                 'updatedby_userid' => auth()->user()->id,
             ]);
 
+        toast(__('global.crud_actions', ['module' => 'Step', 'action' => 'deleted']), 'success');
         return response(null, Response::HTTP_NO_CONTENT);
     }
 }

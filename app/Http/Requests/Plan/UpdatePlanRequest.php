@@ -35,8 +35,8 @@ class UpdatePlanRequest extends FormRequest
 
         $rules= [
             'plan_name' => ['required','string',Rule::unique('payment_plans')->ignore($this->plan->id),'max:50','min:3'],
-            'plan_description' => ['nullable','string','max:500','min:50'],
-            'plan_features' => ['nullable','string','max:500','min:50'],
+            'plan_description' => ['nullable','string'],
+            'plan_features' => ['nullable','string'],
             'plan_price' => ['required','numeric'],
             'valid_from' => ['required','date_format:Y-m-d','date','after_or_equal:today'],
             'valid_to' => ['required','date_format:Y-m-d','date','after:valid_from'],

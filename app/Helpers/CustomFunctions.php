@@ -21,13 +21,17 @@ if (!function_exists('formatNumberAsPrice')) {
 if (!function_exists('appDateFormat')) {
     function appDateFormat($inputDate, $dateFormat = null)
     {
-        $returnDateFormat = "";
+        if(!is_null($inputDate)){
+            $returnDateFormat = "";
         if(filled($dateFormat)) {
             $returnDateFormat = Carbon::parse($inputDate)->format($dateFormat);
         } else {
             $returnDateFormat = Carbon::parse($inputDate)->format(config('app-config.date_format.date', 'd/m/Y'));
         }
         return $returnDateFormat;
+        }else{
+            return "";
+        }
     }
 }
 
