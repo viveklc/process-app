@@ -78,6 +78,7 @@ class StepInstanceController extends Controller
             ->isActive()
             ->orderBy('name')
             ->get();
+        $stepInstance->load('media');
 
         return view('process.instances.steps.edit',compact('stepInstance','processSteps','processInstanceId'));
     }
@@ -96,7 +97,6 @@ class StepInstanceController extends Controller
         $stepInstance->update($request->safe()->except('attachments'));
 
         if($request->hasFile('attachments')){
-            $stepInstance->media()->delete();
             $stepInstance->addMultipleMediaFromRequest(['attachments'])
             ->each(function($attachment){
                 $attachment->toMediaCollection('attachment');

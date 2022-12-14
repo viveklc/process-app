@@ -11,6 +11,7 @@ use App\Models\Team;
 use Exception;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
 
 class TeamController extends Controller
@@ -164,7 +165,6 @@ class TeamController extends Controller
             $team->teamUser()->sync($request->user_id, $request->only('valid_from', 'valid_to'));
 
             if ($request->hasFile('attachments')) {
-                $team->media()->delete();
                 $team->addMultipleMediaFromRequest(['attachments'])
                     ->each(function ($attachment) {
                         $attachment->toMediaCollection('attachments');
@@ -207,4 +207,5 @@ class TeamController extends Controller
         toast(__('global.crud_actions', ['module' => 'Team', 'action' => 'deleted']), 'success');
         return response(null, Response::HTTP_NO_CONTENT);
     }
+
 }

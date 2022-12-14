@@ -33,6 +33,8 @@ class StoreInstanceRequest extends FormRequest
             'assigned_to_user_id' => ['required_without:team_id','exists:users,id'],
             'start_date' => ['required','date_format:Y-m-d\TH:i','date','after_or_equal:today'],
             'due_date' => ['required','date_format:Y-m-d\TH:i','date','after:start_date'],
+            'attachments' => ['nullable','array','min:1'],
+            'attachments.*' => ['file'],
         ];
     }
 }

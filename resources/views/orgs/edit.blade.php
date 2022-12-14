@@ -101,6 +101,18 @@
                                     <input type="file"
                                         class="form-control form-control-solid  {{ $errors->has('attachments') ? 'is-invalid' : '' }}"
                                         placeholder="" name="attachments[]" multiple />
+                                        <div class="attachment-div">
+                                            <ul class="list-group list-group-horizontal">
+                                                @forelse ($org->media as $item)
+                                                    <li class="list-group-item"><a href="{{ $item->original_url }}"
+                                                            target="__blank" class="btn-link">{{ $item->file_name }}</a>
+                                                        &nbsp;&nbsp; <span onclick="deleteMedia({{ $item->id }},this)"><i
+                                                                class="fa fa-times" style="color: red"></i></span></li>
+                                                @empty
+                                                @endforelse
+
+                                            </ul>
+                                        </div>
                                 </div>
                                 <!--end::Input group-->
 
@@ -137,4 +149,47 @@
         <!--end::Content wrapper-->
     </div>
     <!--end:::Main-->
+@endsection
+@section('scripts')
+<script>
+    function deleteMedia(media_id, content) {
+            const $parentLi = $(content).parents('.list-group-item');
+
+            let url = '{{ route('admin.media.remove', ':media_id') }}';
+
+            url = url.replace(':media_id', media_id);
+            Swal.fire({
+                title: '{{ trans('global.are_you_sure') }}',
+                text: "{{ trans('global.are_you_sure_delete_msg') }}",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: '{{ trans('global.ok') }}'
+            }).then((result) => {
+
+                $.ajax({
+                method: "DELETE",
+                url: url,
+                cache: false,
+                data: {
+                    _token: "{{ csrf_token() }}"
+                },
+                beforeSend: function() {
+
+                },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        // alert(response.message);
+                        $parentLi.remove();
+                    }
+
+
+
+                }
+            })
+            })
+
+        }
+</script>
 @endsection

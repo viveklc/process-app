@@ -119,6 +119,8 @@ class DeptController extends Controller
             ->pluck('name', 'id')
             ->prepend('Please select', '');
 
+        $dept->load('media');
+
         return view('depts.edit', compact('dept', 'orgs'));
     }
 
@@ -134,7 +136,7 @@ class DeptController extends Controller
         $dept->update($request->safe()->only(['org_id', 'name', 'description']));
 
         if ($request->hasFile('attachments')) {
-            $dept->media()->delete();
+
             $dept->addMultipleMediaFromRequest(['attachments'])
                 ->each(function ($attachment) {
                     $attachment->toMediaCollection('attachments');

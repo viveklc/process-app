@@ -29,7 +29,7 @@ class ProcessInstanceController extends Controller
         $inputSearchString = $request->input('s', '');
 
         $id = $process->id;
-       $processInstance= $process->processInstances()
+        $processInstance = $process->processInstances()
             ->when($inputSearchString, function ($query) use ($inputSearchString) {
                 $query->where(function ($query) use ($inputSearchString) {
                     $query->orWhere('process_instance_name', 'LIKE', '%' . $inputSearchString . '%');
@@ -39,7 +39,7 @@ class ProcessInstanceController extends Controller
             ->orderBy('process_instance_name')
             ->get();
 
-        return view('process.instances.index', compact('processInstance','id'));
+        return view('process.instances.index', compact('processInstance', 'id'));
     }
 
     /**
@@ -52,20 +52,20 @@ class ProcessInstanceController extends Controller
         abort_if(!auth()->user()->can('create-process-instance'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $users  = User::query()
-            ->select('id','name')
-            ->where('org_id',$process->org_id)
+            ->select('id', 'name')
+            ->where('org_id', $process->org_id)
             ->isActive()
             ->orderBy('name')
             ->get();
 
         $team = Team::query()
-        ->select('id','team_name as name')
-        ->where('org_id',$process->org_id)
-        ->isActive()
-        ->orderBy('name')
-        ->get();
-        // dd($users);
-        return view('process.instances.add',compact('users','process','team'));
+            ->select('id', 'team_name as name')
+            ->where('org_id', $process->org_id)
+            ->isActive()
+            ->orderBy('name')
+            ->get();
+
+        return view('process.instances.add', compact('users', 'process', 'team'));
     }
 
     /**
@@ -78,21 +78,33 @@ class ProcessInstanceController extends Controller
     {
         abort_if(!auth()->user()->can('create-process-instance'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $request->merge([
+       $requestData= $request->safe()->except('attachments');
+        $processData = [
             'org_id' => $process->org_id,
             'process_description' => $process->process_description,
             'process_priority' => $process->process_priority,
             'total_duration' => $process->total_duration
-        ]);
-       $instance= $process->processInstances()->create($request->all());
+        ];
+       $instanceData= array_merge($requestData,$processData);
+
+        $instance = $process->processInstances()->create($instanceData);
         // copy media
         $processMedia = $process->media;
-        foreach($processMedia as $media){
-            $media->copy($instance,'attachments');
+        foreach ($processMedia as $media) {
+            $media->copy($instance, 'attachments');
         }
-       $this->cloneStep($process->id,$instance->id,$instance->process_instance_name,$instance->assigned_to_user_id);
 
-       toast(__('global.crud_actions', ['module' => 'Process instance', 'action' => 'created']), 'success');
+        // upload image
+        if($request->hasFile('attachments')){
+            $instance->addMultipleMediaFromRequest(['attachments'])
+            ->each(function($attachment){
+                $attachment->toMediaCollection('attachments');
+            });
+        }
+
+        $this->cloneStep($process->id, $instance->id, $instance->process_instance_name, $instance->assigned_to_user_id);
+
+        toast(__('global.crud_actions', ['module' => 'Process instance', 'action' => 'created']), 'success');
         return back();
     }
 
@@ -108,7 +120,7 @@ class ProcessInstanceController extends Controller
 
         $processInstance->load('media');
 
-        return view('process.instances.show',compact('processInstance'));
+        return view('process.instances.show', compact('processInstance'));
     }
 
     /**
@@ -117,25 +129,26 @@ class ProcessInstanceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Process $process,ProcessInstance $processInstance)
+    public function edit(Process $process, ProcessInstance $processInstance)
     {
         abort_if(!auth()->user()->can('update-process-instance'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $users  = User::query()
-            ->select('id','name')
-            ->where('org_id',$process->org_id)
+            ->select('id', 'name')
+            ->where('org_id', $process->org_id)
             ->isActive()
             ->orderBy('name')
             ->get();
 
         $team = Team::query()
-        ->select('id','team_name as name')
-        ->where('org_id',$process->org_id)
-        ->isActive()
-        ->orderBy('name')
-        ->get();
+            ->select('id', 'team_name as name')
+            ->where('org_id', $process->org_id)
+            ->isActive()
+            ->orderBy('name')
+            ->get();
+        $processInstance->load('media');
 
-        return view('process.instances.edit',compact('users','team','process','processInstance'));
+        return view('process.instances.edit', compact('users', 'team', 'process', 'processInstance'));
     }
 
     /**
@@ -149,7 +162,14 @@ class ProcessInstanceController extends Controller
     {
         abort_if(!auth()->user()->can('update-process-instance'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $processInstance->update($request->validated());
+        $processInstance->update($request->safe()->except('attachments'));
+
+        if($request->hasFile('attachments')){
+            $processInstance->addMultipleMediaFromRequest(['attachments'])
+            ->each(function($attachment){
+                $attachment->toMediaCollection('attachments');
+            });
+        }
 
         toast(__('global.crud_actions', ['module' => 'Process instance', 'action' => 'updated']), 'success');
         return back();
@@ -178,29 +198,28 @@ class ProcessInstanceController extends Controller
         abort_if(!auth()->user()->can('delete-process-instance'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $process = Process::find($request->process_id);
-        $process->processInstances()->whereIn('id',$request->ids)
-        ->update([
-            'is_active' => 3,
-            'updatedby_userid' => auth()->user()->id,
-        ]);
+        $process->processInstances()->whereIn('id', $request->ids)
+            ->update([
+                'is_active' => 3,
+                'updatedby_userid' => auth()->user()->id,
+            ]);
 
         toast(__('global.crud_actions', ['module' => 'Process instance', 'action' => 'deleted']), 'success');
         return response(null, Response::HTTP_NO_CONTENT);
-
     }
 
-    public function cloneStep(int $process_id,int $process_instances_id,string $process_instance_name,int $assigned_to_user_id){
-       $steps = Step::query()
-       ->with('process:id,process_name')
-       ->with('team:id,team_name')
-       ->with('org:id,name')
-       ->with('dept:id,name')
-        ->where('process_id',$process_id)
-        ->orderBy('id')
-        ->get();
-        foreach($steps as $step)
-        {
-           $stepInsance= StepInstance::create([
+    public function cloneStep(int $process_id, int $process_instances_id, string $process_instance_name, int $assigned_to_user_id)
+    {
+        $steps = Step::query()
+            ->with('process:id,process_name')
+            ->with('team:id,team_name')
+            ->with('org:id,name')
+            ->with('dept:id,name')
+            ->where('process_id', $process_id)
+            ->orderBy('id')
+            ->get();
+        foreach ($steps as $step) {
+            $stepInsance = StepInstance::create([
                 'name' => $step->name,
                 'description' => $step->description,
                 'org_id' => $step->org_id,
@@ -230,8 +249,8 @@ class ProcessInstanceController extends Controller
 
             // copy media
             $stepMedia = $step->media;
-            foreach($stepMedia as $media){
-                $media->copy($stepInsance,'attachments');
+            foreach ($stepMedia as $media) {
+                $media->copy($stepInsance, 'attachments');
             }
         }
 

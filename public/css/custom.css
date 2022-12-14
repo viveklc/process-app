@@ -184,3 +184,8 @@ table.table-bordered.dataTable thead tr:first-child td, table.table-bordered.dat
     color: #000;
 }
 
+/* add margin to attachment div */
+.attachment-div {
+    padding-top: 15px;
+}
+

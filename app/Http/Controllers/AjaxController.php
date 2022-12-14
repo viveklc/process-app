@@ -8,6 +8,7 @@ use App\Models\Process\Step;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
 
 class AjaxController extends Controller
@@ -71,5 +72,14 @@ class AjaxController extends Controller
             ->get();
 
         return response()->json($users);
+    }
+
+    public function deleteMedia($media_id){
+        Media::destroy($media_id);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'media deleted successfully',
+        ]);
     }
 }

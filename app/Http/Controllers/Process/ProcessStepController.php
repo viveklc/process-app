@@ -153,7 +153,7 @@ class ProcessStepController extends Controller
             ->isActive()
             ->orderBy('team_name')
             ->get();
-
+        $step->load('media');
         return view('process.steps.edit',compact('step','process','depts','teams'));
     }
 
@@ -171,7 +171,6 @@ class ProcessStepController extends Controller
         $step->update($request->safe()->except('attachments'));
 
         if($request->hasFile('attachments')){
-            $step->media()->delete();
             $step->addMultipleMediaFromRequest(['attachments'])
             ->each(function($attachment){
                 $attachment->toMediaCollection('attachment');

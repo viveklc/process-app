@@ -109,6 +109,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     /**
      * team related routes
      */
+
     Route::delete('team/destroy', [TeamController::class, 'massDestroy'])->name('team.massDestroy');
     Route::resource('team', TeamController::class);
 
@@ -152,6 +153,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     Route::delete('process/step/destroy', [ProcessStepController::class, 'massDestroy'])->name('process.step.massDestroy');
     Route::resource('process.steps',ProcessStepController::class);
+
+    Route::delete('media/{media_id}/delete',[AjaxController::class,'deleteMedia'])->name('media.remove');
 
 });
 

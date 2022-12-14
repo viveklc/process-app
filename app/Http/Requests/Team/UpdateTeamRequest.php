@@ -28,7 +28,7 @@ class UpdateTeamRequest extends FormRequest
             'user_id' => ['required', 'array','min:1'],
             'user_id.*' => ['required','numeric','distinct','exists:users,id'],
             'org_id' => ['required', 'numeric', 'exists:orgs,id'],
-            'valid_from' => ['required','date_format:Y-m-d','date','after_or_equal:today'],
+            'valid_from' => ['required','date_format:Y-m-d','date'],
             'valid_to' => ['required','date_format:Y-m-d','date','after:valid_from'],
             'team_description' => ['nullable'],
             'team_remarks' => ['nullable'],

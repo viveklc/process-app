@@ -119,6 +119,7 @@ class ProcessController extends Controller
             ->get();
 
         $process->load('processDetails');
+        $process->load('media');
 
         return view('process.edit', compact('process', 'org'));
     }
@@ -137,7 +138,6 @@ class ProcessController extends Controller
         $process->update($request->safe()->only('process_name', 'process_description', 'total_duration', 'valid_from', 'valid_to', 'status', 'org_id','process_priority'));
 
         if($request->hasFile('attachments')){
-            $process->media()->delete();
             $process->addMultipleMediaFromRequest(['attachments'])
             ->each(function($attachment){
                 $attachment->toMediaCollection('attachments');
