@@ -139,8 +139,9 @@ class TeamController extends Controller
                 ->isActive()
                 ->first();
 
+            $team->load('media');
             $teamuserId = collect($team->teamUser)->pluck('id')->toArray();
-
+            // dd($team);
             return view('teams.edit', compact('team', 'org', 'orgUsers', 'teamuserId'));
         } catch (Exception $e) {
             return $e->getMessage();

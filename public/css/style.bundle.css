@@ -65,8 +65,8 @@
     --bs-border-radius-xl: 1rem;
     --bs-border-radius-2xl: 2rem;
     --bs-border-radius-pill: 50rem;
-    --bs-link-color: #009ef7;
-    --bs-link-hover-color: #0095e8;
+    /* --bs-link-color: #009ef7;
+    --bs-link-hover-color: #0095e8; */
     --bs-code-color: #b93993;
     --bs-highlight-bg: #fff3cd
 }
@@ -33983,7 +33983,7 @@ html:not([data-theme=dark]) .theme-light-bg-body {
 .menu-sub-dropdown {
     display: none;
     border-radius: .475rem;
-    background-color: lightgray;
+    background-color: var(--kt-primary-inverse);
     box-shadow: var(--kt-menu-dropdown-box-shadow);
     z-index: 107
 }

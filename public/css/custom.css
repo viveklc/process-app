@@ -163,3 +163,24 @@ div.dt-button-collection {
 .btn:not(:disabled):not(.disabled).active {
     box-shadow: none;
 }
+
+/* @NTS modified sub menu drop down style */
+.menu-sub-dropdown {
+    display: none;
+    border-radius: .475rem;
+    background-color: lightgray !important;
+    box-shadow: var(--kt-menu-dropdown-box-shadow);
+    z-index: 107;
+}
+
+table.dataTable>tbody>tr.selected>* a:not([class=btn]) {
+    color: #000;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+table.table-bordered.dataTable thead tr:first-child td, table.table-bordered.dataTable thead tr:first-child th {
+    border-top-width: 1px;
+    color: #000;
+}
+
