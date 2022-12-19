@@ -90,7 +90,7 @@
                                                 Address
                                             </th>
 
-                                            <th>
+                                            <th style="text-align: center">
                                                 Is Premium
                                             </th>
                                             <th class="notexport">
@@ -113,7 +113,7 @@
                                                 {{ $org->address ?? '' }}
                                             </td>
 
-                                            <td>
+                                            <td style="text-align: center">
                                                 {{ ($org->is_premium == 1 ? 'Yes':'No') ?? '' }}
                                             </td>
                                     <!--begin::Action=-->
