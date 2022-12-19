@@ -21,6 +21,18 @@
                                 <a href="{{ route('admin.processes.index') }}">Processes</a>
                             </li>
                             <!--end::Item-->
+
+
+                            <!--begin::Item-->
+                            <li class="breadcrumb-item">
+                                <span class="bullet bg-gray-400 w-5px h-2px"></span>
+                            </li>
+                            <!--end::Item-->
+                             <!--begin::Item-->
+                             <li class="breadcrumb-item text-muted">
+                                <a href="{{ route('admin.process.steps.index',$processId) }}">Step</a>
+                            </li>
+                            <!--end::Item-->
                             <!--begin::Item-->
                             <li class="breadcrumb-item">
                                 <span class="bullet bg-gray-400 w-5px h-2px"></span>
@@ -98,7 +110,7 @@
                                                 <td>{{ $item->dept->name}}</td>
                                                 <td>{{ $item->team->team_name }}</td>
                                                 <td>{{ $item->process->process_name }}</td>
-                                                <td>{{ $item->total_duration }}</td>
+                                                <td>{{ $item->total_duration }} {{ $item->unit }}</td>
                                                 <td>{!! $item->status == 'active'
                                                     ? '<span class="badge badge-success">Active</span>'
                                                     : '<span class="badge badge-danger">In-active</span>' !!}</td>

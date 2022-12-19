@@ -83,7 +83,7 @@
                                             <th>Organisation</th>
                                             <th>Username</th>
                                             <th>Email</th>
-                                            <th>Mobile</th>
+                                            {{-- <th>Mobile</th> --}}
                                             <th>Role</th>
                                             {{-- <th>Status</th> --}}
                                             <th></th>
@@ -97,7 +97,7 @@
                                                 <td>{{ $item->org->name }}</td>
                                                 <td>{{ $item->username }}</td>
                                                 <td>{{ $item->email }}</td>
-                                                <td>{{ $item->phone }}</td>
+                                                {{-- <td>{{ $item->phone }}</td> --}}
                                                 <td>{{ $item->role->name }}</td>
                                                 {{-- <td>{!! $item->status == 'active'
                                                     ? '<span class="badge badge-success">Active</span>'

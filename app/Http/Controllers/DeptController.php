@@ -26,6 +26,7 @@ class DeptController extends Controller
         $inputSearchString = $request->input('s', '');
 
         $depts = Dept::query()
+        ->withCount('deptUsers')
         ->with('org:id,name')
         ->when($inputSearchString, function ($query) use ($inputSearchString) {
             $query->where(function ($query) use ($inputSearchString) {

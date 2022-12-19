@@ -28,12 +28,16 @@ class TeamController extends Controller
         $inputSearchString = $request->input('s', '');
 
         $teams = Team::with('org:id,name')
+            ->withCount('teamUser')
+            ->withCount('teamProcess')
             ->when(auth()->user()->org_id, function ($query) {
                 $query->where('teams.org_id', auth()->user()->org_id);
             })
             ->when(!empty($inputSearchString), function ($query) use ($inputSearchString) {
                 $query->where(function ($query) use ($inputSearchString) {
                     $query->orWhere('team_name', 'LIKE', '%' . $inputSearchString . '%');
+                    $query->orWhere('valid_from', 'LIKE', '%' . $inputSearchString . '%');
+                    $query->orWhere('valid_to', 'LIKE', '%' . $inputSearchString . '%');
                     $query->orWhere(function ($query) use ($inputSearchString) {
                         $query->whereHas('org', function (Builder $builder) use ($inputSearchString) {
                             $builder->where('name', 'LIKE', '%' . $inputSearchString . '%');
@@ -43,7 +47,7 @@ class TeamController extends Controller
             })
             ->isActive()
             ->orderBy('id', 'DESC')
-            ->paginate(config('app-config.per_page'))
+            ->paginate(config('app-config.datatable_default_row_count',25))
             ->withQueryString();
 
         return view('teams.index', compact('teams'));
@@ -64,16 +68,7 @@ class TeamController extends Controller
             ->orderBy('id', 'DESC')
             ->get();
 
-        $orgUsers = Org::query()
-            ->with('users', function ($query) {
-                $query->when(auth()->user()->org_id, function ($query) {
-                    $query->where('org_id', auth()->user()->org_id);
-                });
-            })
-            ->isActive()
-            ->firstOrFail();
-
-        return view('teams.create', compact('org', 'orgUsers'));
+        return view('teams.create', compact('org'));
     }
 
     /**
@@ -99,7 +94,7 @@ class TeamController extends Controller
 
         toast(__('global.crud_actions', ['module' => 'Team', 'action' => 'created']), 'success');
 
-        return back();
+        return redirect()->route('admin.team.index');
     }
 
     /**
@@ -172,7 +167,7 @@ class TeamController extends Controller
             }
 
             toast(__('global.crud_actions', ['module' => 'Team', 'action' => 'updated']), 'success');
-            return back();
+            return redirect()->route('admin.team.index');
         } catch (Exception $e) {
             return $e->getMessage();
         }

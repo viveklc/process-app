@@ -29,6 +29,8 @@ class PlanController extends Controller
                 $query->where(function ($query) use ($inputSearchString) {
                     $query->orWhere('plan_name', 'LIKE', '%' . $inputSearchString . '%');
                     $query->orWhere('plan_price', 'LIKE', '%' . $inputSearchString . '%');
+                    $query->orWhere('valid_from', 'LIKE', '%' . $inputSearchString . '%');
+                    $query->orWhere('valid_to', 'LIKE', '%' . $inputSearchString . '%');
                 });
             })
             ->isActive()

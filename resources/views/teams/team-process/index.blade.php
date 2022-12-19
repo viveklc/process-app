@@ -27,6 +27,16 @@
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->
+                            <li class="breadcrumb-item text-muted">
+                                <a href="{{ route('admin.team.team-process.index',$id) }}">Team Processes</a>
+                            </li>
+                            <!--end::Item-->
+                            <!--begin::Item-->
+                            <li class="breadcrumb-item">
+                                <span class="bullet bg-gray-400 w-5px h-2px"></span>
+                            </li>
+                            <!--end::Item-->
+                            <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">List</li>
                             <!--end::Item-->
                         </ul>
@@ -91,8 +101,8 @@
                                             <tr data-entry-id="{{ $item->id }}">
                                                 <td></td>
                                                 <td>{{ $item->process_name }}</td>
-                                                <td>{{ appDateFormat($item->valid_from) }}</td>
-                                                <td>{{ appDateFormat($item->valid_to) }}</td>
+                                                <td>{{ appDateFormat($item->pivot->valid_from) }}</td>
+                                                <td>{{ appDateFormat($item->pivot->valid_to) }}</td>
 
                                                 <!--begin::Action=-->
                                                 <td class="text-end">

@@ -45,12 +45,12 @@
                     <div class="card">
                         <!--begin::Card body-->
                         <div class="card-body pt-10">
-                            <h3>Basic Information</h3>
+                            {{-- <h3>Basic Information</h3> --}}
                             <table class="table table-bordered table-striped">
                                 <tbody>
                                     <tr>
                                         <th>
-                                            name
+                                            Name
                                         </th>
                                         <td>
                                             {{ $user->name ?? '' }}

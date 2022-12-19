@@ -38,6 +38,14 @@ class Process extends Model implements HasMedia
         ],
     ];
 
+    public const DURATION_UNITS = [
+         'minutes' => 'Minutes',
+         'seconds' => 'Seconds',
+         'months' => 'Month',
+         'days' => 'Day',
+         'years' => 'Year',
+    ];
+
     /** Spatie Activity Log */
     public function getActivitylogOptions(): LogOptions // spatie model log options
     {
@@ -56,7 +64,7 @@ class Process extends Model implements HasMedia
     }
 
     public function processInstances(){
-        return $this->hasMany(ProcessInstance::class,'process_id');
+        return $this->hasMany(ProcessInstance::class,'process_id')->isActive();
     }
 
     public function processRecurrences()

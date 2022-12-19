@@ -85,16 +85,37 @@
                                         value="{{ old('process_name', $process->process_name) }}" required>
                                 </div>
 
-                                <div class="d-flex flex-column mb-8 fv-row">
-                                    <!--begin::Label-->
+
+
+                                <div class="row mb-8">
+                                    <div class="col-md-8">
+                                        <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
                                         <span class="required">Total Duration</span>
                                     </label>
                                     <!--end::Label-->
                                     <input
                                         class="form-control form-control-solid {{ $errors->has('total_duration') ? 'is-invalid' : '' }}"
-                                        type="text" name="total_duration" id="total_duration"
-                                        value="{{ old('total_duration', $process->total_duration) }}" required>
+                                        type="number" name="total_duration" id="total_duration"
+                                        value="{{ old('total_duration', $process->total_duration) }}" required >
+                                    </div>
+                                    <div class="col-md-4">
+                                          <!--begin::Label-->
+                                    <label class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="required">Unit</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <select name="unit" id="" class="form-control form-control-solid select2 {{ $errors->has('unit') ? 'is-invalid' : '' }}"  required>
+                                        <option value="">Select unit</option>
+                                        @forelse (\App\Models\Process\Process::DURATION_UNITS as $key => $value)
+                                            <option value="{{ $key }}" @selected(old('unit',$process->unit) == $key)>{{ $value }}</option>
+                                        @empty
+
+                                        @endforelse
+                                    </select>
+                                    </div>
+
+
                                 </div>
 
                                 <div class="d-flex flex-column mb-8 fv-row">
@@ -149,7 +170,7 @@
                                             <ul class="list-group list-group-horizontal">
                                                 @forelse ($process->media as $item)
                                                     <li class="list-group-item"><a href="{{ $item->original_url }}"
-                                                            target="__blank" class="btn-link">{{ $item->file_name }}</a>
+                                                            target="__blank" class="btn-link">{{ Str::limit($item->file_name, 10, '*****') }}</a>
                                                         &nbsp;&nbsp; <span onclick="deleteMedia({{ $item->id }},this)"><i
                                                                 class="fa fa-times" style="color: red"></i></span></li>
                                                 @empty

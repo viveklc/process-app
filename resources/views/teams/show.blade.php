@@ -52,7 +52,7 @@
                                             Team name
                                         </th>
                                         <td>
-                                            {{ $team->team_name ?? '' }}
+                                            {{ Str::ucfirst($team->team_name) ?? '' }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -60,7 +60,7 @@
                                            Organisation name
                                        </th>
                                        <td>
-                                           {{ $team->org->name ?? '' }}
+                                           {{ Str::ucfirst($team->org->name ) ?? '' }}
                                        </td>
                                    </tr>
                                     <tr>
@@ -84,7 +84,7 @@
                                             Description
                                         </th>
                                         <td>
-                                            {{ $team->team_description ?? '' }}
+                                            {{ Str::ucfirst($team->team_description) ?? '' }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -92,24 +92,14 @@
                                             Remark
                                         </th>
                                         <td>
-                                            {{ $team->team_remarks ?? '' }}
+                                            {{ Str::ucfirst($team->team_remarks) ?? '' }}
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
-                            <h2>Attachments : </h2>
-                            <ul class="list-group">
-
-                                @forelse ($team->media as $item)
-                                    <li class="list-group-item"> <a href="{{ $item->original_url }}"
-                                            target="__blank">{{ $item->original_url }}</a> </li>
-                                @empty
-                                    <li class="list-group-item">No attachment found</li>
-                                @endforelse
-
-
-
-                            </ul>
+                            <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Attachments
+                            </h1>
+                            @include('components.attachment',['media'=>$team->media])
                         </div>
                         <!--end::Card body-->
                     </div>

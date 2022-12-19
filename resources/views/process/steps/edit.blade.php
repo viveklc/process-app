@@ -23,6 +23,16 @@
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
+                                <a href="{{ route('admin.processes.index') }}">Process</a>
+                            </li>
+                            <!--end::Item-->
+                            <!--begin::Item-->
+                            <li class="breadcrumb-item">
+                                <span class="bullet bg-gray-400 w-5px h-2px"></span>
+                            </li>
+                            <!--end::Item-->
+                            <!--begin::Item-->
+                            <li class="breadcrumb-item text-muted">
                                 <a href="{{ route('admin.process.steps.index',$process->id) }}">Steps</a>
                             </li>
                             <!--end::Item-->
@@ -116,16 +126,35 @@
                                         value="{{ old('sequence', $step->sequence) }}" required>
                                 </div>
 
-                                <div class="d-flex flex-column mb-8 fv-row">
-                                    <!--begin::Label-->
+                                <div class="row mb-8">
+                                    <div class="col-md-8">
+                                        <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
                                         <span class="required">Total Duration</span>
                                     </label>
                                     <!--end::Label-->
                                     <input
                                         class="form-control form-control-solid {{ $errors->has('total_duration') ? 'is-invalid' : '' }}"
-                                        type="text" name="total_duration" id="total_duration"
-                                        value="{{ old('total_duration', $step->total_duration) }}" required>
+                                        type="number" name="total_duration" id="total_duration"
+                                        value="{{ old('total_duration', $step->total_duration) }}" required >
+                                    </div>
+                                    <div class="col-md-4">
+                                          <!--begin::Label-->
+                                    <label class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="required">Unit</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <select name="unit" id="" class="form-control form-control-solid select2 {{ $errors->has('unit') ? 'is-invalid' : '' }}"  required>
+                                        <option value="">Select unit</option>
+                                        @forelse (\App\Models\Process\Process::DURATION_UNITS as $key => $value)
+                                            <option value="{{ $key }}" @selected(old('unit',$step->unit) == $key)>{{ $value }}</option>
+                                        @empty
+
+                                        @endforelse
+                                    </select>
+                                    </div>
+
+
                                 </div>
 
                                 <div class="d-flex flex-column mb-8 fv-row">

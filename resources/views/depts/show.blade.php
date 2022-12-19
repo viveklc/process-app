@@ -49,7 +49,7 @@
                                 <tbody>
                                     <tr>
                                         <th>
-                                            Org Name
+                                            Organisation Name
                                         </th>
                                         <td>
                                             {{ $dept->org->name ?? '' }}
@@ -75,19 +75,9 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <h2>Attachments : </h2>
-                            <ul class="list-group">
-
-                                @forelse ($dept->media as $item)
-                                <li class="list-group-item"> <a href="{{ $item->original_url }}"
-                                    target="__blank">{{ $item->original_url }}</a> </li>
-                                @empty
-                                   <li class="list-group-item">No attachment found</li>
-                                @endforelse
-
-
-
-                            </ul>
+                            <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
+                                Attachments</h1>
+                                @include('components.attachment',['media'=>$dept->media])
                         </div>
                         <!--end::Card body-->
                     </div>

@@ -188,4 +188,29 @@ table.table-bordered.dataTable thead tr:first-child td, table.table-bordered.dat
 .attachment-div {
     padding-top: 15px;
 }
+/* fixed multiple select issue */
+
+.select2-container--default .select2-selection--multiple {
+    padding-bottom: 0px !important;
+    padding-right: 0px !important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    padding: 0px 5px 0px 20px !important;
+}
+
+/* color for error display */
+.red{
+    color: red;
+}
+/* fixed column for extra action menu in any CRUD Grid */
+.fixed-col {
+    width: 50px;
+    height:auto
+}
+
+.attachment-img {
+    width: 30px;
+    height: 30px;;
+}
 

@@ -23,6 +23,16 @@
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
+                                <a href="{{ route('admin.team.index') }}">Teams</a>
+                            </li>
+                            <!--end::Item-->
+                            <!--begin::Item-->
+                            <li class="breadcrumb-item">
+                                <span class="bullet bg-gray-400 w-5px h-2px"></span>
+                            </li>
+                            <!--end::Item-->
+                            <!--begin::Item-->
+                            <li class="breadcrumb-item text-muted">
                                 <a href="{{ route('admin.team.team-users.index',$id) }}">Team Users</a>
                             </li>
                             <!--end::Item-->
@@ -60,7 +70,7 @@
                             <div class="d-flex flex-column mb-8 fv-row">
                                 <!--begin::Label-->
                                 <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                    <span class="">Team Users</span>
+                                    <span class="required">Team Users</span>
                                 </label>
                                 <!--end::Label-->
                                 <select

@@ -26,16 +26,15 @@ class StoreUserRequest extends FormRequest
         return [
             'org_id' => ['required','numeric','exists:orgs,id'],
             'name' => ['required','string','max:50','min:2'],
-            'username' => ['required','string','unique:users,username'],
             'email' => ['nullable','string','email:filter','unique:users,email'],
-            'phone' => ['nullable','string'],
+            'phone' => ['nullable','numeric','digits_between:10,12'],
             'role_id' => ['required','numeric','exists:roles,id'],
-            'is_org_admin' => ['nullable'],
+            'is_org_admin' => ['nullable','in:1,2'],
             'password' => ['required','alpha_num','confirmed','min:6'],
-            'is_colleague_of_user_id' => ['required','array','min:1'],
-            'is_colleague_of_user_id.*' => ['required','numeric','exists:users,id','distinct'],
-            'reports_to_user_id' => ['required','array','min:1'],
-            'reports_to_user_id.*' => ['required','numeric','exists:users,id','distinct']
+            'is_colleague_of_user_id' => ['nullable','array','min:1'],
+            'is_colleague_of_user_id.*' => ['nullable','numeric','exists:users,id','distinct'],
+            'reports_to_user_id' => ['nullable','array','min:1'],
+            'reports_to_user_id.*' => ['nullable','numeric','exists:users,id','distinct']
         ];
     }
 }

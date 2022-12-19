@@ -45,7 +45,7 @@
                     <div class="card">
                         <!--begin::Card body-->
                         <div class="card-body pt-10">
-                            <h3>Basic Information</h3>
+                            <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Basic Information</h1>
                             <table class="table table-bordered table-striped">
                                 <tbody>
                                     <tr>
@@ -93,7 +93,7 @@
                                 </tbody>
 
                             </table>
-                            <h3>Addition Information</h3>
+                            <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Addition Information</h1>
                             <table class="table table-bordered table-striped">
                                 <tbody>
 
@@ -113,19 +113,9 @@
 
                             </table>
 
-                            <h2>Attachments : </h2>
-                            <ul class="list-group">
+                            <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Attachments : </h1>
+                            @include('components.attachment',['media'=>$process->media])
 
-                                @forelse ($process->media as $item)
-                                <li class="list-group-item"> <a href="{{ $item->original_url }}"
-                                    target="__blank">{{ $item->original_url }}</a> </li>
-                                @empty
-                                   <li class="list-group-item">No attachment found</li>
-                                @endforelse
-
-
-
-                            </ul>
                         </div>
                         <!--end::Card body-->
                     </div>

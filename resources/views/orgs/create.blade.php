@@ -12,13 +12,13 @@
                     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                         <!--begin::Title-->
                         <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
-                            Orgs</h1>
+                            Organisations</h1>
                         <!--end::Title-->
                         <!--begin::Breadcrumb-->
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
-                                <a href="{{ route('admin.orgs.index') }}">Org</a>
+                                <a href="{{ route('admin.orgs.index') }}">Organisation</a>
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->
@@ -100,7 +100,7 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="required">Attachment</span>
+                                        <span class="">Attachment</span>
                                     </label>
                                     <!--end::Label-->
                                     <input type="file"
@@ -113,9 +113,10 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span>Is Premium</span>
-                                        &nbsp;
+
                                         <input type="hidden" name="is_premium" value="2">
+                                        &nbsp;
+                                        <span>Is Premium</span>
                                         <input type="checkbox"
                                             class=" form-control-solid {{ $errors->has('is_premium') ? 'is-invalid' : '' }}"
                                             name="is_premium" value="1" {{ old('is_premium', 2) == 1 ? 'checked' : '' }} />

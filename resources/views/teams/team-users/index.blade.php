@@ -27,6 +27,16 @@
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->
+                            <li class="breadcrumb-item text-muted">
+                                <a href="{{ route('admin.team.team-users.index',$id) }}">Team Users</a>
+                            </li>
+                            <!--end::Item-->
+                            <!--begin::Item-->
+                            <li class="breadcrumb-item">
+                                <span class="bullet bg-gray-400 w-5px h-2px"></span>
+                            </li>
+                            <!--end::Item-->
+                            <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">List</li>
                             <!--end::Item-->
                         </ul>

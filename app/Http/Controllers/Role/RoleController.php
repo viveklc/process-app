@@ -29,7 +29,7 @@ class RoleController extends Controller
                 $query->where('name', 'LIKE', '%' . $inputSearchString . '%');
             })
             ->orderBy('name')
-            ->paginate(config('app-config.per_page'))
+            ->paginate(config('app-config.datatable_default_row_count'))
             ->withQueryString();
 
         return view('roles.index', compact('roles'));
@@ -77,7 +77,10 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
-        collect($role->load('permissions'))->sortBy('name');
+        $role->load('permissions')
+        ->orderBy('name')
+        ->orderBy('id')
+        ->get();
 
         return view('roles.show',compact('role'));
     }

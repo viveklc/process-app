@@ -106,7 +106,7 @@ class ProcessStepController extends Controller
         }
 
         toast(__('global.crud_actions', ['module' => 'Step', 'action' => 'created']), 'success');
-        return back();
+        return redirect()->route('admin.process.steps.index',$process->id);
     }
 
     /**
@@ -178,7 +178,7 @@ class ProcessStepController extends Controller
         }
 
         toast(__('global.crud_actions', ['module' => 'Step', 'action' => 'updated']), 'success');
-        return back();
+        return redirect()->route('admin.process.steps.index',$process->id);
     }
 
     /**

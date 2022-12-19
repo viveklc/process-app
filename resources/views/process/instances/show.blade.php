@@ -45,7 +45,7 @@
                     <div class="card">
                         <!--begin::Card body-->
                         <div class="card-body pt-10">
-                            <h3>Basic Information</h3>
+                            <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Basic Information</h1>
                             <table class="table table-bordered table-striped">
                                 <tbody>
                                     <tr>
@@ -66,18 +66,18 @@
                                     </tr>
                                     <tr>
                                         <th>
-                                            Valid From
+                                            Start Date
                                         </th>
                                         <td>
-                                            {{ appDateFormat($processInstance->valid_from) ?? '' }}
+                                            {{ appDateFormat($processInstance->start_date) ?? '' }}
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>
-                                            Valid To
+                                            Due Date
                                         </th>
                                         <td>
-                                            {{ appDateFormat($processInstance->valid_to) ?? '' }}
+                                            {{ appDateFormat($processInstance->due_date) ?? '' }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -95,19 +95,8 @@
                             </table>
 
 
-                            <h2>Attachments : </h2>
-                            <ul class="list-group">
-
-                                @forelse ($processInstance->media as $item)
-                                <li class="list-group-item"> <a href="{{ $item->original_url }}"
-                                    target="__blank">{{ $item->original_url }}</a> </li>
-                                @empty
-                                   <li class="list-group-item">No attachment found</li>
-                                @endforelse
-
-
-
-                            </ul>
+                            <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Attachments : </h1>
+                            @include('components.attachment',['media'=>$processInstance->media])
                         </div>
                         <!--end::Card body-->
                     </div>

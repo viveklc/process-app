@@ -23,6 +23,16 @@
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
+                                <a href="{{ route('admin.processes.index') }}">Process</a>
+                            </li>
+                            <!--end::Item-->
+                            <!--begin::Item-->
+                            <li class="breadcrumb-item">
+                                <span class="bullet bg-gray-400 w-5px h-2px"></span>
+                            </li>
+                            <!--end::Item-->
+                            <!--begin::Item-->
+                            <li class="breadcrumb-item text-muted">
                                 <a href="{{ route('admin.process.steps.index',$process->id) }}">Steps</a>
                             </li>
                             <!--end::Item-->
@@ -115,16 +125,35 @@
                                         value="{{ old('sequence', '') }}" required>
                                 </div>
 
-                                <div class="d-flex flex-column mb-8 fv-row">
-                                    <!--begin::Label-->
+                                <div class="row mb-8">
+                                    <div class="col-md-8">
+                                        <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
                                         <span class="required">Total Duration</span>
                                     </label>
                                     <!--end::Label-->
                                     <input
                                         class="form-control form-control-solid {{ $errors->has('total_duration') ? 'is-invalid' : '' }}"
-                                        type="text" name="total_duration" id="total_duration"
-                                        value="{{ old('total_duration', '') }}" required>
+                                        type="number" name="total_duration" id="total_duration"
+                                        value="{{ old('total_duration', '') }}" required >
+                                    </div>
+                                    <div class="col-md-4">
+                                          <!--begin::Label-->
+                                    <label class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="required">Unit</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <select name="unit" id="" class="form-control form-control-solid select2 {{ $errors->has('unit') ? 'is-invalid' : '' }}"  required>
+                                        <option value="">Select unit</option>
+                                        @forelse (\App\Models\Process\Process::DURATION_UNITS as $key => $value)
+                                            <option value="{{ $key }}" @selected(old('unit') == $key)>{{ $value }}</option>
+                                        @empty
+
+                                        @endforelse
+                                    </select>
+                                    </div>
+
+
                                 </div>
 
                                 <div class="d-flex flex-column mb-8 fv-row">
@@ -182,7 +211,7 @@
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
                                         <span class=""><input type="checkbox" name="is_substep" id="is_substep" value="1" >
-                                            &nbsp;&nbsp; Is Sub Step</span>
+                                            &nbsp;&nbsp; Is Sub Step Of</span>
                                     </label>
 
                                 </div>
@@ -190,12 +219,13 @@
                                 <div class="d-flex flex-column mb-8 fv-row " id="substepdiv">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="">Sub Step</span>
+                                        <span class="">Sub Step Of</span>
                                     </label>
                                     <!--end::Label-->
                                     <select
                                         class="form-control step form-control-solid select2 {{ $errors->has('substep_of_step_id') ? 'is-invalid' : '' }}"
                                         style="width: 100%;" name="substep_of_step_id" id="country-dropdown">
+                                        <option value="">Select sub step of</option>
                                         @forelse ($process->steps as $item)
                                             <option value="{{$item->id}}" {{ old('substep_of_step_id') == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
                                         @empty

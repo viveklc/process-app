@@ -36,6 +36,7 @@ class UpdateProcessRequest extends FormRequest
             'process_name' => ['required','string',Rule::unique('processes')->ignore($this->process->id),'max:50','min:3'],
             'process_description' => ['nullable','string','max:500','min:1'],
             'total_duration' => ['required','numeric'],
+            'unit' => ['required','string'],
             'valid_from' => ['required','date_format:Y-m-d','date'],
             'valid_to' => ['required','date_format:Y-m-d','date','after:valid_from'],
             'status' => ['required','string','in:active,in-active'],

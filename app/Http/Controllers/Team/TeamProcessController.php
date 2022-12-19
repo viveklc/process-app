@@ -29,11 +29,13 @@ class TeamProcessController extends Controller
             ->when($inputSearchString, function ($query) use ($inputSearchString) {
                 $query->where(function ($query) use ($inputSearchString) {
                     $query->orWhere('process_name', 'LIKE', '%' . $inputSearchString . '%');
+                    $query->orWhere('process_teams.valid_from', 'LIKE', '%' . $inputSearchString . '%');
+                    $query->orWhere('process_teams.valid_to', 'LIKE', '%' . $inputSearchString . '%');
                 });
             })
             ->paginate(config('app-config.per_page'))
             ->withQueryString();
-
+        // dd($teamProcess);
 
         return view('teams.team-process.index', compact('teamProcess', 'id'));
     }
@@ -51,6 +53,7 @@ class TeamProcessController extends Controller
         $process = Process::whereNotIn('id', collect($team->teamProcess)->pluck('id')->toArray())
             ->select('id', 'process_name')
             ->isActive()
+            ->orderBy('process_name')
             ->get();
 
         return view('teams.team-process.add', compact('process', 'team_id'));

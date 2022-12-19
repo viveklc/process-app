@@ -30,6 +30,7 @@ class ProcessInstanceController extends Controller
 
         $id = $process->id;
         $processInstance = $process->processInstances()
+            ->withCount('stepInstances')
             ->when($inputSearchString, function ($query) use ($inputSearchString) {
                 $query->where(function ($query) use ($inputSearchString) {
                     $query->orWhere('process_instance_name', 'LIKE', '%' . $inputSearchString . '%');
@@ -105,7 +106,7 @@ class ProcessInstanceController extends Controller
         $this->cloneStep($process->id, $instance->id, $instance->process_instance_name, $instance->assigned_to_user_id);
 
         toast(__('global.crud_actions', ['module' => 'Process instance', 'action' => 'created']), 'success');
-        return back();
+        return redirect()->route('admin.processes.process-instance.index',$process->id);
     }
 
     /**
@@ -172,7 +173,7 @@ class ProcessInstanceController extends Controller
         }
 
         toast(__('global.crud_actions', ['module' => 'Process instance', 'action' => 'updated']), 'success');
-        return back();
+        return redirect()->route('admin.processes.process-instance.index',$process->id);
     }
 
     /**

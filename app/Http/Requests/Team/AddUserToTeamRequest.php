@@ -30,4 +30,14 @@ class AddUserToTeamRequest extends FormRequest
             'team_id' => ['required','numeric','exists:teams,id']
         ];
     }
+
+
+    public function attributes()
+    {
+        return [
+            'user_id' => 'Team user',
+            'org_id' => 'Organisation',
+            'team_id' => 'Team'
+        ];
+    }
 }

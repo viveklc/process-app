@@ -62,7 +62,7 @@
                                     <!--end::Label-->
                                     <select
                                         class="form-control form-control-solid select2 {{ $errors->has('org_id') ? 'is-invalid' : '' }}"
-                                        style="width: 100%;" name="org_id" id="country-dropdown"
+                                        style="width: 100%;" name="org_id" id="org-dropdown"
                                         onchange="getUserByOrgId(this.value)">
                                         <option value="">Select Organisation</option>
                                         @forelse ($org as $item)
@@ -113,7 +113,7 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="required">Attachment</span>
+                                        <span class="">Attachment</span>
                                     </label>
                                     <!--end::Label-->
                                     <input type="file"
@@ -202,6 +202,14 @@
 @endsection
 @section('scripts')
     <script>
+        $(document).ready(function(){
+        var oldOrgId = "{{ old('org_id') }}";
+        var oldUserId = '{{ collect(old("user_id")) }}';
+
+        if(oldOrgId !== ''){
+            $("#org-dropdown").change()
+        }
+    })
         function deleteMedia(media_id, content) {
             const $parentLi = $(content).parents('.list-group-item');
 
@@ -247,6 +255,9 @@
 
             url = url.replace(':org_id', org_id);
 
+            var selectedVal = new Array();
+            selectedVal = '{{ collect(old("user_id")) }}';
+
             $.ajax({
                 method: "GET",
                 url: url,
@@ -256,10 +267,13 @@
                 },
                 success: function(response) {
                     // console.log(response);
-                    var option = "<option value=''>select Team User</option>";
+                    var option = "";
                     $.each(response, function(index, value) {
 
-                        option += "<option value='" + value.id + "'>" + value.name + "</option>";
+                        let isChecked = selectedVal.includes(value.id)
+                        let isSelected = isChecked === true ? 'selected' : '';
+                        console.log("is selected", isSelected);
+                        option += "<option value='"+value.id+"' "+ isSelected +" >"+value.name+"</option>";
 
                     });
                     $('#team_user_dropDown').html(option);

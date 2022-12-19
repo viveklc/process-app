@@ -30,6 +30,7 @@ class OrgController extends Controller
             ->when($inputSearchString, function ($query) use ($inputSearchString) {
                 $query->where(function ($query) use ($inputSearchString) {
                     $query->orWhere('name', 'LIKE', '%' . $inputSearchString . '%');
+                    $query->orWhere('address', 'LIKE', '%' . $inputSearchString . '%');
                     $query->orWhere(function ($query) use ($inputSearchString) {
                         $query->whereHas('plan', function (Builder $builder) use ($inputSearchString) {
                             $builder->where('plan_name', 'LIKE', '%' . $inputSearchString . '%');
