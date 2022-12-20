@@ -30,6 +30,7 @@ class OrgController extends Controller
             ->when($inputSearchString, function ($query) use ($inputSearchString) {
                 $query->where(function ($query) use ($inputSearchString) {
                     $query->orWhere('name', 'LIKE', '%' . $inputSearchString . '%');
+                    $query->orWhere('address', 'LIKE', '%' . $inputSearchString . '%');
                     $query->orWhere(function ($query) use ($inputSearchString) {
                         $query->whereHas('plan', function (Builder $builder) use ($inputSearchString) {
                             $builder->where('plan_name', 'LIKE', '%' . $inputSearchString . '%');
@@ -118,6 +119,8 @@ class OrgController extends Controller
             ->orderBy('plan_name')
             ->get();
 
+        $org->load('media');
+
         return view('orgs.edit', compact('org', 'plans'));
     }
 
@@ -135,7 +138,6 @@ class OrgController extends Controller
         $org->update($request->safe()->only(['name', 'plan_id', 'address', 'is_premium']));
 
         if ($request->hasFile('attachments')) {
-            $org->media()->delete();
             $org->addMultipleMediaFromRequest(['attachments'])
                 ->each(function ($attachment) {
                     $attachment->toMediaCollection('attachments');

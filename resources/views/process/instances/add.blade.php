@@ -75,7 +75,7 @@
                                     style="width: 100%;" name="team_id" id="country-dropdown" >
                                     <option value="">--select team --</option>
                                     @forelse ($team as $item)
-                                        <option value="{{ $item->id }}" >{{ $item->name }}</option>
+                                        <option value="{{ $item->id }}" {{ old('team_id') == $item->id ? 'selected' : '' }} >{{ $item->name }}</option>
                                     @empty
                                     @endforelse
                                 </select>
@@ -91,7 +91,7 @@
                                     style="width: 100%;" name="assigned_to_user_id" id="country-dropdown" >
                                     <option value="">--select user --</option>
                                     @forelse ($users as $item)
-                                        <option value="{{ $item->id }}" >{{ $item->name }}</option>
+                                        <option value="{{ $item->id }}" {{ old('assigned_to_user_id') == $item->id ? 'selected' : '' }} >{{ $item->name }}</option>
                                     @empty
                                     @endforelse
                                 </select>
@@ -118,6 +118,19 @@
                                     class="form-control form-control-solid {{ $errors->has('due_date') ? 'is-invalid' : '' }}"
                                     type="datetime-local" name="due_date" id="due_date" value="{{ old('due_date', '') }}">
                             </div>
+
+                            <!--begin::Input group-->
+                            <div class="d-flex flex-column mb-8 fv-row">
+                                <!--begin::Label-->
+                                <label class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                    <span class="">Attachment</span>
+                                </label>
+                                <!--end::Label-->
+                                <input type="file"
+                                    class="form-control form-control-solid  {{ $errors->has('attachments') ? 'is-invalid' : '' }}"
+                                    placeholder="" name="attachments[]" multiple />
+                            </div>
+                            <!--end::Input group-->
 
                             <div>
                                 <button type="submit" id="kt_modal_new_ticket_submit" class="btn btn-primary">

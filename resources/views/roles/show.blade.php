@@ -47,10 +47,9 @@
 
                         <!--begin::Card body-->
                         <div class="card-body pt-0">
-                            <h2>Assigned Permissions</h2>
                             <ul class="list-group">
-                                @forelse (collect($role->permissions)->sortBy('name') as $item)
-                                <li class="list-group-item">{{$item->name}} </li>
+                                @forelse ($role->permissions as $item)
+                                <li class="list-group-item">{{ Str::headline($item->name) }} </li>
                                 @empty
                                 <li class="list-group-item">No Permission found</li>
                                 @endforelse

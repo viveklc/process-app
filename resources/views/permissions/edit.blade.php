@@ -63,7 +63,7 @@
                                 <!--end::Label-->
                                 <input
                                     class="form-control form-control-solid {{ $errors->has('name') ? 'is-invalid' : '' }}"
-                                    type="text" name="name" id="name" value="{{ old('name', $permission->name) }}" required>
+                                    type="text" name="name" id="name" value="{{ old('name', Str::headline($permission->name)) }}" required>
                             </div>
 
                             <div>

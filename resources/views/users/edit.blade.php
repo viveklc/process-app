@@ -85,17 +85,7 @@
                                         type="text" name="name" id="name" value="{{ old('name', $user->name) }}" required>
                                 </div>
 
-                                <div class="d-flex flex-column mb-8 fv-row">
-                                    <!--begin::Label-->
-                                    <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="required">Username</span>
-                                    </label>
-                                    <!--end::Label-->
-                                    <input
-                                        class="form-control form-control-solid {{ $errors->has('username') ? 'is-invalid' : '' }}"
-                                        type="text" name="username" id="username" value="{{ old('username', $user->username) }}"
-                                        required>
-                                </div>
+
 
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
@@ -112,13 +102,13 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="required">Mobile</span>
+                                        <span class="">Mobile</span>
                                     </label>
                                     <!--end::Label-->
                                     <input
                                         class="form-control form-control-solid {{ $errors->has('phone') ? 'is-invalid' : '' }}"
                                         type="text" name="phone" id="phone" value="{{ old('phone', $user->phone) }}"
-                                        required>
+                                        >
                                 </div>
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
@@ -139,9 +129,10 @@
                                     </select>
                                 </div>
                                 <div class="d-flex flex-column mb-8 fv-row">
+                                    <input type="hidden" name="is_org_admin" value="2">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class=""><input type="checkbox" name="is_org_admin" id="" {{ old('is_org_admin',$user->is_org_admin) == 1 ? 'checked':'' }}>
+                                        <span class=""><input type="checkbox" name="is_org_admin" value="1" id="" {{ old('is_org_admin',$user->is_org_admin) == 1 ? 'checked':'' }}>
                                             &nbsp;&nbsp; Is Organisation admin</span>
                                     </label>
 

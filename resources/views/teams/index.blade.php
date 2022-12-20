@@ -83,6 +83,8 @@
                                             <th>Organisation</th>
                                             <th>Valid From</th>
                                             <th>Valid To</th>
+                                            <th class="fixed-col"></th>
+                                            <th class="fixed-col"></th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -94,9 +96,12 @@
                                             <td>{{ $item->org->name }}</td>
                                             <td>{{ appDateFormat($item->valid_from) }}</td>
                                             <td>{{ appDateFormat($item->valid_to) }}</td>
+                                            <td><a href="{{ route('admin.team.team-users.index',$item->id) }}">{{ trans('global.team_users') }} ({{ $item->team_user_count }})</a></td>
+                                            <td><a href="{{ route('admin.team.team-process.index',$item->id) }}">{{ trans('global.team_process') }} ({{ $item->team_process_count }})</a></td>
+
                                             <!--begin::Action=-->
                                             <td class="text-end">
-                                                <a href="#" class="btn btn-light btn-active-light-primary btn-sm"
+                                                <a href="#" class="btn btn-sm"
                                                     data-kt-menu-trigger="click"
                                                     data-kt-menu-placement="bottom-end">Actions
                                                     <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
@@ -113,18 +118,7 @@
                                                 <!--begin::Menu-->
                                                 <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4"
                                                     data-kt-menu="true">
-                                                    <!--begin::Menu item-->
-                                                    <div class="menu-item px-3">
-                                                        <a href="{{ route('admin.team.team-users.index',$item->id) }}"
-                                                            class="menu-link px-3"> {{ trans('global.team_users') }}</a>
-                                                    </div>
-                                                    <!--end::Menu item-->
-                                                     <!--begin::Menu item-->
-                                                     <div class="menu-item px-3">
-                                                        <a href="{{ route('admin.team.team-process.index',$item->id) }}"
-                                                            class="menu-link px-3"> {{ trans('global.team_process') }}</a>
-                                                    </div>
-                                                    <!--end::Menu item-->
+
                                                     <!--begin::Menu item-->
                                                     <div class="menu-item px-3">
                                                         <a href="{{ route('admin.team.edit',$item->id) }}"

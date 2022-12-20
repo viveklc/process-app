@@ -18,6 +18,26 @@
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
+                                <a href="{{ route('admin.processes.index') }}">Processes</a>
+                            </li>
+                            <!--end::Item-->
+                            <!--begin::Item-->
+                            <li class="breadcrumb-item">
+                                <span class="bullet bg-gray-400 w-5px h-2px"></span>
+                            </li>
+                            <!--end::Item-->
+                            <!--begin::Item-->
+                            <li class="breadcrumb-item text-muted">
+                                <a href="{{ route('admin.processes.process-instance.index',$processInstance->process_id) }}">Process Instances</a>
+                            </li>
+                            <!--end::Item-->
+                            <!--begin::Item-->
+                            <li class="breadcrumb-item">
+                                <span class="bullet bg-gray-400 w-5px h-2px"></span>
+                            </li>
+                            <!--end::Item-->
+                            <!--begin::Item-->
+                            <li class="breadcrumb-item text-muted">
                                 <a href="{{ route('admin.process-instance.step-instance.index',$processInstance->id) }}">Step Instances</a>
                             </li>
                             <!--end::Item-->
@@ -45,7 +65,7 @@
                     <div class="card">
                         <!--begin::Card body-->
                         <div class="card-body pt-10">
-                            <h3>Basic Information</h3>
+                            <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Basic Information</h1>
                             <table class="table table-bordered table-striped">
                                 <tbody>
                                     <tr>
@@ -169,7 +189,7 @@
                                 </tbody>
 
                             </table>
-                            <h2>Attachments : </h2>
+                            <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Attachments : </h1>
                             <ul class="list-group">
 
                                 @forelse ($stepInstance->media as $item)

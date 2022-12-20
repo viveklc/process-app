@@ -61,7 +61,7 @@
                                     <!--end::Label-->
                                     <select
                                         class="form-control form-control-solid select2 {{ $errors->has('org_id') ? 'is-invalid' : '' }}"
-                                        style="width: 100%;" name="org_id" id="country-dropdown" onchange="getUserByOrgId(this.value)">
+                                        style="width: 100%;" name="org_id" id="org-dropdown" onchange="getUserByOrgId(this.value)" required>
                                         <option value="">Select Organisation</option>
                                         @forelse ($org as $item)
                                             <option value="{{ $item->id }}"
@@ -79,7 +79,7 @@
                                     <!--end::Label-->
                                     <input
                                         class="form-control form-control-solid {{ $errors->has('team_name') ? 'is-invalid' : '' }}"
-                                        type="text" name="team_name" id="team_name" value="{{ old('team_name', '') }}">
+                                        type="text" name="team_name" id="team_name" value="{{ old('team_name', '') }}" required>
                                 </div>
 
                                 <div class="d-flex flex-column mb-8 fv-row">
@@ -91,7 +91,7 @@
                                     <input
                                         class="form-control form-control-solid {{ $errors->has('valid_from') ? 'is-invalid' : '' }}"
                                         type="date" name="valid_from" id="valid_from"
-                                        value="{{ old('valid_from', '') }}">
+                                        value="{{ old('valid_from', '') }}" required>
                                 </div>
 
                                 <div class="d-flex flex-column mb-8 fv-row">
@@ -102,14 +102,14 @@
                                     <!--end::Label-->
                                     <input
                                         class="form-control form-control-solid {{ $errors->has('valid_to') ? 'is-invalid' : '' }}"
-                                        type="date" name="valid_to" id="valid_to" value="{{ old('valid_to', '') }}">
+                                        type="date" name="valid_to" id="valid_to" value="{{ old('valid_to', '') }}" required>
                                 </div>
 
                                <!--begin::Input group-->
                                <div class="d-flex flex-column mb-8 fv-row">
                                 <!--begin::Label-->
                                 <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                    <span class="required">Attachment</span>
+                                    <span class="">Attachment</span>
                                 </label>
                                 <!--end::Label-->
                                 <input type="file"
@@ -126,13 +126,8 @@
                                     <!--end::Label-->
                                     <select
                                         class="form-control form-control-solid select2 {{ $errors->has('user_id[]') ? 'is-invalid' : '' }}"
-                                        style="width: 100%;" name="user_id[]" id="team_user_dropDown" multiple>
-                                        @forelse ($orgUsers->users as $item)
-                                            <option value="{{ $item->id }}"
-                                                {{ collect(old('user_id'))->contains($item->id) ? 'selected' : '' }}>
-                                                {{ $item->name }}</option>
-                                        @empty
-                                        @endforelse
+                                        style="width: 100%;" name="user_id[]" id="team_user_dropDown" multiple required>
+
                                     </select>
                                 </div>
 
@@ -185,10 +180,23 @@
 @endsection
 @section('scripts')
 <script>
+    $(document).ready(function(){
+        var oldOrgId = "{{ old('org_id') }}";
+        var oldUserId = '{{ collect(old("user_id")) }}';
+
+        if(oldOrgId !== ''){
+            $("#org-dropdown").change()
+        }
+    })
     function getUserByOrgId(org_id){
         let url = '{{ route('admin.org.users',':org_id') }}';
 
             url = url.replace(':org_id',org_id);
+
+            var selectedVal = new Array();
+            selectedVal = '{{ collect(old("user_id")) }}';
+
+            console.log("selected value", selectedVal);
 
             $.ajax({
                 method : "GET",
@@ -198,12 +206,12 @@
 
                 },
                 success : function(response){
-                    // console.log(response);
-                    var option = "<option value=''>select Team User</option>";
+                    var option = "";
                     $.each(response, function(index,value){
-
-                        option += "<option value='"+value.id+"'>"+value.name+"</option>";
-
+                        let isChecked = selectedVal.includes(value.id)
+                        let isSelected = isChecked === true ? 'selected' : '';
+                        console.log("is selected", isSelected);
+                        option += "<option value='"+value.id+"' "+ isSelected +" >"+value.name+"</option>";
                     });
                     $('#team_user_dropDown').html(option);
 

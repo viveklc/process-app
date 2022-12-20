@@ -62,7 +62,8 @@
                                     <!--end::Label-->
                                     <select
                                         class="form-control form-control-solid select2 {{ $errors->has('org_id') ? 'is-invalid' : '' }}"
-                                        style="width: 100%;" name="org_id" id="country-dropdown" onchange="fetchUsers(this.value)">
+                                        style="width: 100%;" name="org_id" id="org-dropdown"
+                                        onchange="fetchUsers(this.value)">
                                         <option value="">Select Organisation</option>
                                         @forelse ($org as $item)
                                             <option value="{{ $item->id }}"
@@ -84,17 +85,6 @@
                                         type="text" name="name" id="name" value="{{ old('name', '') }}" required>
                                 </div>
 
-                                <div class="d-flex flex-column mb-8 fv-row">
-                                    <!--begin::Label-->
-                                    <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="required">Username</span>
-                                    </label>
-                                    <!--end::Label-->
-                                    <input
-                                        class="form-control form-control-solid {{ $errors->has('username') ? 'is-invalid' : '' }}"
-                                        type="text" name="username" id="username" value="{{ old('username', '') }}"
-                                        required>
-                                </div>
 
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
@@ -111,13 +101,12 @@
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="required">Mobile</span>
+                                        <span class="">Mobile</span>
                                     </label>
                                     <!--end::Label-->
                                     <input
                                         class="form-control form-control-solid {{ $errors->has('phone') ? 'is-invalid' : '' }}"
-                                        type="text" name="phone" id="phone" value="{{ old('phone', '') }}"
-                                        required>
+                                        type="number" name="phone" id="phone" value="{{ old('phone', '') }}">
                                 </div>
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
@@ -138,9 +127,10 @@
                                     </select>
                                 </div>
                                 <div class="d-flex flex-column mb-8 fv-row">
+                                    <input type="hidden" name="is_org_admin" value="2">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class=""><input type="checkbox" name="is_org_admin" id="">
+                                        <span class=""><input type="checkbox" name="is_org_admin" id="" value="1">
                                             &nbsp;&nbsp; Is Organisation admin</span>
                                     </label>
                                 </div>
@@ -153,7 +143,7 @@
                                     <!--end::Label-->
                                     <input
                                         class="form-control form-control-solid {{ $errors->has('password') ? 'is-invalid' : '' }}"
-                                        type="text" name="password" id="password" value="{{ old('password', '') }}"
+                                        type="password" name="password" id="password" value="{{ old('password', '') }}"
                                         required>
                                 </div>
                                 <div class="d-flex flex-column mb-8 fv-row">
@@ -164,7 +154,7 @@
                                     <!--end::Label-->
                                     <input
                                         class="form-control form-control-solid {{ $errors->has('password_confirmation') ? 'is-invalid' : '' }}"
-                                        type="text" name="password_confirmation" id="password_confirmation"
+                                        type="password" name="password_confirmation" id="password_confirmation"
                                         value="{{ old('password_confirmation', '') }}" required>
                                 </div>
 
@@ -177,7 +167,6 @@
                                     <select
                                         class="form-control form-control-solid select2 {{ $errors->has('is_colleague_of_user_id') ? 'is-invalid' : '' }}"
                                         style="width: 100%;" name="is_colleague_of_user_id[]" id="is_collegue" multiple>
-
                                     </select>
                                 </div>
 
@@ -190,7 +179,8 @@
                                     <!--end::Label-->
                                     <select
                                         class="form-control form-control-solid select2 {{ $errors->has('reports_to_user_id') ? 'is-invalid' : '' }}"
-                                        style="width: 100%;" name="reports_to_user_id[]" id="reports_to_user_id" multiple>
+                                        style="width: 100%;" name="reports_to_user_id[]" id="reports_to_user_id"
+                                        multiple>
 
                                     </select>
                                 </div>
@@ -221,31 +211,52 @@
 @endsection
 @section('scripts')
     <script>
-        function fetchUsers(org_id){
-            let url = '{{ route('admin.org.users',':org_id') }}';
+        $(document).ready(function() {
+            var oldOrgId = "{{ old('org_id') }}";
+            var oldCollegueId = '{{ collect(old("is_colleague_of_user_id")) }}';
+            var oldReportToId = '{{ collect(old("reports_to_user_id")) }}';
 
-            url = url.replace(':org_id',org_id);
+            if (oldOrgId !== '') {
+                $("#org-dropdown").change()
+            }
+        })
+
+        function fetchUsers(org_id) {
+            let url = '{{ route('admin.org.users', ':org_id') }}';
+
+            url = url.replace(':org_id', org_id);
+
+            var selectedCollegueId = new Array();
+            selectedCollegueId = '{{ collect(old("is_colleague_of_user_id")) }}';
+            var selectedReportsToId = new Array();
+            selectedReportsToId = '{{ collect(old("reports_to_user_id")) }}';
+
+            console.log("selected value", selectedCollegueId);
 
             $.ajax({
-                method : "GET",
-                url : url,
-                cache : false,
-                beforeSend : function(){
+                method: "GET",
+                url: url,
+                cache: false,
+                beforeSend: function() {
 
                 },
-                success : function(response){
-                    // console.log(response);
-                    var option = "";
-                    $.each(response, function(index,value){
+                success: function(response) {
+                    var option_1 = "";
+                    var option_2 = "";
+                    $.each(response, function(index, value) {
+                        let isCheckedCollegueId = selectedCollegueId.includes(value.id)
+                        let isSelectedCollegueId = isCheckedCollegueId === true ? 'selected' : '';
+                        option_1 += "<option value='"+value.id+"' "+ isSelectedCollegueId +" >"+value.name+"</option>";
 
-                        option += "<option value='"+value.id+"'>"+value.name+"</option>";
+                        let isCheckedReportsTo = selectedReportsToId.includes(value.id)
+                        let isSelectedReportsTo = isCheckedReportsTo === true ? 'selected' : '';
+                        option_2 += "<option value='"+value.id+"' "+ isSelectedReportsTo +" >"+value.name+"</option>";
 
                     });
-                    $('#is_collegue').html(option);
-                    $("#reports_to_user_id").html(option);
+                    $('#is_collegue').html(option_1);
+                    $("#reports_to_user_id").html(option_2);
                 }
             })
         }
     </script>
-
 @endsection

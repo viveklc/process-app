@@ -27,16 +27,14 @@ class UpdateUserRequest extends FormRequest
         return [
             'org_id' => ['required','numeric','exists:orgs,id'],
             'name' => ['required','string','max:50','min:2'],
-            'username' => ['required','string',Rule::unique('users','username')->ignore($this->user->id)],
             'email' => ['nullable','string','email:filter',Rule::unique('users','email')->ignore($this->user->id)],
             'phone' => ['nullable','string'],
             'role_id' => ['required','numeric','exists:roles,id'],
-            'is_org_admin' => ['nullable'],
-            // 'password' => ['required','alpha_num','confirmed','min:6'],
-            'is_colleague_of_user_id' => ['required','array','min:1'],
-            'is_colleague_of_user_id.*' => ['required','numeric','exists:users,id','distinct'],
-            'reports_to_user_id' => ['required','array','min:1'],
-            'reports_to_user_id.*' => ['required','numeric','exists:users,id','distinct']
+            'is_org_admin' => ['nullable','in:1,2'],
+            'is_colleague_of_user_id' => ['nullable','array','min:1'],
+            'is_colleague_of_user_id.*' => ['nullable','numeric','exists:users,id','distinct'],
+            'reports_to_user_id' => ['nullable','array','min:1'],
+            'reports_to_user_id.*' => ['nullable','numeric','exists:users,id','distinct']
         ];
     }
 }

@@ -23,6 +23,16 @@
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
+                                <a href="{{ route('admin.processes.index') }}">Process</a>
+                            </li>
+                            <!--end::Item-->
+                            <!--begin::Item-->
+                            <li class="breadcrumb-item">
+                                <span class="bullet bg-gray-400 w-5px h-2px"></span>
+                            </li>
+                            <!--end::Item-->
+                            <!--begin::Item-->
+                            <li class="breadcrumb-item text-muted">
                                 <a href="{{ route('admin.process.steps.index',$process->id) }}">Steps</a>
                             </li>
                             <!--end::Item-->
@@ -116,16 +126,35 @@
                                         value="{{ old('sequence', $step->sequence) }}" required>
                                 </div>
 
-                                <div class="d-flex flex-column mb-8 fv-row">
-                                    <!--begin::Label-->
+                                <div class="row mb-8">
+                                    <div class="col-md-8">
+                                        <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
                                         <span class="required">Total Duration</span>
                                     </label>
                                     <!--end::Label-->
                                     <input
                                         class="form-control form-control-solid {{ $errors->has('total_duration') ? 'is-invalid' : '' }}"
-                                        type="text" name="total_duration" id="total_duration"
-                                        value="{{ old('total_duration', $step->total_duration) }}" required>
+                                        type="number" name="total_duration" id="total_duration"
+                                        value="{{ old('total_duration', $step->total_duration) }}" required >
+                                    </div>
+                                    <div class="col-md-4">
+                                          <!--begin::Label-->
+                                    <label class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="required">Unit</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <select name="unit" id="" class="form-control form-control-solid select2 {{ $errors->has('unit') ? 'is-invalid' : '' }}"  required>
+                                        <option value="">Select unit</option>
+                                        @forelse (\App\Models\Process\Process::DURATION_UNITS as $key => $value)
+                                            <option value="{{ $key }}" @selected(old('unit',$step->unit) == $key)>{{ $value }}</option>
+                                        @empty
+
+                                        @endforelse
+                                    </select>
+                                    </div>
+
+
                                 </div>
 
                                 <div class="d-flex flex-column mb-8 fv-row">
@@ -215,6 +244,18 @@
                                 <input type="file"
                                     class="form-control form-control-solid  {{ $errors->has('attachments') ? 'is-invalid' : '' }}"
                                     placeholder="Attachment" name="attachments[]" multiple  />
+                                    <div class="attachment-div">
+                                        <ul class="list-group list-group-horizontal">
+                                            @forelse ($step->media as $item)
+                                                <li class="list-group-item"><a href="{{ $item->original_url }}"
+                                                        target="__blank" class="btn-link">{{ $item->file_name }}</a>
+                                                    &nbsp;&nbsp; <span onclick="deleteMedia({{ $item->id }},this)"><i
+                                                            class="fa fa-times" style="color: red"></i></span></li>
+                                            @empty
+                                            @endforelse
+
+                                        </ul>
+                                    </div>
                             </div>
                             <!--end::Input group-->
 
@@ -269,130 +310,71 @@
     <!--end:::Main-->
 @endsection
 @section('scripts')
-{{--
-
     <script>
+        function deleteMedia(media_id, content) {
+            const $parentLi = $(content).parents('.list-group-item');
 
-$(document).ready(function(){
-    $("#substepdiv").hide();
+            let url = '{{ route('admin.media.remove', ':media_id') }}';
 
-    $("#is_substep").click(function () {
-            if ($(this).is(":checked")) {
-                // $("#substepdiv").show();
-                // alert('checked');
-                // $("#AddPassport").hide();
-            } else {
-                $("#substepdiv").hide();
-                // $("#AddPassport").show();
-            }
-        });
-})
+            url = url.replace(':media_id', media_id);
+            Swal.fire({
+                title: '{{ trans('global.are_you_sure') }}',
+                text: "{{ trans('global.are_you_sure_delete_msg') }}",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: '{{ trans('global.ok') }}'
+            }).then((result) => {
 
-function mountDropDown(org_id){
-        getDeptsByOrgId(org_id)
-        getTeamsByOrgId(org_id)
-    }
-    function getDeptsByOrgId(org_id){
-            let url = '{{ route('admin.org.depts',':org_id') }}';
-
-            url = url.replace(':org_id',org_id);
-
-            $.ajax({
-                method : "GET",
-                url : url,
-                cache : false,
-                beforeSend : function(){
+                $.ajax({
+                method: "DELETE",
+                url: url,
+                cache: false,
+                data: {
+                    _token: "{{ csrf_token() }}"
+                },
+                beforeSend: function() {
 
                 },
-                success : function(response){
+                success: function(response) {
+                    if (response.status === 'success') {
+                        // alert(response.message);
+                        $parentLi.remove();
+                    }
+
+
+
+                }
+            })
+            })
+
+        }
+
+        function getUserByOrgId(org_id) {
+            let url = '{{ route('admin.org.users', ':org_id') }}';
+
+            url = url.replace(':org_id', org_id);
+
+            $.ajax({
+                method: "GET",
+                url: url,
+                cache: false,
+                beforeSend: function() {
+
+                },
+                success: function(response) {
                     // console.log(response);
-                    var option = "<option value=''>select Departments</option>";
-                    $.each(response, function(index,value){
+                    var option = "<option value=''>select Team User</option>";
+                    $.each(response, function(index, value) {
 
-                        option += "<option value='"+value.id+"'>"+value.name+"</option>";
+                        option += "<option value='" + value.id + "'>" + value.name + "</option>";
 
                     });
-                    $('#department_dropdown').html(option);
+                    $('#team_user_dropDown').html(option);
 
                 }
             })
-    }
-
-    function getTeamsByOrgId(org_id){
-        let url = '{{ route('admin.org.teams',':org_id') }}';
-
-            url = url.replace(':org_id',org_id);
-
-            $.ajax({
-                method : "GET",
-                url : url,
-                cache : false,
-                beforeSend : function(){
-
-                },
-                success : function(response){
-                    // console.log(response);
-                    var option = "<option value=''>select Team</option>";
-                    $.each(response, function(index,value){
-
-                        option += "<option value='"+value.id+"'>"+value.name+"</option>";
-
-                    });
-                    $('#team_dropdown').html(option);
-
-                }
-            })
-    }
-
-    function getProcessByTeamId(team_id){
-        let url = '{{ route('admin.team.process',':team_id') }}';
-
-            url = url.replace(':team_id',team_id);
-
-            $.ajax({
-                method : "GET",
-                url : url,
-                cache : false,
-                beforeSend : function(){
-
-                },
-                success : function(response){
-                    var option = "<option value=''>select process</option>";
-                    $.each(response.team_process, function(index,value){
-
-                        option += "<option value='"+value.id+"'>"+value.process_name+"</option>";
-
-                    });
-                    $('#process_dropdown').html(option);
-
-                }
-            })
-    }
-
-    function fetchSteps(process_id){
-        let url = '{{ route('admin.process.step',':process_id') }}';
-
-            url = url.replace(':process_id',process_id);
-
-            $.ajax({
-                method : "GET",
-                url : url,
-                cache : false,
-                beforeSend : function(){
-
-                },
-                success : function(response){
-                    var option = "<option value=''>select Step</option>";
-                    $.each(response, function(index,value){
-
-                        option += "<option value='"+value.id+"'>"+value.name+"</option>";
-
-                    });
-                    $('.step').html(option);
-
-                }
-            })
-    }
-</script>
---}}
+        }
+    </script>
 @endsection

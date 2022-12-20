@@ -25,7 +25,9 @@ class ProcessController extends Controller
         $inputSearchString = $request->input('s', '');
 
         $process = Process::query()
-            ->select('id', 'process_name', 'total_duration', 'valid_from', 'valid_to', 'status')
+            ->select('id', 'process_name', 'total_duration', 'valid_from', 'valid_to', 'status','unit')
+            ->withCount('steps')
+            ->withCount('processInstances')
             ->when($inputSearchString, function ($query) use ($inputSearchString) {
                 $query->where(function ($query) use ($inputSearchString) {
                     $query->orWhere('process_name', 'LIKE', '%' . $inputSearchString . '%');
@@ -67,7 +69,7 @@ class ProcessController extends Controller
     {
         abort_if(!auth()->user()->can('create-process'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $process = Process::create($request->safe()->only('process_name', 'process_description', 'total_duration', 'valid_from', 'valid_to', 'status', 'org_id','process_priority'));
+        $process = Process::create($request->safe()->only('process_name', 'process_description', 'total_duration', 'valid_from', 'valid_to', 'status', 'org_id', 'process_priority','unit'));
         $process_details = [];
         $input = $request->validated();
         foreach (Process::ADDITIONAL_DETAILS as $key => $value) {
@@ -75,15 +77,15 @@ class ProcessController extends Controller
         }
         $process->processDetails()->createMany($process_details);
 
-        if($request->hasFile('attachments')){
+        if ($request->hasFile('attachments')) {
             $process->addMultipleMediaFromRequest(['attachments'])
-            ->each(function($attachment){
-                $attachment->toMediaCollection('attachments');
-            });
+                ->each(function ($attachment) {
+                    $attachment->toMediaCollection('attachments');
+                });
         }
 
         toast(__('global.crud_actions', ['module' => 'Process', 'action' => 'created']), 'success');
-        return back();
+        return redirect()->route('admin.processes.index');
     }
 
     /**
@@ -98,7 +100,7 @@ class ProcessController extends Controller
 
         $process->load('processDetails');
         $process->load('media');
-
+        // dd($process);
         return view('process.show', compact('process'));
     }
 
@@ -119,6 +121,7 @@ class ProcessController extends Controller
             ->get();
 
         $process->load('processDetails');
+        $process->load('media');
 
         return view('process.edit', compact('process', 'org'));
     }
@@ -134,14 +137,13 @@ class ProcessController extends Controller
     {
         abort_if(!auth()->user()->can('update-process'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $process->update($request->safe()->only('process_name', 'process_description', 'total_duration', 'valid_from', 'valid_to', 'status', 'org_id','process_priority'));
+        $process->update($request->safe()->only('process_name', 'process_description', 'total_duration', 'valid_from', 'valid_to', 'status', 'org_id', 'process_priority','unit'));
 
-        if($request->hasFile('attachments')){
-            $process->media()->delete();
+        if ($request->hasFile('attachments')) {
             $process->addMultipleMediaFromRequest(['attachments'])
-            ->each(function($attachment){
-                $attachment->toMediaCollection('attachments');
-            });
+                ->each(function ($attachment) {
+                    $attachment->toMediaCollection('attachments');
+                });
         }
 
         $input = $request->validated();
@@ -153,7 +155,7 @@ class ProcessController extends Controller
         $process->processDetails()->createMany($process_details);
 
         toast(__('global.crud_actions', ['module' => 'Process', 'action' => 'updated']), 'success');
-        return back();
+        return redirect()->route('admin.processes.index');
     }
 
     /**

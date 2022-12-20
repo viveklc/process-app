@@ -29,6 +29,7 @@ class UpdateStepRequest extends FormRequest
             'team_id' => ['required','numeric','exists:teams,id'],
             'name' => ['required','string','min:2','max:100'],
             'total_duration' => ['required','numeric'],
+            'unit' => ['required'],
             'description' => ['nullable','string'],
             'sequence' => ['required','numeric'],
             'before_step_id' => ['nullable','exists:steps,id'],

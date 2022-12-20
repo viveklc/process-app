@@ -80,10 +80,12 @@
                                         <tr>
                                             <th width="10"></th>
                                             <th>Process name</th>
-                                            <th>Total Duration(In Sec.)</th>
+                                            <th>Total Duration</th>
                                             <th>Valid From</th>
                                             <th>Valid To</th>
                                             <th>Status</th>
+                                            <th class="fixed-col"></th>
+                                            <th class="fixed-col"></th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -92,16 +94,25 @@
                                             <tr data-entry-id="{{ $item->id }}">
                                                 <td></td>
                                                 <td>{{ $item->process_name }}</td>
-                                                <td>{{ $item->total_duration }}</td>
+                                                <td>{{ $item->total_duration }} {{ $item->unit }}</td>
                                                 <td>{{ appDateFormat($item->valid_from) }}</td>
                                                 <td>{{ appDateFormat($item->valid_to) }}</td>
                                                 <td>{!! $item->status == 'active'
                                                     ? '<span class="badge badge-success">Active</span>'
                                                     : '<span class="badge badge-danger">In-active</span>' !!}</td>
+                                                <td>
+                                                    <a href="{{ route('admin.process.steps.index', $item->id) }}"
+                                                        class="menu-link px-3"> Steps ({{ $item->steps_count }})
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a href="{{ route('admin.processes.process-instance.index', $item->id) }}"
+                                                        class="menu-link px-3"> {{ trans('global.process_instance') }} ({{$item->process_instances_count}})
+                                                    </a>
+                                                </td>
                                                 <!--begin::Action=-->
                                                 <td class="text-end">
-                                                    <a href="#" class="btn btn-light btn-active-light-primary btn-sm"
-                                                        data-kt-menu-trigger="click"
+                                                    <a href="#" class="btn  btn-sm" data-kt-menu-trigger="click"
                                                         data-kt-menu-placement="bottom-end">Actions
                                                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
                                                         <span class="svg-icon svg-icon-5 m-0">
@@ -119,21 +130,7 @@
                                                         data-kt-menu="true">
 
 
-                                                        <!--begin::Menu item-->
-                                                        <div class="menu-item px-3">
-                                                            <a href="{{ route('admin.process.steps.index', $item->id) }}"
-                                                                class="menu-link px-3"> Steps
-                                                            </a>
-                                                        </div>
-                                                        <!--end::Menu item-->
 
-                                                        <!--begin::Menu item-->
-                                                        <div class="menu-item px-3">
-                                                            <a href="{{ route('admin.processes.process-instance.index', $item->id) }}"
-                                                                class="menu-link px-3"> {{ trans('global.process_instance') }}
-                                                            </a>
-                                                        </div>
-                                                        <!--end::Menu item-->
 
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
@@ -152,7 +149,8 @@
                                                         <!--end::Menu item-->
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <form action="{{ route('admin.processes.destroy', $item->id) }}"
+                                                            <form
+                                                                action="{{ route('admin.processes.destroy', $item->id) }}"
                                                                 method="POST" id="frmDeleteschool-{{ $item->id }}"
                                                                 style="display: inline-block; width: 100%;">
                                                                 <input type="hidden" name="_method" value="DELETE">

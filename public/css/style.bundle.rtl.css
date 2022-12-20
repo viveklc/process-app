@@ -33484,7 +33484,7 @@ a:hover {
 .menu-sub-dropdown {
   display: none;
   border-radius: 0;
-  background-color: #ffffff;
+  background-color: lightgray;
   box-shadow: 0px 0px 50px 0px rgba(82, 63, 105, 0.1);
   z-index: 105;
 }

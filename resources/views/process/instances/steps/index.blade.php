@@ -18,6 +18,16 @@
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
+                                <a href="{{ route('admin.processes.index') }}">Processes</a>
+                            </li>
+                            <!--end::Item-->
+                            <!--begin::Item-->
+                            <li class="breadcrumb-item">
+                                <span class="bullet bg-gray-400 w-5px h-2px"></span>
+                            </li>
+                            <!--end::Item-->
+                            <!--begin::Item-->
+                            <li class="breadcrumb-item text-muted">
                                 <a href="{{ route('admin.processes.process-instance.index',$processId) }}">Process Instances</a>
                             </li>
                             <!--end::Item-->
@@ -95,7 +105,7 @@
 
                                                 <!--begin::Action=-->
                                                 <td class="text-end">
-                                                    <a href="#" class="btn btn-light btn-active-light-primary btn-sm"
+                                                    <a href="#" class="btn  btn-sm"
                                                         data-kt-menu-trigger="click"
                                                         data-kt-menu-placement="bottom-end">Actions
                                                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->

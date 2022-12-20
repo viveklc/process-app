@@ -3,15 +3,13 @@
 namespace App\Http\Controllers\Permission;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Permission\MassDestroyPermissionRequest;
 use App\Http\Requests\Permission\StorePermissionRequest;
 use App\Http\Requests\Permission\UpdatePermissionRequest;
-use App\Models\Team;
 use Exception;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-use Symfony\Component\HttpFoundation\Response;
+
 
 class PermissionController extends Controller
 {
@@ -30,7 +28,7 @@ class PermissionController extends Controller
                 $query->where('name','LIKE','%'.$inputSearchString.'%');
             })
             ->orderBy('name')
-            ->paginate(config('app-config.per_page'));
+            ->paginate(config('app-config.datatable_default_row_count'));
 
         return view('permissions.index', compact('permissions'));
     }
@@ -73,7 +71,8 @@ class PermissionController extends Controller
      */
     public function show(Permission $permission)
     {
-        $permission->load('roles');
+        $permission->load('roles')->orderBy('name');
+
         return view('permissions.show',compact('permission'));
     }
 

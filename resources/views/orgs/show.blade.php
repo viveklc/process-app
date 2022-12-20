@@ -12,13 +12,13 @@
                     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                         <!--begin::Title-->
                         <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
-                            Countries</h1>
+                            Organisaitons</h1>
                         <!--end::Title-->
                         <!--begin::Breadcrumb-->
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
-                                <a href="{{ route('admin.orgs.index') }}">Org</a>
+                                <a href="{{ route('admin.orgs.index') }}">Organisaitons</a>
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->
@@ -48,65 +48,46 @@
                             <table class="table table-bordered table-striped">
                                 <tbody>
                                     <tr>
-                                        <th>
+                                        <td>
                                             Name
-                                        </th>
+                                        </td>
                                         <td>
                                             {{ $org->name ?? '' }}
                                         </td>
                                     </tr>
 
                                     <tr>
-                                        <th>
+                                        <td>
                                             Plan Name
-                                        </th>
+                                        </td>
                                         <td>
                                             {{ $org->plan->plan_name ?? '' }}
                                         </td>
                                     </tr>
 
                                     <tr>
-                                        <th>
+                                        <td>
                                             Address
-                                        </th>
+                                        </td>
                                         <td>
                                             {{ $org->address ?? '' }}
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>
+                                        <td>
                                             Premium
-                                        </th>
+                                        </td>
                                         <td>
                                             {{ ($org->is_premium == 1 ? 'Yes' : 'No') ?? '' }}
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <th>
-                                            Image
-                                        </th>
-                                        <td>
-                                            @if ($org->getFirstMediaUrl('Org'))
-                                                <a href="{{ $org->getFirstMediaUrl('Org') }}" target="_BLANK">
-                                                    <img src="{{ $org->getFirstMediaUrl('Org', 'thumb') }}" />
-                                                </a>
-                                            @endif
                                         </td>
                                     </tr>
 
 
                                 </tbody>
                             </table>
-                            <h2>Attachments : </h2>
-                            <ul class="list-group">
-
-                                @foreach ($org->media as $item)
-                                    <li class="list-group-item"> <a href="{{ $item->original_url }}"
-                                            target="__blank">{{ $item->original_url }}</a> </li>
-                                @endforeach
-
-                            </ul>
+                            <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
+                                Attachments</h1>
+                                @include('components.attachment',['media'=>$org->media])
                         </div>
                         <!--end::Card body-->
                     </div>

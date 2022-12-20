@@ -36,7 +36,7 @@ class UpdateStepInstaceRequest extends FormRequest
             'attachments.*' => ['file'],
             'is_mandatory' => ['nullable'],
             'is_conditional' => ['nullable','in:1,2'],
-            'planned_start_on' => ['nullable','date_format:Y-m-d','date','after_or_equal:today'],
+            'planned_start_on' => ['nullable','date_format:Y-m-d','date'],
             'planned_finish_on' => ['nullable','date_format:Y-m-d','date','after:planned_start_on'],
             'actual_start_on' => ['nullable','date_format:Y-m-d','date','after_or_equal:today'],
             'actual_finish_on' => ['nullable','date_format:Y-m-d','date','after:actual_start_on'],

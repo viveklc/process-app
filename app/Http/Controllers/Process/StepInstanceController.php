@@ -78,6 +78,7 @@ class StepInstanceController extends Controller
             ->isActive()
             ->orderBy('name')
             ->get();
+        $stepInstance->load('media');
 
         return view('process.instances.steps.edit',compact('stepInstance','processSteps','processInstanceId'));
     }
@@ -93,7 +94,14 @@ class StepInstanceController extends Controller
     {
         abort_if(!auth()->user()->can('update-step-instance'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $stepInstance->update($request->validated());
+        $stepInstance->update($request->safe()->except('attachments'));
+
+        if($request->hasFile('attachments')){
+            $stepInstance->addMultipleMediaFromRequest(['attachments'])
+            ->each(function($attachment){
+                $attachment->toMediaCollection('attachment');
+            });
+        }
 
         toast(__('global.crud_actions', ['module' => 'Step instance', 'action' => 'updated']), 'success');
         return back();

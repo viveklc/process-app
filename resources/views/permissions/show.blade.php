@@ -12,7 +12,7 @@
                     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                         <!--begin::Title-->
                         <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
-                            Assigned Roles</h1>
+                            Assigned To Roles</h1>
                         <!--end::Title-->
                         <!--begin::Breadcrumb-->
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
@@ -47,7 +47,6 @@
 
                         <!--begin::Card body-->
                         <div class="card-body pt-0">
-                            <h2>Assigned with roles</h2>
                             <ul class="list-group">
                                 @forelse ($permission->roles as $item)
                                 <li class="list-group-item">{{$item->name}}</li>

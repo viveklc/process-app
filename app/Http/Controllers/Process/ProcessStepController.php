@@ -106,7 +106,7 @@ class ProcessStepController extends Controller
         }
 
         toast(__('global.crud_actions', ['module' => 'Step', 'action' => 'created']), 'success');
-        return back();
+        return redirect()->route('admin.process.steps.index',$process->id);
     }
 
     /**
@@ -153,7 +153,7 @@ class ProcessStepController extends Controller
             ->isActive()
             ->orderBy('team_name')
             ->get();
-
+        $step->load('media');
         return view('process.steps.edit',compact('step','process','depts','teams'));
     }
 
@@ -171,7 +171,6 @@ class ProcessStepController extends Controller
         $step->update($request->safe()->except('attachments'));
 
         if($request->hasFile('attachments')){
-            $step->media()->delete();
             $step->addMultipleMediaFromRequest(['attachments'])
             ->each(function($attachment){
                 $attachment->toMediaCollection('attachment');
@@ -179,7 +178,7 @@ class ProcessStepController extends Controller
         }
 
         toast(__('global.crud_actions', ['module' => 'Step', 'action' => 'updated']), 'success');
-        return back();
+        return redirect()->route('admin.process.steps.index',$process->id);
     }
 
     /**

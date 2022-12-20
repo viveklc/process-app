@@ -27,6 +27,16 @@
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->
+                            <li class="breadcrumb-item text-muted">
+                                <a href="{{ route('admin.processes.process-instance.index', $id) }}">{{ trans('global.process_instance') }}</a>
+                            </li>
+                            <!--end::Item-->
+                            <!--begin::Item-->
+                            <li class="breadcrumb-item">
+                                <span class="bullet bg-gray-400 w-5px h-2px"></span>
+                            </li>
+                            <!--end::Item-->
+                            <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">List</li>
                             <!--end::Item-->
                         </ul>
@@ -83,6 +93,7 @@
                                             <th>Start Date </th>
                                             <th>Due Date</th>
                                             <th>Duration</th>
+                                            <th class="fixed-col"></th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -94,10 +105,15 @@
                                                 <td>{{ appDateFormat($item->start_date) }}</td>
                                                 <td>{{ appDateFormat($item->due_date) }}</td>
                                                 <td>{{ $item->total_duration}}</td>
+                                                <td >
+                                                    <a href="{{ route('admin.process-instance.step-instance.index', $item->id) }}"
+                                                        class="menu-link px-3"> {{ trans('global.step_instance') }} ({{ $item->step_instances_count }})
+                                                    </a>
+                                                </td>
 
                                                 <!--begin::Action=-->
                                                 <td class="text-end">
-                                                    <a href="#" class="btn btn-light btn-active-light-primary btn-sm"
+                                                    <a href="#" class="btn  btn-sm"
                                                         data-kt-menu-trigger="click"
                                                         data-kt-menu-placement="bottom-end">Actions
                                                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
@@ -116,13 +132,6 @@
                                                         data-kt-menu="true">
 
 
-                                                        <!--begin::Menu item-->
-                                                        <div class="menu-item px-3">
-                                                            <a href="{{ route('admin.process-instance.step-instance.index', $item->id) }}"
-                                                                class="menu-link px-3"> {{ trans('global.step_instance') }}
-                                                            </a>
-                                                        </div>
-                                                        <!--end::Menu item-->
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
                                                             <a href="{{ route('admin.processes.process-instance.edit', ["process"=>$id,"process_instance"=>$item->id]) }}"

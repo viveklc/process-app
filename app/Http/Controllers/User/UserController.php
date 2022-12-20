@@ -35,11 +35,13 @@ class UserController extends Controller
                     $query->orWhere('username', 'LIKE', '%' . $inputSearchString . '%');
                     $query->orWhere('email', 'LIKE', '%' . $inputSearchString . '%');
                     $query->orWhere('phone', 'LIKE', '%' . $inputSearchString . '%');
-                    $query->whereHas('org', function (Builder $builder) use ($inputSearchString) {
-                        $builder->where('name', 'LIKE', '%' . $inputSearchString . '%');
-                    });
-                    $query->whereHas('role', function (Builder $builder) use ($inputSearchString) {
-                        $builder->where('name', 'LIKE', '%' . $inputSearchString . '%');
+                    $query->orWhere(function($query) use ($inputSearchString){
+                        $query->whereHas('org', function (Builder $builder) use ($inputSearchString) {
+                            $builder->orWhere('orgs.name', 'LIKE', '%' . $inputSearchString . '%');
+                        });
+                        $query->whereHas('role', function (Builder $builder) use ($inputSearchString) {
+                            $builder->orWhere('roles.name', 'LIKE', '%' . $inputSearchString . '%');
+                        });
                     });
                 });
             })
@@ -47,7 +49,7 @@ class UserController extends Controller
             ->with('org:id,name')
             ->with('role:id,name')
             ->orderBy('name')
-            ->paginate(config('app-config.per_page'));
+            ->paginate(config('app-config.datatable_default_row_count'));
 
         return view('users.index', compact('users'));
     }
@@ -85,7 +87,7 @@ class UserController extends Controller
     {
         abort_if(!auth()->user()->can('create-user'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $validated = $request->merge(['is_org_admin' => isset($request->is_org_admin) ? 1 : 2, 'password' => Hash::make($request->password)]);
+        $validated = $request->merge(['password' => Hash::make($request->password),'username'=>$this->generateUserName(User::count())]);
         $user = User::create($validated->except('is_colleague_of_user_id', 'reports_to_user_id'));
         $user->reportToUsers()->attach(
             $request->reports_to_user_id,
@@ -97,7 +99,7 @@ class UserController extends Controller
         );
 
         toast(__('global.crud_actions', ['module' => 'User', 'action' => 'created']), 'success');
-        return back();
+        return redirect()->route('admin.users.index');
     }
 
     /**
@@ -114,7 +116,7 @@ class UserController extends Controller
         $user->load('collegues');
         $user->load('org:id,name');
         $user->load('role:id,name');
-        // dd($user);
+
         return view('users.show', compact('user'));
     }
 
@@ -142,6 +144,7 @@ class UserController extends Controller
         $users = User::query()
             ->select('id', 'name')
             ->where('org_id', $user->org_id)
+            ->whereNot('id',$user->id)
             ->isActive()
             ->orderBy('name')
             ->get();
@@ -175,7 +178,7 @@ class UserController extends Controller
         );
 
         toast(__('global.crud_actions', ['module' => 'User', 'action' => 'updated']), 'success');
-        return back();
+        return redirect()->route('admin.users.index');
     }
 
     /**
@@ -212,6 +215,10 @@ class UserController extends Controller
 
         toast(__('global.crud_actions', ['module' => 'User', 'action' => 'deleted']), 'success');
         return response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    public function generateUserName($user_count){
+        return "PRCS".($user_count+1);
     }
 
 

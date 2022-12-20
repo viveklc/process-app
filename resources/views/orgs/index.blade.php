@@ -12,13 +12,13 @@
                     <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
                         <!--begin::Title-->
                         <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
-                            Orgs</h1>
+                            Organisations</h1>
                         <!--end::Title-->
                         <!--begin::Breadcrumb-->
                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                             <!--begin::Item-->
                             <li class="breadcrumb-item text-muted">
-                                <a href="{{ route('admin.orgs.index') }}">Org</a>
+                                <a href="{{ route('admin.orgs.index') }}">Organisations</a>
                             </li>
                             <!--end::Item-->
                             <!--begin::Item-->
@@ -75,7 +75,7 @@
                         <div class="card-body pt-0">
                             <!--begin::Table-->
                             <div class="table-responsive">
-                                <table class="table datatable datatable-Cities">
+                                <table class="table table-bordered datatable datatable-Cities">
                                     <thead>
                                         <tr>
                                             <th width="10">
@@ -90,7 +90,7 @@
                                                 Address
                                             </th>
 
-                                            <th>
+                                            <th style="text-align: center">
                                                 Is Premium
                                             </th>
                                             <th class="notexport">
@@ -113,12 +113,12 @@
                                                 {{ $org->address ?? '' }}
                                             </td>
 
-                                            <td>
+                                            <td style="text-align: center">
                                                 {{ ($org->is_premium == 1 ? 'Yes':'No') ?? '' }}
                                             </td>
                                     <!--begin::Action=-->
                                     <td class="text-end">
-                                        <a href="#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
+                                        <a href="#" class="btn  btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
                                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
                                         <span class="svg-icon svg-icon-5 m-0">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -130,15 +130,16 @@
                                         <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
                                             <!--begin::Menu item-->
                                             <div class="menu-item px-3">
-                                                <a href="{{ route('admin.orgs.show', $org->id) }}" class="menu-link px-3">                                {{ trans('global.view') }}</a>
-                                            </div>
-                                            <!--end::Menu item-->
-                                            <!--begin::Menu item-->
-                                            <div class="menu-item px-3">
                                                 <a href="{{ route('admin.orgs.edit', $org->id) }}" class="menu-link px-3">                                {{ trans('global.edit') }}
                                                 </a>
                                             </div>
                                             <!--end::Menu item-->
+                                            <!--begin::Menu item-->
+                                            <div class="menu-item px-3">
+                                                <a href="{{ route('admin.orgs.show', $org->id) }}" class="menu-link px-3">                                {{ trans('global.view') }}</a>
+                                            </div>
+                                            <!--end::Menu item-->
+
                                             <!--begin::Menu item-->
                                             <div class="menu-item px-3">
                                                 <form action="{{ route('admin.orgs.destroy', $org->id) }}" method="POST" id="frmDeleteCountry-{{ $org->id }}" style="display: inline-block; width: 100%;">

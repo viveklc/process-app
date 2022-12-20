@@ -1,8 +1,7 @@
 @extends('layouts.admin')
 @section('content')
-
     @if (Session::has('success'))
-        <div class="alert alert-success">{{Session::get('success')}}</div>
+        <div class="alert alert-success">{{ Session::get('success') }}</div>
     @endif
 
     <!--begin::Main-->
@@ -51,8 +50,8 @@
                     <div class="card">
                         <!--begin::Card body-->
                         <div class="card-body pt-7">
-                            <form id="kt_subscriptions_export_form" class="form" method="POST" enctype="multipart/form-data"
-                                action="{{ route('admin.team.update',$team->id) }}" >
+                            <form id="kt_subscriptions_export_form" class="form" method="POST"
+                                enctype="multipart/form-data" action="{{ route('admin.team.update', $team->id) }}">
                                 @csrf
                                 @method('PUT')
                                 <div class="d-flex flex-column mb-8 fv-row">
@@ -63,10 +62,13 @@
                                     <!--end::Label-->
                                     <select
                                         class="form-control form-control-solid select2 {{ $errors->has('org_id') ? 'is-invalid' : '' }}"
-                                        style="width: 100%;" name="org_id" id="country-dropdown" onchange="getUserByOrgId(this.value)">
+                                        style="width: 100%;" name="org_id" id="org-dropdown"
+                                        onchange="getUserByOrgId(this.value)">
                                         <option value="">Select Organisation</option>
                                         @forelse ($org as $item)
-                                            <option value="{{ $item->id }}" {{ ($item->id == $team->org_id) ? 'selected':'' }} >{{ $item->name }}</option>
+                                            <option value="{{ $item->id }}"
+                                                {{ $item->id == $team->org_id ? 'selected' : '' }}>{{ $item->name }}
+                                            </option>
                                         @empty
                                         @endforelse
                                     </select>
@@ -79,7 +81,8 @@
                                     <!--end::Label-->
                                     <input
                                         class="form-control form-control-solid {{ $errors->has('team_name') ? 'is-invalid' : '' }}"
-                                        type="text" name="team_name" id="team_name" value="{{ old('team_name', $team->team_name) }}">
+                                        type="text" name="team_name" id="team_name"
+                                        value="{{ old('team_name', $team->team_name) }}">
                                 </div>
 
                                 <div class="d-flex flex-column mb-8 fv-row">
@@ -102,19 +105,32 @@
                                     <!--end::Label-->
                                     <input
                                         class="form-control form-control-solid {{ $errors->has('valid_to') ? 'is-invalid' : '' }}"
-                                        type="date" name="valid_to" id="valid_to" value="{{ old('valid_to', dbDateFormat($team->valid_to)) }}">
+                                        type="date" name="valid_to" id="valid_to"
+                                        value="{{ old('valid_to', dbDateFormat($team->valid_to)) }}">
                                 </div>
 
                                 <!--begin::Input group-->
                                 <div class="d-flex flex-column mb-8 fv-row">
                                     <!--begin::Label-->
                                     <label class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span class="required">Attachment</span>
+                                        <span class="">Attachment</span>
                                     </label>
                                     <!--end::Label-->
                                     <input type="file"
                                         class="form-control form-control-solid  {{ $errors->has('attachments') ? 'is-invalid' : '' }}"
                                         placeholder="" name="attachments[]" multiple />
+                                    <div class="attachment-div">
+                                        <ul class="list-group list-group-horizontal">
+                                            @forelse ($team->media as $item)
+                                                <li class="list-group-item"><a href="{{ $item->original_url }}"
+                                                        target="__blank" class="btn-link">{{ $item->file_name }}</a>
+                                                    &nbsp;&nbsp; <span onclick="deleteMedia({{ $item->id }},this)"><i
+                                                            class="fa fa-times" style="color: red"></i></span></li>
+                                            @empty
+                                            @endforelse
+
+                                        </ul>
+                                    </div>
                                 </div>
                                 <!--end::Input group-->
 
@@ -128,7 +144,10 @@
                                         class="form-control form-control-solid select2 {{ $errors->has('user_id') ? 'is-invalid' : '' }}"
                                         style="width: 100%;" name="user_id[]" id="team_user_dropDown" multiple>
                                         @forelse ($orgUsers->users as $item)
-                                            <option value="{{ $item->id }}" {{ in_array($item->id,$teamuserId) ? 'selected':'' }} >{{ $item->name }}</option>
+                                            <option value="{{ $item->id }}"
+                                                {{ in_array($item->id, $teamuserId) ? 'selected' : '' }}>
+                                                {{ $item->name }}
+                                            </option>
                                         @empty
                                         @endforelse
                                     </select>
@@ -182,31 +201,85 @@
     <!--end:::Main-->
 @endsection
 @section('scripts')
-<script>
-    function getUserByOrgId(org_id){
-        let url = '{{ route('admin.org.users',':org_id') }}';
+    <script>
+        $(document).ready(function(){
+        var oldOrgId = "{{ old('org_id') }}";
+        var oldUserId = '{{ collect(old("user_id")) }}';
 
-            url = url.replace(':org_id',org_id);
+        if(oldOrgId !== ''){
+            $("#org-dropdown").change()
+        }
+    })
+        function deleteMedia(media_id, content) {
+            const $parentLi = $(content).parents('.list-group-item');
 
-            $.ajax({
-                method : "GET",
-                url : url,
-                cache : false,
-                beforeSend : function(){
+            let url = '{{ route('admin.media.remove', ':media_id') }}';
+
+            url = url.replace(':media_id', media_id);
+            Swal.fire({
+                title: '{{ trans('global.are_you_sure') }}',
+                text: "{{ trans('global.are_you_sure_delete_msg') }}",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: '{{ trans('global.ok') }}'
+            }).then((result) => {
+
+                $.ajax({
+                method: "DELETE",
+                url: url,
+                cache: false,
+                data: {
+                    _token: "{{ csrf_token() }}"
+                },
+                beforeSend: function() {
 
                 },
-                success : function(response){
-                    // console.log(response);
-                    var option = "<option value=''>select Team User</option>";
-                    $.each(response, function(index,value){
+                success: function(response) {
+                    if (response.status === 'success') {
+                        // alert(response.message);
+                        $parentLi.remove();
+                    }
 
-                        option += "<option value='"+value.id+"'>"+value.name+"</option>";
+
+
+                }
+            })
+            })
+
+        }
+
+        function getUserByOrgId(org_id) {
+            let url = '{{ route('admin.org.users', ':org_id') }}';
+
+            url = url.replace(':org_id', org_id);
+
+            var selectedVal = new Array();
+            selectedVal = '{{ collect(old("user_id")) }}';
+
+            $.ajax({
+                method: "GET",
+                url: url,
+                cache: false,
+                beforeSend: function() {
+
+                },
+                success: function(response) {
+                    // console.log(response);
+                    var option = "";
+                    $.each(response, function(index, value) {
+
+                        let isChecked = selectedVal.includes(value.id)
+                        let isSelected = isChecked === true ? 'selected' : '';
+                        console.log("is selected", isSelected);
+                        option += "<option value='"+value.id+"' "+ isSelected +" >"+value.name+"</option>";
 
                     });
                     $('#team_user_dropDown').html(option);
 
                 }
             })
-    }
-</script>
+        }
+    </script>
 @endsection

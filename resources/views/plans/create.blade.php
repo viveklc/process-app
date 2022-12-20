@@ -1,11 +1,8 @@
 @extends('layouts.admin')
 @section('content')
-    @if (Session::has('success'))
-        <div class="alert alert-success">{{ Session::get('success') }}</div>
-    @endif
 
     <!--begin::Main-->
-    <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+    <div class="app-main flex-column flex-row-fluid" id="kt_app_main" >
         <!--begin::Content wrapper-->
         <div class="d-flex flex-column flex-column-fluid">
             <!--begin::Toolbar-->
@@ -85,7 +82,7 @@
                                 <input
                                     class="form-control form-control-solid {{ $errors->has('valid_from') ? 'is-invalid' : '' }}"
                                     type="date" name="valid_from" id="valid_from"
-                                    value="{{ old('valid_from', '') }}">
+                                    value="{{ old('valid_from', '') }}" required>
                             </div>
 
                             <div class="d-flex flex-column mb-8 fv-row">
@@ -96,7 +93,7 @@
                                 <!--end::Label-->
                                 <input
                                     class="form-control form-control-solid {{ $errors->has('valid_to') ? 'is-invalid' : '' }}"
-                                    type="date" name="valid_to" id="valid_to" value="{{ old('valid_to', '') }}">
+                                    type="date" name="valid_to" id="valid_to" value="{{ old('valid_to', '') }}" required>
                             </div>
 
                             <div class="d-flex flex-column mb-8 fv-row">

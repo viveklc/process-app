@@ -38,7 +38,7 @@ class UpdatePlanRequest extends FormRequest
             'plan_description' => ['nullable','string'],
             'plan_features' => ['nullable','string'],
             'plan_price' => ['required','numeric'],
-            'valid_from' => ['required','date_format:Y-m-d','date','after_or_equal:today'],
+            'valid_from' => ['required','date_format:Y-m-d','date'],
             'valid_to' => ['required','date_format:Y-m-d','date','after:valid_from'],
             'status' => ['required','string','in:active,in-active']
         ];

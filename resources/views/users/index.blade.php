@@ -83,7 +83,7 @@
                                             <th>Organisation</th>
                                             <th>Username</th>
                                             <th>Email</th>
-                                            <th>Mobile</th>
+                                            {{-- <th>Mobile</th> --}}
                                             <th>Role</th>
                                             {{-- <th>Status</th> --}}
                                             <th></th>
@@ -97,14 +97,14 @@
                                                 <td>{{ $item->org->name }}</td>
                                                 <td>{{ $item->username }}</td>
                                                 <td>{{ $item->email }}</td>
-                                                <td>{{ $item->phone }}</td>
+                                                {{-- <td>{{ $item->phone }}</td> --}}
                                                 <td>{{ $item->role->name }}</td>
                                                 {{-- <td>{!! $item->status == 'active'
                                                     ? '<span class="badge badge-success">Active</span>'
                                                     : '<span class="badge badge-danger">In-active</span>' !!}</td> --}}
                                                 <!--begin::Action=-->
                                                 <td class="text-end">
-                                                    <a href="#" class="btn btn-light btn-active-light-primary btn-sm"
+                                                    <a href="#" class="btn  btn-sm"
                                                         data-kt-menu-trigger="click"
                                                         data-kt-menu-placement="bottom-end">Actions
                                                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
