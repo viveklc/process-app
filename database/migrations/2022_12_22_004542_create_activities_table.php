@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('activities', function (Blueprint $table) {
+        Schema::connection('mysql2')->create('activities', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->index();
             $table->string('activity_title')->nullable();

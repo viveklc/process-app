@@ -14,7 +14,7 @@ class DocumentAutor extends Model
     use HasFactory, LogsActivity;
     use CreatedUpdatedBy, ModelScopes;
 
-    protected $connection = 'mysql2';
+    public $connection = 'mysql2';
     protected $guarded = [];
 
     /** Spatie Activity Log */

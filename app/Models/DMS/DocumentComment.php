@@ -2,7 +2,6 @@
 
 namespace App\Models\DMS;
 
-use App\Models\User;
 use App\Traits\CreatedUpdatedBy;
 use App\Traits\ModelScopes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 
-class DocumentVote extends Model
+class DocumentComment extends Model
 {
     use HasFactory, LogsActivity;
     use CreatedUpdatedBy, ModelScopes;
@@ -21,16 +20,12 @@ class DocumentVote extends Model
     /** Spatie Activity Log */
     public function getActivitylogOptions(): LogOptions // spatie model log options
     {
-        return LogOptions::defaults()->logAll()->useLogName('DocumentVote');
+        return LogOptions::defaults()->logAll()->useLogName('DocumentComment');
     }
 
-    public function document()
-    {
-        return $this->belongsTo(Document::class);
+    public function replies(){
+        return $this->hasMany(DocumentComment::class,'in_reply_to_comment_id');
     }
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+
 }

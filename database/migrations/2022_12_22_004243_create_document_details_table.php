@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('document_details', function (Blueprint $table) {
+        Schema::connection('mysql2')->create('document_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('document_id')->index();
             $table->string('document_keyname')->nullable();

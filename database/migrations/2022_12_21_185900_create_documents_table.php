@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('documents', function (Blueprint $table) {
+        Schema::connection('mysql2')->create('documents', function (Blueprint $table) {
             $table->id();
             $table->text('document_title')->nullable();
             $table->longText('document_subtitle')->nullable();

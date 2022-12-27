@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('document_autors', function (Blueprint $table) {
+        Schema::connection('mysql2')->create('document_autors', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->index();
             $table->unsignedBigInteger('document_id')->index();
