@@ -240,7 +240,26 @@
             'read-step-instance',
             'update-step-instance',
             'delete-step-instance',
-            'show-step-instance'
+            'show-step-instance',
+            'read-projects', //projects
+            'create-project',
+            'update-project',
+            'delete-project',
+            'show-project',
+            'invite-users',
+            'read-invites',
+            'delete-invites',
+            'read-document-tag',//document tags
+            'create-document-tag',
+            'update-document-tag',
+            'show-document-tag',
+            'delete-document-tag',
+            'read-documents', //documents
+            'create-document',
+            'update-document',
+            'show-document',
+            'delete-document',
+            'share-document'
         ],
         'author' => [
             'read-language',
