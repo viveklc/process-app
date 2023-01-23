@@ -27,6 +27,7 @@ class User extends Authenticatable implements HasMedia
     use HasApiTokens, HasFactory, Notifiable, LogsActivity, HasRoles, InteractsWithMedia;
     use CreatedUpdatedBy, ModelScopes;
 
+    public $connection = 'mysql';
     /**
      * The attributes that are mass assignable.
      *

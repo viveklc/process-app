@@ -27,6 +27,9 @@ use App\Http\Controllers\Team\TeamController;
 use App\Http\Controllers\OrgController;
 use App\Http\Controllers\DeptController;
 use App\Http\Controllers\DeptUserController;
+use App\Http\Controllers\DMS\DocumentTagController;
+use App\Http\Controllers\DMS\InviteController;
+use App\Http\Controllers\DMS\ProjectController;
 use App\Http\Controllers\Permission\PermissionController;
 use App\Http\Controllers\Plan\PlanController;
 use App\Http\Controllers\Process\ProcessController;
@@ -156,6 +159,14 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     Route::delete('media/{media_id}/delete',[AjaxController::class,'deleteMedia'])->name('media.remove');
 
+});
+
+Route::middleware(['auth'])->prefix('dms')->name('dms.')->group(function(){
+    Route::resource('projects',ProjectController::class);
+    Route::resource('project.invites',InviteController::class);
+
+    Route::delete('tags/destroy', [DocumentTagController::class, 'massDestroy'])->name('document-tags.massDestroy');
+    Route::resource('document-tags',DocumentTagController::class);
 });
 
 require __DIR__ . '/auth.php';

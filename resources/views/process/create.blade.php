@@ -150,7 +150,7 @@
                                     <select
                                         class="form-control form-control-solid select2 {{ $errors->has('process_priority') ? 'is-invalid' : '' }}"
                                         style="width: 100%;" name="process_priority" id="country-dropdown">
-                                        <option value="">--select priority--</option>
+                                        <option value="">Select priority</option>
                                         <option value="1" {{ old('process_priority') == 1 ? 'selected' : '' }}>High</option>
                                         <option value="2" {{ old('process_priority') == 2 ? 'selected' : '' }}>Medium</option>
                                         <option value="3" {{ old('process_priority') == 3 ? 'selected' : '' }}>Low</option>
